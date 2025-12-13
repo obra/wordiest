@@ -61,23 +61,22 @@ final class GameScene: SKScene {
     }
 
     func resetWords() {
-        var bank1 = tilesByRow[.bank1] ?? []
-        var bank2 = tilesByRow[.bank2] ?? []
+        resetWords(clearOnlyInvalid: false)
+    }
 
-        let toReturn = (tilesByRow[.word1] ?? []) + (tilesByRow[.word2] ?? [])
-        tilesByRow[.word1] = []
-        tilesByRow[.word2] = []
+    func resetWords(clearOnlyInvalid: Bool) {
+        let state = currentRackState()
+        let validity = currentWordValidity()
 
-        for tile in toReturn {
-            if bank1.count <= bank2.count {
-                bank1.append(tile)
-            } else {
-                bank2.append(tile)
-            }
-        }
+        let reset = Reset.apply(
+            state: state,
+            clearOnlyInvalid: clearOnlyInvalid,
+            isWord1Valid: validity.isWord1Valid,
+            isWord2Valid: validity.isWord2Valid,
+            shuffle: { Shuffle.shuffled(state: $0) }
+        )
 
-        tilesByRow[.bank1] = bank1
-        tilesByRow[.bank2] = bank2
+        applyRackState(reset)
         rebalanceBanks()
         layoutAll(animated: true)
         run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
@@ -366,6 +365,17 @@ final class GameScene: SKScene {
         tilesByRow[.word2] = state.word2.map { tileNodes[$0] }
         tilesByRow[.bank1] = state.bank1.map { tileNodes[$0] }
         tilesByRow[.bank2] = state.bank2.map { tileNodes[$0] }
+    }
+
+    private func currentWordValidity() -> (isWord1Valid: Bool, isWord2Valid: Bool) {
+        guard let definitions else { return (false, false) }
+
+        let word1 = (tilesByRow[.word1] ?? []).map { $0.tile.letter }.joined()
+        let word2 = (tilesByRow[.word2] ?? []).map { $0.tile.letter }.joined()
+
+        let isWord1Valid = ((try? definitions.definition(for: word1)) ?? nil) != nil
+        let isWord2Valid = ((try? definitions.definition(for: word2)) ?? nil) != nil
+        return (isWord1Valid, isWord2Valid)
     }
 
     private func updateScoreAndDefinitions() {
