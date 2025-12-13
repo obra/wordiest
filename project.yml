@@ -28,8 +28,8 @@ targets:
       - path: Wordiest
         excludes:
           - Resources
-    resources:
       - path: Wordiest/Resources
+        buildPhase: resources
     scheme:
       testTargets:
         - WordiestTests
