@@ -9,6 +9,8 @@ final class TileNode: SKNode {
     private let valueLabel: SKLabelNode
     private let bonusLabelTop: SKLabelNode
     private let bonusLabelBottom: SKLabelNode
+    private var validStrokeColor: SKColor = .white
+    private var invalidStrokeColor: SKColor = .gray
 
     init(tile: Tile, size: CGSize, fontName: String?) {
         self.tile = tile
@@ -75,7 +77,19 @@ final class TileNode: SKNode {
     }
 
     func setStyle(isValidWordTile: Bool) {
-        background.strokeColor = isValidWordTile ? .white : .gray
+        background.strokeColor = isValidWordTile ? validStrokeColor : invalidStrokeColor
+    }
+
+    func applyPalette(background: SKColor, foreground: SKColor, faded: SKColor) {
+        validStrokeColor = foreground
+        invalidStrokeColor = faded
+
+        self.background.fillColor = background
+        self.background.strokeColor = validStrokeColor
+
+        letterLabel.fontColor = foreground
+        valueLabel.fontColor = foreground
+        bonusLabelTop.fontColor = foreground
+        bonusLabelBottom.fontColor = foreground
     }
 }
-

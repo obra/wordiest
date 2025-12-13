@@ -68,6 +68,7 @@ final class AppModel: ObservableObject {
 
     func applySettingsToScene() {
         scene.soundEnabled = settings.soundEnabled
+        scene.applyPalette(settings.palette)
     }
 
     func configureSceneIfReady(size: CGSize) {

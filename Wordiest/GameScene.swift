@@ -1,5 +1,6 @@
 import SpriteKit
 import WordiestCore
+import UIKit
 
 @MainActor
 final class GameScene: SKScene {
@@ -38,6 +39,7 @@ final class GameScene: SKScene {
 
     var isReview: Bool = false
     var soundEnabled: Bool = true
+    private var palette: (background: SKColor, foreground: SKColor, faded: SKColor) = (.black, .white, .gray)
 
     func configure(size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
@@ -51,7 +53,7 @@ final class GameScene: SKScene {
     }
 
     override func didMove(to view: SKView) {
-        backgroundColor = .black
+        backgroundColor = palette.background
 
         if tilesByRow.isEmpty {
             for row in Row.allCases {
@@ -63,6 +65,20 @@ final class GameScene: SKScene {
         if matchStore != nil, definitions != nil {
             loadNextMatch()
         }
+    }
+
+    func applyPalette(_ palette: ColorPalette) {
+        self.palette = (palette.uiBackground, palette.uiForeground, palette.uiFaded)
+        backgroundColor = self.palette.background
+
+        scoreLabel.fontColor = self.palette.foreground
+        definition1Label.fontColor = self.palette.foreground
+        definition2Label.fontColor = self.palette.foreground
+
+        for node in tileNodes {
+            node.applyPalette(background: self.palette.background, foreground: self.palette.foreground, faded: self.palette.faded)
+        }
+        updateScoreAndDefinitions()
     }
 
     func setAssets(matchStore: MatchDataStore, definitions: Definitions) {
@@ -240,7 +256,7 @@ final class GameScene: SKScene {
 
     private func configureLabels() {
         scoreLabel.fontSize = 24
-        scoreLabel.fontColor = .white
+        scoreLabel.fontColor = palette.foreground
         scoreLabel.horizontalAlignmentMode = .center
         scoreLabel.verticalAlignmentMode = .top
         scoreLabel.zPosition = 20
@@ -248,7 +264,7 @@ final class GameScene: SKScene {
 
         for label in [definition1Label, definition2Label] {
             label.fontSize = 14
-            label.fontColor = .white
+            label.fontColor = palette.foreground
             label.horizontalAlignmentMode = .center
             label.verticalAlignmentMode = .top
             label.zPosition = 20
@@ -395,6 +411,7 @@ final class GameScene: SKScene {
 
         tileNodes = match.tiles.map { tile in
             let node = TileNode(tile: tile, size: baseTileSize(), fontName: "IstokWeb-Bold")
+            node.applyPalette(background: palette.background, foreground: palette.foreground, faded: palette.faded)
             node.zPosition = 1
             return node
         }
@@ -475,6 +492,11 @@ final class GameScene: SKScene {
         let isWord2Valid = word2Definition != nil
         lastWord1Definition = word1Definition
         lastWord2Definition = word2Definition
+
+        for node in tilesByRow[.word1] ?? [] { node.setStyle(isValidWordTile: isWord1Valid) }
+        for node in tilesByRow[.word2] ?? [] { node.setStyle(isValidWordTile: isWord2Valid) }
+        for node in tilesByRow[.bank1] ?? [] { node.setStyle(isValidWordTile: true) }
+        for node in tilesByRow[.bank2] ?? [] { node.setStyle(isValidWordTile: true) }
 
         if isWord1Valid {
             score += (try? WordiestScoring.scoreWord(word1Tiles.map(\.tile))) ?? 0

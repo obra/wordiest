@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ScoreGraphView: View {
+    var palette: ColorPalette
     var points: [CGPoint]
     var center: CGPoint
     var highlightIndex: Int?
@@ -12,7 +13,7 @@ struct ScoreGraphView: View {
                 let mapping = ScoreGraphMath.mappedPoints(points: points, center: center, rect: rect)
 
                 var background = Path(rect)
-                context.fill(background, with: .color(.black))
+                context.fill(background, with: .color(palette.background))
 
                 let midX = rect.midX
                 let midY = rect.midY
@@ -27,16 +28,15 @@ struct ScoreGraphView: View {
                 axis.addLine(to: CGPoint(x: rect.maxX, y: midY))
                 axis.move(to: CGPoint(x: midX, y: rect.minY))
                 axis.addLine(to: CGPoint(x: midX, y: rect.maxY))
-                context.stroke(axis, with: .color(.white.opacity(0.6)), lineWidth: 1)
+                context.stroke(axis, with: .color(palette.foreground.opacity(0.6)), lineWidth: 1)
 
                 for (idx, p) in mapping.mapped.enumerated() {
                     let isHighlight = highlightIndex == idx
                     let dotRect = CGRect(x: p.x - 3, y: p.y - 3, width: 6, height: 6)
-                    context.fill(Path(ellipseIn: dotRect), with: .color(isHighlight ? .red : .white))
+                    context.fill(Path(ellipseIn: dotRect), with: .color(isHighlight ? .red : palette.foreground))
                 }
             }
         }
         .aspectRatio(1, contentMode: .fit)
     }
 }
-

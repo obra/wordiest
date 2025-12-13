@@ -47,6 +47,7 @@ struct ScoreView: View {
 
     @ViewBuilder
     private func scoreGraph() -> some View {
+        let palette = model.settings.palette
         let points: [CGPoint] = context.match.scoreSamples.map { CGPoint(x: Double($0.ratingX10) / 10.0, y: Double($0.score)) }
         let center = CGPoint(x: context.newRating, y: Double(context.playerScore))
 
@@ -54,7 +55,7 @@ struct ScoreView: View {
             let rect = CGRect(origin: .zero, size: proxy.size).insetBy(dx: 12, dy: 12)
             let mapping = ScoreGraphMath.mappedPoints(points: points, center: center, rect: rect)
 
-            ScoreGraphView(points: points, center: center, highlightIndex: highlightIndex)
+            ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
                 .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0)
