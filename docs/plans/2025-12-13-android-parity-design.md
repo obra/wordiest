@@ -236,8 +236,24 @@ Target: Whole app feels like Wordiest.
   - A handful of definition lookups (present/absent/redirect).
 - Add minimal UI tests only where deterministic (navigation, button presence).
 
+## Parity acceptance checklist
+
+- [ ] Match: Shuffle matches Android behavior (bank-only shuffle; avoids trivial no-op shuffle cases).
+- [ ] Match: Reset matches Android behavior (tap clears both words; long-press clears invalid words only; shuffle when nothing cleared).
+- [ ] Match: “Best” tracking + tap-to-restore behaves like Android for a single rack.
+- [ ] Match: Definition display (format + animation) matches Android; tapping prompts to open Wiktionary.
+- [ ] Match: Submit warnings match Android strings for 0/1/2 valid words; review mode disables submission.
+- [ ] Score: Percentile and new rating match Android to 0.1 for a fixed rack and score list.
+- [ ] Score: Graph renders quadrants/labels and nearest-point highlighting feels identical in interaction.
+- [ ] Score: Opponent inspector shows decoded words, definitions, and score correctly.
+- [ ] Score: Fireworks/confetti triggers in the same cases as Android.
+- [ ] History: Stores up to 100 entries, ordered newest-first, with matching summary text and “best” star rule.
+- [ ] History: Long-press delete prompts and removes entry; sparkline updates and highlights visible range.
+- [ ] Shell: Splash summary + loading gating + swipe-to-play works; Help pages match Android content.
+- [ ] Shell: Credits/about and privacy policy link match Android.
+- [ ] Settings: Color palette cycling (1..6) and sound enable/disable persist and apply everywhere.
+
 ## Open questions
 
 - Do we implement ads at all on iOS, or treat “Remove ads” as a no-op and omit ads entirely?
 - Do we want iCloud save to mirror Android’s merge rules exactly, or is “latest wins” acceptable?
-
