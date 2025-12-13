@@ -6,6 +6,13 @@ struct SplashView: View {
     var body: some View {
         let palette = model.settings.palette
         VStack(spacing: 16) {
+            HStack {
+                Spacer()
+                MenuButton(model: model)
+            }
+            .padding(.horizontal, 18)
+            .padding(.top, 12)
+
             Spacer()
 
             Text("Wordiest")
@@ -53,4 +60,3 @@ struct SplashView: View {
         return "You have played \(model.settings.numMatches) game\(gamesPlural)\nfor \(model.settings.cumulativeScore) total point\(pointsPlural).\n\nYour wordiest rating is \(rating)."
     }
 }
-

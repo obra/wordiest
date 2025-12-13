@@ -10,6 +10,7 @@ struct CreditsView: View {
                 Button("Back") { model.returnToSplash() }
                     .buttonStyle(.bordered)
                 Spacer()
+                MenuButton(model: model)
             }
             .padding(.horizontal, 18)
             .padding(.top, 18)
@@ -27,4 +28,3 @@ struct CreditsView: View {
         .background(palette.background)
     }
 }
-

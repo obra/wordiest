@@ -7,6 +7,7 @@ struct MatchView: View {
     @State private var didLongPressReset = false
     @State private var wiktionaryWord: String?
     @State private var submitWarningMessage: String?
+    @State private var isConfirmingLeave = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -22,6 +23,12 @@ struct MatchView: View {
                     }
                     .onChange(of: proxy.size) { _, newSize in
                         model.configureSceneIfReady(size: newSize)
+                    }
+                    .onChange(of: model.settings.soundEnabled) { _, _ in
+                        model.applySettingsToScene()
+                    }
+                    .onChange(of: model.settings.colorPaletteIndex) { _, _ in
+                        model.applySettingsToScene()
                     }
 
                 HStack(spacing: 12) {
@@ -58,6 +65,24 @@ struct MatchView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 24)
+
+                VStack {
+                    HStack {
+                        Button("Back") {
+                            if model.scene.hasInProgressMove && !model.scene.isReview {
+                                isConfirmingLeave = true
+                                return
+                            }
+                            model.returnToSplash()
+                        }
+                        .buttonStyle(.bordered)
+                        Spacer()
+                        MenuButton(model: model)
+                    }
+                    .padding(.horizontal, 18)
+                    .padding(.top, 12)
+                    Spacer()
+                }
             }
         }
         .alert(
@@ -89,6 +114,11 @@ struct MatchView: View {
         } message: { message in
             Text(message)
         }
+        .alert("Confirm", isPresented: $isConfirmingLeave) {
+            Button("No", role: .cancel) {}
+            Button("Yes") { model.returnToSplash() }
+        } message: {
+            Text("Leave game in progress?")
+        }
     }
 }
-

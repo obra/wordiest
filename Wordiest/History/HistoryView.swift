@@ -10,6 +10,7 @@ struct HistoryView: View {
                 Button("Back") { model.returnToSplash() }
                     .buttonStyle(.bordered)
                 Spacer()
+                MenuButton(model: model)
             }
             .padding(.horizontal, 18)
             .padding(.top, 18)
@@ -39,4 +40,3 @@ struct HistoryView: View {
         .background(palette.background)
     }
 }
-
