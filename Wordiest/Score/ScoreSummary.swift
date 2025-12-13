@@ -44,6 +44,11 @@ enum ScoreSummary {
         return "You beat \(count) higher rated player\(plural)."
     }
 
+    static func shouldCelebrate(opponentsCount: Int, expectedLosses: Int, upsetLosses: Int) -> Bool {
+        guard opponentsCount > 0 else { return false }
+        return (expectedLosses + upsetLosses) == 0
+    }
+
     private static func formatTenths(_ value: Double) -> String {
         String(format: "%.1f", value)
     }

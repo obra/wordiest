@@ -7,77 +7,99 @@ struct ScoreView: View {
 
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
+    @State private var isCelebrating = false
 
     var body: some View {
         let palette = model.settings.palette
-        VStack(spacing: 16) {
-            HStack {
-                Button("Back") { model.showMatchReviewFromScore() }
-                    .buttonStyle(.bordered)
-                Spacer()
-                MenuButton(model: model)
-            }
-            .padding(.horizontal, 18)
-            .padding(.top, 12)
-
-            if let tiles = playerTiles(), !tiles.isEmpty {
-                ScoreTileRowView(palette: palette, tiles: tiles)
-                    .padding(.horizontal, 18)
-                    .padding(.top, 6)
-            }
-
-            Text(ScoreSummary.scoreText(score: context.playerScore, percentile: context.percentile))
-                .multilineTextAlignment(.center)
-                .foregroundStyle(palette.foreground)
-                .padding(.horizontal, 18)
-
-            Text(ScoreSummary.ratingText(old: context.oldRating, new: context.newRating, matchCount: context.matchCountBefore))
-                .multilineTextAlignment(.center)
-                .foregroundStyle(palette.foreground)
-                .padding(.horizontal, 18)
-
-            VStack(spacing: 6) {
+        ZStack {
+            VStack(spacing: 16) {
                 HStack {
-                    Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
-                        .foregroundStyle(palette.foreground)
-                        .font(.footnote)
+                    Button("Back") { model.showMatchReviewFromScore() }
+                        .buttonStyle(.bordered)
                     Spacer()
-                    Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
-                        .foregroundStyle(palette.foreground)
-                        .font(.footnote)
+                    MenuButton(model: model)
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+
+                if let tiles = playerTiles(), !tiles.isEmpty {
+                    ScoreTileRowView(palette: palette, tiles: tiles)
+                        .padding(.horizontal, 18)
+                        .padding(.top, 6)
                 }
 
-                HStack {
-                    Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
-                        .foregroundStyle(palette.foreground)
-                        .font(.footnote)
-                    Spacer()
-                    Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
-                        .foregroundStyle(palette.foreground)
-                        .font(.footnote)
-                }
-            }
-            .padding(.horizontal, 18)
+                Text(ScoreSummary.scoreText(score: context.playerScore, percentile: context.percentile))
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(palette.foreground)
+                    .padding(.horizontal, 18)
 
-            scoreGraph()
-                .frame(maxWidth: .infinity)
+                Text(ScoreSummary.ratingText(old: context.oldRating, new: context.newRating, matchCount: context.matchCountBefore))
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(palette.foreground)
+                    .padding(.horizontal, 18)
+
+                VStack(spacing: 6) {
+                    HStack {
+                        Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
+                            .foregroundStyle(palette.foreground)
+                            .font(.footnote)
+                        Spacer()
+                        Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
+                            .foregroundStyle(palette.foreground)
+                            .font(.footnote)
+                    }
+
+                    HStack {
+                        Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
+                            .foregroundStyle(palette.foreground)
+                            .font(.footnote)
+                        Spacer()
+                        Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
+                            .foregroundStyle(palette.foreground)
+                            .font(.footnote)
+                    }
+                }
                 .padding(.horizontal, 18)
 
-            if let idx = highlightIndex {
-                OpponentInspectorView(model: model, match: context.match, sampleIndex: idx)
+                scoreGraph()
+                    .frame(maxWidth: .infinity)
                     .padding(.horizontal, 18)
-            }
 
-            HStack(spacing: 12) {
-                Button("Play") { model.startNewMatchFromScore() }
-                Button("History") { model.showHistory() }
-                Button("Leaders") { model.showLeaders() }
+                if let idx = highlightIndex {
+                    OpponentInspectorView(model: model, match: context.match, sampleIndex: idx)
+                        .padding(.horizontal, 18)
+                }
+
+                HStack(spacing: 12) {
+                    Button("Play") { model.startNewMatchFromScore() }
+                    Button("History") { model.showHistory() }
+                    Button("Leaders") { model.showLeaders() }
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.bottom, 24)
             }
-            .buttonStyle(.borderedProminent)
-            .padding(.bottom, 24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(palette.background)
+
+            if isCelebrating {
+                ConfettiView()
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(palette.background)
+        .onAppear {
+            let should = ScoreSummary.shouldCelebrate(
+                opponentsCount: context.match.scoreSamples.count,
+                expectedLosses: context.expectedLosses,
+                upsetLosses: context.upsetLosses
+            )
+            if should {
+                isCelebrating = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    isCelebrating = false
+                }
+            }
+        }
     }
 
     private func playerTiles() -> [ScoreTile]? {
