@@ -7,7 +7,7 @@ struct HistoryRowView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(summaryText())
+            summaryText()
                 .foregroundStyle(palette.foreground)
                 .font(.body)
                 .fixedSize(horizontal: false, vertical: true)
@@ -21,23 +21,18 @@ struct HistoryRowView: View {
         .contentShape(Rectangle())
     }
 
-    private func summaryText() -> String {
+    private func summaryText() -> Text {
         let words = HistoryRowFormatter.wordsString(entry: entry) ?? ""
-        let pointsPlural = entry.score == 1 ? "" : "s"
+        let plural = entry.score == 1 ? "" : "s"
         let delta = Double(entry.newRatingX10 - entry.ratingX10) / 10.0
         let deltaText = String(format: "%+.1f", delta)
-        var text = "\(words) (\(entry.score) pt\(pointsPlural), \(deltaText) rtg)"
-        if HistoryRowFormatter.isBest(entry: entry) {
-            text += "*"
-        }
-        return text
+        let suffix = HistoryRowFormatter.isBest(entry: entry) ? "*" : ""
+        return Text(words).bold() + Text(" (\(entry.score) pt\(plural), \(deltaText) rtg)\(suffix)")
     }
 
     private func relativeTimestampText() -> String {
         guard let date = HistoryRowFormatter.parseGMTTimestamp(entry.timestamp) else { return "" }
-        let formatter = RelativeDateTimeFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter.localizedString(for: date, relativeTo: Date())
+        return PrettyRelativeTime.format(target: date, relativeTo: Date())
     }
 }
 
@@ -69,4 +64,3 @@ enum HistoryRowFormatter {
         return true
     }
 }
-
