@@ -21,7 +21,7 @@ final class GameScene: SKScene {
     private var tileNodes: [TileNode] = []
     private var tilesByRow: [Row: [TileNode]] = [:]
 
-    private var dragging: (node: TileNode, offset: CGPoint)?
+    private var dragging: (node: TileNode, offset: CGPoint, baseScale: CGFloat)?
     private let bestTracker = BestTracker()
     private var currentScore: Int = 0
 
@@ -140,7 +140,9 @@ final class GameScene: SKScene {
 
         let offset = CGPoint(x: point.x - node.position.x, y: point.y - node.position.y)
         node.zPosition = 10
-        dragging = (node, offset)
+        let baseScale = node.xScale
+        node.setScale(baseScale * DragConstants.draggingScaleMultiplier)
+        dragging = (node, offset, baseScale)
         run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
     }
 
@@ -252,10 +254,15 @@ final class GameScene: SKScene {
             x += tileWidth + tileGap
 
             if animated {
-                let move = SKAction.move(to: target, duration: 0.15)
-                move.timingMode = .easeOut
-                tile.run(move)
-                tile.setScale(scale)
+                let duration: TimeInterval = 0.20
+
+                let move = SKAction.move(to: target, duration: duration)
+                move.timingFunction = Self.overshootTimingFunction()
+
+                let scaleAction = SKAction.scale(to: scale, duration: duration)
+                scaleAction.timingFunction = Self.overshootTimingFunction()
+
+                tile.run(.group([move, scaleAction]), withKey: "layout")
             } else {
                 tile.position = target
                 tile.setScale(scale)
@@ -469,6 +476,15 @@ final class GameScene: SKScene {
             definition2Label.text = "\(d.partOfSpeech): \(d.definition)"
         } else {
             definition2Label.text = word2.isEmpty ? "" : "Not a word."
+        }
+    }
+
+    private static func overshootTimingFunction() -> @Sendable (Float) -> Float {
+        // Android's OvershootInterpolator-like curve ("easeOutBack").
+        { t in
+            let s: Float = 1.70158
+            let p = t - 1
+            return p * p * ((s + 1) * p + s) + 1
         }
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		043CF4A990A8961A58EDC24D /* WordiestCore in Frameworks */ = {isa = PBXBuildFile; productRef = 01E150662B9290FBD203179D /* WordiestCore */; };
+		04484F5B456442337CD031E6 /* DragConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA732D7CAC7BF7B6D8D8E9D2 /* DragConstants.swift */; };
 		0FC82588D992E409837154FC /* Wiktionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5225FF87A1FB7866D1400D /* Wiktionary.swift */; };
 		119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3391FCFCAB86B2ECF9EDFEC6 /* GameScene.swift */; };
 		26B13FFED6FF5647CCC8DAC2 /* BestTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */; };
@@ -26,6 +27,7 @@
 		A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C40B1DFA81C8CCB804B864 /* WordiestApp.swift */; };
 		B4CD5BFD3FD90687C292C38D /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */; };
 		B9427B4C04DE39A52790B8E3 /* words.idx in Resources */ = {isa = PBXBuildFile; fileRef = 7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */; };
+		BB5DD0A529532D0D524036F5 /* DragScaleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A270FFCB42C1CA6A1B037A4A /* DragScaleTests.swift */; };
 		BC714A895A670E4E9A344927 /* Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */; };
 		D88E00D37D73131DC57F3FAC /* TileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B897F46C3F7C85641AFC8A /* TileNode.swift */; };
 		D9817B1C83BDC63ABA6E257A /* IstokWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */; };
@@ -65,11 +67,13 @@
 		9246E78F954F0BB289702998 /* drop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = drop.mp3; sourceTree = "<group>"; };
 		9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestTests.swift; sourceTree = "<group>"; };
 		9D376FB5C9F385443F903F23 /* SubmissionWarningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionWarningTests.swift; sourceTree = "<group>"; };
+		A270FFCB42C1CA6A1B037A4A /* DragScaleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragScaleTests.swift; sourceTree = "<group>"; };
 		A3D799B470740295E4500221 /* matchdata.packed */ = {isa = PBXFileReference; path = matchdata.packed; sourceTree = "<group>"; };
 		C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IstokWeb-Bold.ttf"; sourceTree = "<group>"; };
 		C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleTests.swift; sourceTree = "<group>"; };
 		D70B9D5A29CEBED88B284BE9 /* words.def */ = {isa = PBXFileReference; path = words.def; sourceTree = "<group>"; };
 		DC980312C975A57FB84E133C /* Wordiest.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Wordiest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA732D7CAC7BF7B6D8D8E9D2 /* DragConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */,
+				A270FFCB42C1CA6A1B037A4A /* DragScaleTests.swift */,
 				7175E378BA73685D202FCBDE /* ResetTests.swift */,
 				16782840D30A5C245D4304CE /* ScoreLabelTests.swift */,
 				C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */,
@@ -119,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				769ACE542B56513F86A2199D /* BestTracker.swift */,
+				EA732D7CAC7BF7B6D8D8E9D2 /* DragConstants.swift */,
 				0BE4BBF6191A5D708C142466 /* Reset.swift */,
 				68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */,
 				2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */,
@@ -269,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26B13FFED6FF5647CCC8DAC2 /* BestTrackerTests.swift in Sources */,
+				BB5DD0A529532D0D524036F5 /* DragScaleTests.swift in Sources */,
 				8530717F2623C928E01C8B4D /* ResetTests.swift in Sources */,
 				57E7DDB95029CE3A8AE5E216 /* ScoreLabelTests.swift in Sources */,
 				FB5D32B38E6F1544E859C1C1 /* ShuffleTests.swift in Sources */,
@@ -283,6 +290,7 @@
 			files = (
 				8B6F12D72169877249B30C47 /* BestTracker.swift in Sources */,
 				278D4E22A44E81FD2E38C653 /* ContentView.swift in Sources */,
+				04484F5B456442337CD031E6 /* DragConstants.swift in Sources */,
 				119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */,
 				6B3CB6DB2CBB08A3A90EE0B8 /* Reset.swift in Sources */,
 				BC714A895A670E4E9A344927 /* Shuffle.swift in Sources */,
