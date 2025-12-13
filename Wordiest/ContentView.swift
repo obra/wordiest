@@ -6,14 +6,24 @@ struct ContentView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            SpriteView(scene: scene)
-                .ignoresSafeArea()
-                .onAppear {
-                    scene.configure(size: proxy.size)
+            ZStack(alignment: .bottom) {
+                SpriteView(scene: scene)
+                    .ignoresSafeArea()
+                    .onAppear {
+                        scene.configure(size: proxy.size)
+                    }
+                    .onChange(of: proxy.size) { _, newSize in
+                        scene.configure(size: newSize)
+                    }
+
+                HStack(spacing: 12) {
+                    Button("Shuffle") { scene.shuffle() }
+                    Button("Reset") { scene.resetWords() }
+                    Button("Submit") { scene.submit() }
                 }
-                .onChange(of: proxy.size) { _, newSize in
-                    scene.configure(size: newSize)
-                }
+                .buttonStyle(.borderedProminent)
+                .padding(.bottom, 24)
+            }
         }
     }
 }

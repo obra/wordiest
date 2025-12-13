@@ -2,3 +2,6 @@
 /Wordiest_1.188_APKPure.apk
 /.worktrees/
 /.derivedData/
+/.home/
+/WordiestCore/.build/
+/WordiestCore/.swiftpm/

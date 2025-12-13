@@ -10,10 +10,16 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
 
+packages:
+  WordiestCore:
+    path: WordiestCore
+
 targets:
   Wordiest:
     type: application
     platform: iOS
+    dependencies:
+      - package: WordiestCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.concreterose.wordiest.ios
@@ -34,5 +40,6 @@ targets:
     platform: iOS
     dependencies:
       - target: Wordiest
+      - package: WordiestCore
     sources:
       - path: WordiestTests
