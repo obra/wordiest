@@ -6,6 +6,7 @@ struct MenuView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var isConfirmingReset = false
+    @State private var isPresentingShare = false
 
     var body: some View {
         let palette = model.settings.palette
@@ -15,6 +16,10 @@ struct MenuView: View {
                     Button("Change colors") {
                         model.settings.colorPaletteIndex = (model.settings.colorPaletteIndex % 6) + 1
                         model.applySettingsToScene()
+                    }
+
+                    Button("Share screenshot") {
+                        isPresentingShare = true
                     }
 
                     Toggle(
@@ -72,6 +77,9 @@ struct MenuView: View {
             } message: {
                 Text("Reset rating and clear history?")
             }
+        }
+        .sheet(isPresented: $isPresentingShare) {
+            ShareScreenshotView(model: model)
         }
     }
 }
