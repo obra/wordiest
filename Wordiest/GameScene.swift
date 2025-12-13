@@ -110,6 +110,10 @@ final class GameScene: SKScene {
         return count
     }
 
+    var hasInProgressMove: Bool {
+        !(tilesByRow[.word1] ?? []).isEmpty || !(tilesByRow[.word2] ?? []).isEmpty
+    }
+
     // MARK: - Touch handling
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
