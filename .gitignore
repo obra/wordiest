@@ -5,3 +5,5 @@
 /.home/
 /WordiestCore/.build/
 /WordiestCore/.swiftpm/
+/Wordiest.xcodeproj/xcuserdata/
+/Wordiest.xcodeproj/project.xcworkspace/xcuserdata/
