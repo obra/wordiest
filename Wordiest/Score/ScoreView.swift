@@ -20,6 +20,12 @@ struct ScoreView: View {
             .padding(.horizontal, 18)
             .padding(.top, 12)
 
+            if let tiles = playerTiles(), !tiles.isEmpty {
+                ScoreTileRowView(palette: palette, tiles: tiles)
+                    .padding(.horizontal, 18)
+                    .padding(.top, 6)
+            }
+
             Text(ScoreSummary.scoreText(score: context.playerScore, percentile: context.percentile))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(palette.foreground)
@@ -48,6 +54,19 @@ struct ScoreView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
+    }
+
+    private func playerTiles() -> [ScoreTile]? {
+        guard let decoded = try? SubsetEncoding.decode(context.playerEncoding, tileCount: context.match.tiles.count) else { return nil }
+        let word1 = decoded.word1.map { context.match.tiles[$0] }
+        let word2 = decoded.word2.map { context.match.tiles[$0] }
+
+        var tiles: [ScoreTile] = []
+        tiles.reserveCapacity(word1.count + word2.count + 1)
+        for t in word1 { tiles.append(.tile(t)) }
+        if !word1.isEmpty, !word2.isEmpty { tiles.append(.plus) }
+        for t in word2 { tiles.append(.tile(t)) }
+        return tiles
     }
 
     @ViewBuilder
