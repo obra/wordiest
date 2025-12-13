@@ -13,5 +13,18 @@ final class ScoreSummaryTests: XCTestCase {
         XCTAssertEqual(ScoreSummary.ratingText(old: 50.0, new: 50.0, matchCount: 5), "No rating change, still 50.0.")
         XCTAssertEqual(ScoreSummary.ratingText(old: 0.0, new: 50.0, matchCount: 0), "Your new rating is 50.0!")
     }
-}
 
+    func testQuadrantTextPluralizationMatchesAndroidCopy() {
+        XCTAssertEqual(ScoreSummary.expectedLossesText(count: 1), "1 higher rated player beat you.")
+        XCTAssertEqual(ScoreSummary.expectedLossesText(count: 2), "2 higher rated players beat you.")
+
+        XCTAssertEqual(ScoreSummary.upsetLossesText(count: 1), "1 lower rated player beat you.")
+        XCTAssertEqual(ScoreSummary.upsetLossesText(count: 2), "2 lower rated players beat you.")
+
+        XCTAssertEqual(ScoreSummary.expectedWinsText(count: 1), "You beat 1 lower rated player.")
+        XCTAssertEqual(ScoreSummary.expectedWinsText(count: 2), "You beat 2 lower rated players.")
+
+        XCTAssertEqual(ScoreSummary.upsetWinsText(count: 1), "You beat 1 higher rated player.")
+        XCTAssertEqual(ScoreSummary.upsetWinsText(count: 2), "You beat 2 higher rated players.")
+    }
+}

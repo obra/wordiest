@@ -130,6 +130,15 @@ struct HistoryView: View {
         guard let samples = HistoryJSON.decodeScoreSamples(entry.scoreListJSON) else { return }
 
         let match = Match(tiles: tiles, scoreSamples: samples)
+        var update = UpdateRating(rating: Double(entry.ratingX10) / 10.0, ratingDeviation: 0.0)
+        let opponents: [UpdateRating.ScoreRating] = match.scoreSamples.map { sample in
+            UpdateRating.ScoreRating(
+                score: sample.score,
+                rating: Double(sample.ratingX10) / 10.0,
+                wordsEncoding: sample.wordsEncoding
+            )
+        }
+        update.update(playerScore: entry.score, opponents: opponents)
         model.presentScore(
             AppModel.ScoreContext(
                 matchIndex: Int(entry.matchId) ?? 0,
@@ -137,6 +146,10 @@ struct HistoryView: View {
                 playerEncoding: entry.wordsEncoding,
                 playerScore: entry.score,
                 percentile: Int(Double(entry.percentileX10) / 10.0),
+                upsetWins: update.upsetWins,
+                expectedLosses: update.expectedLosses,
+                expectedWins: update.expectedWins,
+                upsetLosses: update.upsetLosses,
                 matchCountBefore: max(0, model.settings.numMatches - 1),
                 oldRating: Double(entry.ratingX10) / 10.0,
                 newRating: Double(entry.newRatingX10) / 10.0,

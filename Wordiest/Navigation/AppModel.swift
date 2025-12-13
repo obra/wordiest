@@ -23,6 +23,10 @@ final class AppModel: ObservableObject {
         var playerEncoding: UInt64
         var playerScore: Int
         var percentile: Int
+        var upsetWins: Int
+        var expectedLosses: Int
+        var expectedWins: Int
+        var upsetLosses: Int
         var matchCountBefore: Int
         var oldRating: Double
         var newRating: Double
@@ -137,6 +141,10 @@ final class AppModel: ObservableObject {
                 playerEncoding: encoding,
                 playerScore: playerScore,
                 percentile: Int(update.percentile),
+                upsetWins: update.upsetWins,
+                expectedLosses: update.expectedLosses,
+                expectedWins: update.expectedWins,
+                upsetLosses: update.upsetLosses,
                 matchCountBefore: matchCountBefore,
                 oldRating: oldRating,
                 newRating: update.newRating,

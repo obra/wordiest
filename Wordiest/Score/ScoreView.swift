@@ -36,6 +36,29 @@ struct ScoreView: View {
                 .foregroundStyle(palette.foreground)
                 .padding(.horizontal, 18)
 
+            VStack(spacing: 6) {
+                HStack {
+                    Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
+                        .foregroundStyle(palette.foreground)
+                        .font(.footnote)
+                    Spacer()
+                    Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
+                        .foregroundStyle(palette.foreground)
+                        .font(.footnote)
+                }
+
+                HStack {
+                    Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
+                        .foregroundStyle(palette.foreground)
+                        .font(.footnote)
+                    Spacer()
+                    Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
+                        .foregroundStyle(palette.foreground)
+                        .font(.footnote)
+                }
+            }
+            .padding(.horizontal, 18)
+
             scoreGraph()
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 18)
