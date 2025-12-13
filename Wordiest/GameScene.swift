@@ -34,6 +34,8 @@ final class GameScene: SKScene {
     private var lastWord1Definition: Definitions.Definition?
     private var lastWord2Definition: Definitions.Definition?
 
+    var isReview: Bool = false
+
     func configure(size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
         if self.size != size {
@@ -90,8 +92,22 @@ final class GameScene: SKScene {
     }
 
     func submit() {
+        if isReview { return }
         loadNextMatch()
         run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+    }
+
+    func currentWords() -> (word1: String, word2: String) {
+        let word1 = (tilesByRow[.word1] ?? []).map { $0.tile.letter }.joined()
+        let word2 = (tilesByRow[.word2] ?? []).map { $0.tile.letter }.joined()
+        return (word1, word2)
+    }
+
+    func currentValidWordCount() -> Int {
+        var count = 0
+        if lastWord1Definition != nil { count += 1 }
+        if lastWord2Definition != nil { count += 1 }
+        return count
     }
 
     // MARK: - Touch handling

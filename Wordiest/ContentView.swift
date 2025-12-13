@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var scene = GameScene(size: .zero)
     @State private var didLongPressReset = false
     @State private var wiktionaryWord: String?
+    @State private var submitWarningMessage: String?
 
     var body: some View {
         GeometryReader { proxy in
@@ -40,7 +41,19 @@ struct ContentView: View {
                                 scene.resetWords(clearOnlyInvalid: false)
                             }
                         )
-                    Button("Submit") { scene.submit() }
+                    Button(scene.isReview ? "OK" : "Submit") {
+                        if scene.isReview {
+                            scene.submit()
+                            return
+                        }
+
+                        let message = SubmissionWarning.message(validWordCount: scene.currentValidWordCount())
+                        if let message {
+                            submitWarningMessage = message
+                        } else {
+                            scene.submit()
+                        }
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 24)
@@ -58,6 +71,22 @@ struct ContentView: View {
             Button("Search") { Wiktionary.open(lookupWord: word) }
         } message: { word in
             Text("Search '\(word)' in Wiktionary?")
+        }
+        .alert(
+            "Confirm",
+            isPresented: Binding(
+                get: { submitWarningMessage != nil },
+                set: { if !$0 { submitWarningMessage = nil } }
+            ),
+            presenting: submitWarningMessage
+        ) { _ in
+            Button("Cancel", role: .cancel) {}
+            Button("Submit") {
+                submitWarningMessage = nil
+                scene.submit()
+            }
+        } message: { message in
+            Text(message)
         }
     }
 }

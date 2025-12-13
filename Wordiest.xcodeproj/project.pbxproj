@@ -21,6 +21,7 @@
 		6B3CB6DB2CBB08A3A90EE0B8 /* Reset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE4BBF6191A5D708C142466 /* Reset.swift */; };
 		7F0D7B41C169E06606FF003B /* matchdata.packed in Resources */ = {isa = PBXBuildFile; fileRef = A3D799B470740295E4500221 /* matchdata.packed */; };
 		8530717F2623C928E01C8B4D /* ResetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7175E378BA73685D202FCBDE /* ResetTests.swift */; };
+		8A017B362B40B8FC732373CA /* SubmissionWarning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6546855497272138149E8499 /* SubmissionWarning.swift */; };
 		8B6F12D72169877249B30C47 /* BestTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769ACE542B56513F86A2199D /* BestTracker.swift */; };
 		A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C40B1DFA81C8CCB804B864 /* WordiestApp.swift */; };
 		B4CD5BFD3FD90687C292C38D /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */; };
@@ -28,6 +29,7 @@
 		BC714A895A670E4E9A344927 /* Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */; };
 		D88E00D37D73131DC57F3FAC /* TileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B897F46C3F7C85641AFC8A /* TileNode.swift */; };
 		D9817B1C83BDC63ABA6E257A /* IstokWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */; };
+		DFC4E1A9F4A7C29D2C07869B /* SubmissionWarningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D376FB5C9F385443F903F23 /* SubmissionWarningTests.swift */; };
 		FB5D32B38E6F1544E859C1C1 /* ShuffleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +54,7 @@
 		5D02CD1E40D850281D3C60BF /* pickup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pickup.mp3; sourceTree = "<group>"; };
 		5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestTrackerTests.swift; sourceTree = "<group>"; };
 		644D9E8D0F4BE0F878EFFF75 /* WordiestTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WordiestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6546855497272138149E8499 /* SubmissionWarning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionWarning.swift; sourceTree = "<group>"; };
 		68B4F4B96FF1CE6302534A72 /* WordiestCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WordiestCore; path = WordiestCore; sourceTree = SOURCE_ROOT; };
 		68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shuffle.swift; sourceTree = "<group>"; };
 		7175E378BA73685D202FCBDE /* ResetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetTests.swift; sourceTree = "<group>"; };
@@ -61,6 +64,7 @@
 		8C69A70A47AD183693307C5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9246E78F954F0BB289702998 /* drop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = drop.mp3; sourceTree = "<group>"; };
 		9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestTests.swift; sourceTree = "<group>"; };
+		9D376FB5C9F385443F903F23 /* SubmissionWarningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionWarningTests.swift; sourceTree = "<group>"; };
 		A3D799B470740295E4500221 /* matchdata.packed */ = {isa = PBXFileReference; path = matchdata.packed; sourceTree = "<group>"; };
 		C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IstokWeb-Bold.ttf"; sourceTree = "<group>"; };
 		C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleTests.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 				7175E378BA73685D202FCBDE /* ResetTests.swift */,
 				16782840D30A5C245D4304CE /* ScoreLabelTests.swift */,
 				C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */,
+				9D376FB5C9F385443F903F23 /* SubmissionWarningTests.swift */,
 				9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */,
 			);
 			path = WordiestTests;
@@ -117,6 +122,7 @@
 				0BE4BBF6191A5D708C142466 /* Reset.swift */,
 				68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */,
 				2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */,
+				6546855497272138149E8499 /* SubmissionWarning.swift */,
 			);
 			path = Match;
 			sourceTree = "<group>";
@@ -266,6 +272,7 @@
 				8530717F2623C928E01C8B4D /* ResetTests.swift in Sources */,
 				57E7DDB95029CE3A8AE5E216 /* ScoreLabelTests.swift in Sources */,
 				FB5D32B38E6F1544E859C1C1 /* ShuffleTests.swift in Sources */,
+				DFC4E1A9F4A7C29D2C07869B /* SubmissionWarningTests.swift in Sources */,
 				4847F99B07C9FE1876BB7C24 /* WordiestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +287,7 @@
 				6B3CB6DB2CBB08A3A90EE0B8 /* Reset.swift in Sources */,
 				BC714A895A670E4E9A344927 /* Shuffle.swift in Sources */,
 				B4CD5BFD3FD90687C292C38D /* Strings.swift in Sources */,
+				8A017B362B40B8FC732373CA /* SubmissionWarning.swift in Sources */,
 				D88E00D37D73131DC57F3FAC /* TileNode.swift in Sources */,
 				0FC82588D992E409837154FC /* Wiktionary.swift in Sources */,
 				A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */,
