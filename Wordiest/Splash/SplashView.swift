@@ -50,6 +50,15 @@ struct SplashView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
+        .highPriorityGesture(
+            DragGesture(minimumDistance: 20)
+                .onEnded { value in
+                    guard !model.isLoadingAssets else { return }
+                    if value.predictedEndTranslation.width < 0, abs(value.predictedEndTranslation.width) > abs(value.predictedEndTranslation.height) {
+                        model.startPlay()
+                    }
+                }
+        )
     }
 
     private func summaryText() -> String {

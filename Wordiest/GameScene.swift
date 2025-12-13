@@ -32,6 +32,9 @@ final class GameScene: SKScene {
     private let definition1Label = SKLabelNode(fontNamed: "IstokWeb-Bold")
     private let definition2Label = SKLabelNode(fontNamed: "IstokWeb-Bold")
 
+    private let baseline1 = SKShapeNode()
+    private let baseline2 = SKShapeNode()
+
     var onRequestOpenWiktionary: ((String) -> Void)?
 
     private var lastWord1Definition: Definitions.Definition?
@@ -271,6 +274,14 @@ final class GameScene: SKScene {
         scoreLabel.zPosition = 20
         if scoreLabel.parent == nil { addChild(scoreLabel) }
 
+        for baseline in [baseline1, baseline2] {
+            baseline.strokeColor = .clear
+            baseline.fillColor = palette.faded
+            baseline.alpha = 0.35
+            baseline.zPosition = 0
+            if baseline.parent == nil { addChild(baseline) }
+        }
+
         for label in [definition1Label, definition2Label] {
             label.fontSize = 14
             label.fontColor = palette.foreground
@@ -297,10 +308,24 @@ final class GameScene: SKScene {
             layoutRow(tiles, atY: rowYs[row] ?? 0, baseTileSize: tileSize, animated: animated)
         }
 
+        layoutBaselines(rowYs: rowYs, tileSize: tileSize)
+
         definition1Label.position = CGPoint(x: size.width / 2, y: (rowYs[.word1] ?? 0) - tileSize.height * 0.75)
         definition2Label.position = CGPoint(x: size.width / 2, y: (rowYs[.word2] ?? 0) - tileSize.height * 0.75)
 
         updateScoreAndDefinitions()
+    }
+
+    private func layoutBaselines(rowYs: [Row: CGFloat], tileSize: CGSize) {
+        let baselineHeight = max(3, tileSize.height * 0.06)
+        let width = size.width - (scenePadding * 2)
+        let rect1 = CGRect(x: scenePadding, y: (rowYs[.word1] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: width, height: baselineHeight)
+        let rect2 = CGRect(x: scenePadding, y: (rowYs[.word2] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: width, height: baselineHeight)
+
+        baseline1.path = CGPath(rect: rect1, transform: nil)
+        baseline2.path = CGPath(rect: rect2, transform: nil)
+        baseline1.fillColor = palette.faded
+        baseline2.fillColor = palette.faded
     }
 
     private func layoutRow(_ tiles: [TileNode], atY y: CGFloat, baseTileSize: CGSize, animated: Bool) {
