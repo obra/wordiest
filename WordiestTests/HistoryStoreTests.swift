@@ -51,8 +51,8 @@ final class HistoryStoreTests: XCTestCase {
     private func makeEntry(matchId: String, timestamp: String) -> HistoryEntry {
         HistoryEntry(
             matchId: matchId,
-            matchDataJSON: "{\"tiles\":[]}",
-            scoreListJSON: "[]",
+            matchDataJSON: "{\"i\":[]}",
+            scoreListJSON: "{\"sl\":[]}",
             wordsEncoding: 0,
             score: 0,
             ratingX10: 500,
@@ -72,4 +72,3 @@ final class HistoryStoreTests: XCTestCase {
         return base.appendingPathComponent("history.json")
     }
 }
-
