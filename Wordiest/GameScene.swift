@@ -137,6 +137,15 @@ final class GameScene: SKScene {
         loadNextMatch()
     }
 
+    func loadReviewMatch(matchIndex: Int, match: Match, wordsEncoding: UInt64) {
+        isReview = true
+        currentMatchIndex = matchIndex
+        currentMatch = match
+
+        let initialState = ReviewPlacement.rackState(tileCount: match.tiles.count, encoding: wordsEncoding)
+        applyMatch(match, initialRackState: initialState)
+    }
+
     func currentWordsEncoding() -> UInt64? {
         let state = currentRackState()
         return try? SubsetEncoding.encode(word1: state.word1, word2: state.word2)
@@ -396,13 +405,13 @@ final class GameScene: SKScene {
             currentMatch = match
             nextMatchIndex = (nextMatchIndex + 1) % matchStore.count
             UserDefaults.standard.set(nextMatchIndex, forKey: "nextMatchIndex")
-            applyMatch(match)
+            applyMatch(match, initialRackState: nil)
         } catch {
             // noop for now
         }
     }
 
-    private func applyMatch(_ match: Match) {
+    private func applyMatch(_ match: Match, initialRackState: RackState?) {
         removeAllChildren()
         bestTracker.reset()
         currentScore = 0
@@ -422,10 +431,14 @@ final class GameScene: SKScene {
             addChild(node)
         }
 
-        tilesByRow[.word1] = []
-        tilesByRow[.word2] = []
-        tilesByRow[.bank1] = tileNodes
-        tilesByRow[.bank2] = []
+        if let initialRackState {
+            applyRackState(initialRackState)
+        } else {
+            tilesByRow[.word1] = []
+            tilesByRow[.word2] = []
+            tilesByRow[.bank1] = tileNodes
+            tilesByRow[.bank2] = []
+        }
         rebalanceBanks()
 
         layoutAll(animated: false)

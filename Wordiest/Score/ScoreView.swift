@@ -11,6 +11,15 @@ struct ScoreView: View {
     var body: some View {
         let palette = model.settings.palette
         VStack(spacing: 16) {
+            HStack {
+                Button("Back") { model.showMatchReviewFromScore() }
+                    .buttonStyle(.bordered)
+                Spacer()
+                MenuButton(model: model)
+            }
+            .padding(.horizontal, 18)
+            .padding(.top, 12)
+
             Text(ScoreSummary.scoreText(score: context.playerScore, percentile: context.percentile))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(palette.foreground)
@@ -30,17 +39,13 @@ struct ScoreView: View {
                     .padding(.horizontal, 18)
             }
 
-            Button("OK") {
-                if context.isReview {
-                    model.showHistory()
-                } else {
-                    model.finishScoreAndAdvance()
-                }
+            HStack(spacing: 12) {
+                Button("Play") { model.startNewMatchFromScore() }
+                Button("History") { model.showHistory() }
             }
-                .buttonStyle(.borderedProminent)
-                .padding(.bottom, 24)
+            .buttonStyle(.borderedProminent)
+            .padding(.bottom, 24)
         }
-        .padding(.top, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
     }

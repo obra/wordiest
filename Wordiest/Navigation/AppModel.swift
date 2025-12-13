@@ -37,6 +37,7 @@ final class AppModel: ObservableObject {
     let scene: GameScene
 
     private(set) var assets: GameAssets?
+    private(set) var matchReviewContext: ScoreContext?
 
     init(settings: AppSettings = AppSettings(), historyStore: HistoryStore = HistoryStore()) {
         self.settings = settings
@@ -47,6 +48,8 @@ final class AppModel: ObservableObject {
     }
 
     func startPlay() {
+        scene.isReview = false
+        matchReviewContext = nil
         route = .match
     }
 
@@ -63,7 +66,21 @@ final class AppModel: ObservableObject {
     }
 
     func returnToSplash() {
+        scene.isReview = false
+        matchReviewContext = nil
         route = .splash
+    }
+
+    func showMatchReviewFromScore() {
+        route = .match
+    }
+
+    func returnToScoreFromMatchReview() {
+        guard let context = matchReviewContext else {
+            returnToSplash()
+            return
+        }
+        route = .score(context)
     }
 
     func applySettingsToScene() {
@@ -113,7 +130,7 @@ final class AppModel: ObservableObject {
         )
         historyStore.append(entry)
 
-        route = .score(
+        presentScore(
             ScoreContext(
                 matchIndex: matchIndex,
                 match: match,
@@ -124,13 +141,25 @@ final class AppModel: ObservableObject {
                 oldRating: oldRating,
                 newRating: update.newRating,
                 isReview: false
-            )
+            ),
+            prepareMatchReview: false
         )
     }
 
-    func finishScoreAndAdvance() {
+    func startNewMatchFromScore() {
+        matchReviewContext = nil
+        scene.isReview = false
         scene.advanceToNextMatch()
         route = .match
+    }
+
+    func presentScore(_ context: ScoreContext, prepareMatchReview: Bool) {
+        matchReviewContext = context
+        scene.isReview = true
+        if prepareMatchReview {
+            scene.loadReviewMatch(matchIndex: context.matchIndex, match: context.match, wordsEncoding: context.playerEncoding)
+        }
+        route = .score(context)
     }
 
     private func loadAssets() async {

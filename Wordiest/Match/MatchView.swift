@@ -51,7 +51,7 @@ struct MatchView: View {
                         )
                     Button(model.scene.isReview ? "OK" : "Submit") {
                         if model.scene.isReview {
-                            model.returnToSplash()
+                            model.returnToScoreFromMatchReview()
                             return
                         }
 
@@ -69,6 +69,10 @@ struct MatchView: View {
                 VStack {
                     HStack {
                         Button("Back") {
+                            if model.scene.isReview, model.matchReviewContext != nil {
+                                model.returnToScoreFromMatchReview()
+                                return
+                            }
                             if model.scene.hasInProgressMove && !model.scene.isReview {
                                 isConfirmingLeave = true
                                 return
@@ -81,6 +85,18 @@ struct MatchView: View {
                     }
                     .padding(.horizontal, 18)
                     .padding(.top, 12)
+
+                    if model.scene.isReview {
+                        Text(MatchStrings.reviewBanner)
+                            .font(.footnote)
+                            .foregroundStyle(model.settings.palette.foreground)
+                            .padding(.horizontal, 18)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(model.settings.palette.faded.opacity(0.25))
+                            .padding(.horizontal, 18)
+                            .padding(.top, 6)
+                    }
                     Spacer()
                 }
             }

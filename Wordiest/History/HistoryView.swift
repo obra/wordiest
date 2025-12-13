@@ -130,7 +130,7 @@ struct HistoryView: View {
         guard let samples = HistoryJSON.decodeScoreSamples(entry.scoreListJSON) else { return }
 
         let match = Match(tiles: tiles, scoreSamples: samples)
-        model.route = .score(
+        model.presentScore(
             AppModel.ScoreContext(
                 matchIndex: Int(entry.matchId) ?? 0,
                 match: match,
@@ -141,7 +141,8 @@ struct HistoryView: View {
                 oldRating: Double(entry.ratingX10) / 10.0,
                 newRating: Double(entry.newRatingX10) / 10.0,
                 isReview: true
-            )
+            ),
+            prepareMatchReview: true
         )
     }
 
