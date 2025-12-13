@@ -490,6 +490,8 @@ final class GameScene: SKScene {
         let word2 = word2Tiles.map { $0.tile.letter }.joined()
 
         var score = 0
+        var word1Points = 0
+        var word2Points = 0
 
         let word1Definition: Definitions.Definition?
         let word2Definition: Definitions.Definition?
@@ -512,10 +514,12 @@ final class GameScene: SKScene {
         for node in tilesByRow[.bank2] ?? [] { node.setStyle(isValidWordTile: true) }
 
         if isWord1Valid {
-            score += (try? WordiestScoring.scoreWord(word1Tiles.map(\.tile))) ?? 0
+            word1Points = (try? WordiestScoring.scoreWord(word1Tiles.map(\.tile))) ?? 0
+            score += word1Points
         }
         if isWord2Valid {
-            score += (try? WordiestScoring.scoreWord(word2Tiles.map(\.tile))) ?? 0
+            word2Points = (try? WordiestScoring.scoreWord(word2Tiles.map(\.tile))) ?? 0
+            score += word2Points
         }
 
         currentScore = score
@@ -523,13 +527,13 @@ final class GameScene: SKScene {
         scoreLabel.text = MatchStrings.totalScoreWithBest(score, best: bestTracker.bestScore)
 
         if let d = word1Definition {
-            definition1Label.text = "\(d.partOfSpeech): \(d.definition)"
+            definition1Label.text = MatchStrings.definitionText(word: word1, points: word1Points, seeWord: d.seeWord, definition: d.definition)
         } else {
             definition1Label.text = word1.isEmpty ? "" : "Not a word."
         }
 
         if let d = word2Definition {
-            definition2Label.text = "\(d.partOfSpeech): \(d.definition)"
+            definition2Label.text = MatchStrings.definitionText(word: word2, points: word2Points, seeWord: d.seeWord, definition: d.definition)
         } else {
             definition2Label.text = word2.isEmpty ? "" : "Not a word."
         }
