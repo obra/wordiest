@@ -17,6 +17,8 @@ final class GameScene: SKScene {
     private var matchStore: MatchDataStore?
     private var definitions: Definitions?
     private var nextMatchIndex = 0
+    private(set) var currentMatchIndex: Int?
+    private(set) var currentMatch: Match?
 
     private var tileNodes: [TileNode] = []
     private var tilesByRow: [Row: [TileNode]] = [:]
@@ -35,6 +37,7 @@ final class GameScene: SKScene {
     private var lastWord2Definition: Definitions.Definition?
 
     var isReview: Bool = false
+    var soundEnabled: Bool = true
 
     func configure(size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
@@ -57,8 +60,19 @@ final class GameScene: SKScene {
         }
 
         configureLabels()
-        loadAssetsIfNeeded()
-        loadNextMatch()
+        if matchStore != nil, definitions != nil {
+            loadNextMatch()
+        }
+    }
+
+    func setAssets(matchStore: MatchDataStore, definitions: Definitions) {
+        let shouldReload = self.matchStore == nil || self.definitions == nil
+        self.matchStore = matchStore
+        self.definitions = definitions
+        if shouldReload {
+            nextMatchIndex = initialMatchIndex(matchCount: matchStore.count)
+            loadNextMatch()
+        }
     }
 
     func shuffle() {
@@ -66,7 +80,9 @@ final class GameScene: SKScene {
         applyRackState(Shuffle.shuffled(state: state))
         rebalanceBanks()
         layoutAll(animated: true)
-        run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+        if soundEnabled {
+            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+        }
     }
 
     func resetWords() {
@@ -88,13 +104,30 @@ final class GameScene: SKScene {
         applyRackState(reset)
         rebalanceBanks()
         layoutAll(animated: true)
-        run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+        if soundEnabled {
+            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+        }
     }
 
     func submit() {
         if isReview { return }
         loadNextMatch()
-        run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+        if soundEnabled {
+            run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+        }
+    }
+
+    func advanceToNextMatch() {
+        loadNextMatch()
+    }
+
+    func currentWordsEncoding() -> UInt64? {
+        let state = currentRackState()
+        return try? SubsetEncoding.encode(word1: state.word1, word2: state.word2)
+    }
+
+    func currentScoreValue() -> Int {
+        currentScore
     }
 
     func currentWords() -> (word1: String, word2: String) {
@@ -147,7 +180,9 @@ final class GameScene: SKScene {
         let baseScale = node.xScale
         node.setScale(baseScale * DragConstants.draggingScaleMultiplier)
         dragging = (node, offset, baseScale)
-        run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+        if soundEnabled {
+            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+        }
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -180,7 +215,9 @@ final class GameScene: SKScene {
 
         node.zPosition = 1
         layoutAll(animated: true)
-        run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+        if soundEnabled {
+            run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+        }
     }
 
     private func removeTileFromRows(_ node: TileNode) {
@@ -313,28 +350,6 @@ final class GameScene: SKScene {
 
     // MARK: - Loading
 
-    private func loadAssetsIfNeeded() {
-        guard matchStore == nil || definitions == nil else { return }
-
-        guard
-            let matchURL = Bundle.main.url(forResource: "matchdata", withExtension: "packed"),
-            let idxURL = Bundle.main.url(forResource: "words", withExtension: "idx"),
-            let defURL = Bundle.main.url(forResource: "words", withExtension: "def")
-        else {
-            return
-        }
-
-        do {
-            let store = try MatchDataStore(data: try Data(contentsOf: matchURL))
-            matchStore = store
-            definitions = Definitions(indexData: try Data(contentsOf: idxURL), definitionsData: try Data(contentsOf: defURL))
-            nextMatchIndex = initialMatchIndex(matchCount: store.count)
-        } catch {
-            matchStore = nil
-            definitions = nil
-        }
-    }
-
     private func initialMatchIndex(matchCount: Int) -> Int {
         guard matchCount > 0 else { return 0 }
 
@@ -360,7 +375,9 @@ final class GameScene: SKScene {
     private func loadNextMatch() {
         guard let matchStore else { return }
         do {
+            currentMatchIndex = nextMatchIndex
             let match = try matchStore.match(at: nextMatchIndex)
+            currentMatch = match
             nextMatchIndex = (nextMatchIndex + 1) % matchStore.count
             UserDefaults.standard.set(nextMatchIndex, forKey: "nextMatchIndex")
             applyMatch(match)
