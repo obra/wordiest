@@ -63,7 +63,7 @@ struct MenuView: View {
             .alert("Confirm", isPresented: $isConfirmingReset) {
                 Button("Cancel", role: .cancel) {}
                 Button("Reset", role: .destructive) {
-                    model.settings.reset()
+                    model.settings.resetRatingAndStats()
                     model.historyStore.clear()
                     model.applySettingsToScene()
                     dismiss()

@@ -49,8 +49,10 @@ final class AppSettings: ObservableObject {
     }
 
     func reset() {
-        colorPaletteIndex = 1
-        soundEnabled = true
+        resetRatingAndStats()
+    }
+
+    func resetRatingAndStats() {
         rating = 50.0
         ratingDeviation = 0.0
         numMatches = 0
