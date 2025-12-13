@@ -12,6 +12,8 @@ Jesse — this document defines “full parity” for the iOS Swift port of the 
 
 - Rebuilding the backend service (`wordiest-service.appspot.com`) — the Android client doesn’t appear to depend on it for core play.
 - New art/audio/UX beyond what’s needed for parity.
+- Ads / “Remove ads” IAP.
+- iCloud/online cloud save.
 
 ## Reference behavior (Android v1.188)
 
@@ -26,7 +28,7 @@ Android app structure is a single-activity “stack” that transitions between:
 Menu items (popup menu):
 
 - Help
-- Remove ads (IAP)
+- Remove ads (IAP) (out of scope for iOS)
 - Sign in / sign out (Google Play Games)
 - Enable / disable sound
 - Change colors (cycles 1..6)
@@ -39,18 +41,9 @@ Menu items (popup menu):
 
 Android integrations map naturally to iOS, but require external setup:
 
-1) **Local-only parity** (recommended for fastest reliable testing)
+1) **Local-only parity** (recommended)
    - Implement all offline gameplay + persistence + screens.
-   - Stub service integrations behind a feature flag until Apple config exists.
    - Pros: easiest to build/test; no external dependencies.
-   - Cons: “Leaders/Achievements/Cloud Save/Remove Ads” are incomplete until later.
-
-2) **Full services parity**
-   - Add Game Center, iCloud sync, StoreKit IAP, and (optionally) ads.
-   - Pros: closest to shipped Android experience.
-   - Cons: requires App Store Connect + entitlement setup; harder to test in CI/simulator.
-
-Plan below assumes (1) first, then (2) as a later milestone.
 
 ## Parity matrix (what “full parity” means)
 
@@ -158,17 +151,11 @@ Legend: ✅ done, 🟡 partial, ⬜ todo
 - ⬜ Match history store:
   - Stores match_id, match_data JSON, score_list JSON, words encoding, score, rating, new rating, percentile, timestamp, etc.
   - Bounded to 100 entries and supports deletion.
-- ⬜ Cloud merge logic (later milestone if we do iCloud):
-  - Android merges user data and history from a cloud snapshot.
-  - iOS should merge deterministically and avoid clobbering newer local items.
 
-### Social / monetization parity (optional until App Store setup exists)
+### Social parity (optional)
 
 - ⬜ Leaders: Game Center leaderboards (maps Android’s 3 leaderboards).
 - ⬜ Achievements: Game Center achievements (maps Android’s achievements).
-- ⬜ Cloud save: iCloud sync for user data + history.
-- ⬜ Remove ads: StoreKit purchase toggles ads off permanently.
-- ⬜ Ads: banner + (optional) interstitial cadence.
 
 ## Proposed milestone plan
 
@@ -217,11 +204,9 @@ Target: Whole app feels like Wordiest.
 - Credits/about, including debug lookup gesture.
 - Privacy policy menu action.
 
-### Milestone 5 — “Services parity” (requires Jesse decision + Apple setup)
+### Milestone 5 — “Social parity” (optional, requires Apple setup)
 
 - Game Center (leaders + achievements).
-- iCloud sync (user data + history).
-- StoreKit “Remove Ads” and ad presentation if desired.
 
 ## Testing strategy
 
@@ -255,5 +240,4 @@ Target: Whole app feels like Wordiest.
 
 ## Open questions
 
-- Do we implement ads at all on iOS, or treat “Remove ads” as a no-op and omit ads entirely?
-- Do we want iCloud save to mirror Android’s merge rules exactly, or is “latest wins” acceptable?
+- None right now.

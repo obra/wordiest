@@ -24,7 +24,7 @@ The **only activity** in `AndroidManifest.xml` is `com.concreterose.wordiest.Mer
 - Key IDs:
   - `ad_container`: banner ad container (Android uses AdMob).
   - `fill_into`: the “screen” container where `MergedActivity` inflates each view (splash/match/score/history/credits).
-- Port implication: iOS should have a root container and a content container; we can ignore ads initially and treat this as “safe area / top bar” spacing behavior.
+- Port implication: iOS should have a root container and a content container; we ignore ads and treat this as “safe area / top bar” spacing behavior.
 
 ### `button_bar.xml`
 
@@ -155,4 +155,3 @@ These are standard templates from AppCompat / Android framework support librarie
 - `notification_*` (notification templates)
 - `select_dialog_*`, `support_simple_spinner_dropdown_item.xml`
 - `tooltip.xml` (AppCompat tooltip template; not referenced directly by Wordiest code)
-
