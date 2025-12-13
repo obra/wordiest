@@ -11,6 +11,7 @@
 		04484F5B456442337CD031E6 /* DragConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA732D7CAC7BF7B6D8D8E9D2 /* DragConstants.swift */; };
 		0FC82588D992E409837154FC /* Wiktionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5225FF87A1FB7866D1400D /* Wiktionary.swift */; };
 		119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3391FCFCAB86B2ECF9EDFEC6 /* GameScene.swift */; };
+		14C5DAC860D98383DEE2EC1F /* ReviewPlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */; };
 		1F322310B6F0CC622EA27559 /* OpponentInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809CFFC4DED651870EA2D4CC /* OpponentInspectorView.swift */; };
 		2207CBC2419BEFA2F0734B6A /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8F9E574C7B06F3C62160A /* SplashView.swift */; };
 		26B13FFED6FF5647CCC8DAC2 /* BestTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */; };
@@ -47,6 +48,7 @@
 		98B209A2B313EF972D75FCE6 /* HistoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0DDAE2F8D893E2F73880CC /* HistoryEntry.swift */; };
 		9C4EB2C19133F99152291A59 /* ScoreSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ECC64839C5B613AA8D5BE8 /* ScoreSummaryTests.swift */; };
 		A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C40B1DFA81C8CCB804B864 /* WordiestApp.swift */; };
+		AAD1D9353116FEB7126068E1 /* ReviewPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06085A14725887F1E699C4F1 /* ReviewPlacement.swift */; };
 		B4CD5BFD3FD90687C292C38D /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */; };
 		B9427B4C04DE39A52790B8E3 /* words.idx in Resources */ = {isa = PBXBuildFile; fileRef = 7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */; };
 		BB5DD0A529532D0D524036F5 /* DragScaleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A270FFCB42C1CA6A1B037A4A /* DragScaleTests.swift */; };
@@ -77,6 +79,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		06085A14725887F1E699C4F1 /* ReviewPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPlacement.swift; sourceTree = "<group>"; };
 		0BE4BBF6191A5D708C142466 /* Reset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reset.swift; sourceTree = "<group>"; };
 		0CB8F9E574C7B06F3C62160A /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		14C40B1DFA81C8CCB804B864 /* WordiestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestApp.swift; sourceTree = "<group>"; };
@@ -88,6 +91,7 @@
 		2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		329726C0D29742A45EAC5044 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		3391FCFCAB86B2ECF9EDFEC6 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPlacementTests.swift; sourceTree = "<group>"; };
 		3BDBA30E2A8B01579566BB54 /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
 		4C3411BCE0D020CE7B795921 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		53B897F46C3F7C85641AFC8A /* TileNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileNode.swift; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 				A270FFCB42C1CA6A1B037A4A /* DragScaleTests.swift */,
 				9A928AA3DB3FFDC6DD5A0270 /* HistoryStoreTests.swift */,
 				7175E378BA73685D202FCBDE /* ResetTests.swift */,
+				3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */,
 				B5207887F149771E88F60A2C /* ScoreGraphMathTests.swift */,
 				16782840D30A5C245D4304CE /* ScoreLabelTests.swift */,
 				63ECC64839C5B613AA8D5BE8 /* ScoreSummaryTests.swift */,
@@ -211,6 +216,7 @@
 				EA732D7CAC7BF7B6D8D8E9D2 /* DragConstants.swift */,
 				6056ACCC7610E8028C9C8B7D /* MatchView.swift */,
 				0BE4BBF6191A5D708C142466 /* Reset.swift */,
+				06085A14725887F1E699C4F1 /* ReviewPlacement.swift */,
 				68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */,
 				2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */,
 				6546855497272138149E8499 /* SubmissionWarning.swift */,
@@ -444,6 +450,7 @@
 				BB5DD0A529532D0D524036F5 /* DragScaleTests.swift in Sources */,
 				BEAAA1F597E1077AB1859A95 /* HistoryStoreTests.swift in Sources */,
 				8530717F2623C928E01C8B4D /* ResetTests.swift in Sources */,
+				14C5DAC860D98383DEE2EC1F /* ReviewPlacementTests.swift in Sources */,
 				DC7300B95FE5FA1A5F60A959 /* ScoreGraphMathTests.swift in Sources */,
 				57E7DDB95029CE3A8AE5E216 /* ScoreLabelTests.swift in Sources */,
 				9C4EB2C19133F99152291A59 /* ScoreSummaryTests.swift in Sources */,
@@ -481,6 +488,7 @@
 				8F3DB8AED24D624B6DC2698D /* MenuView.swift in Sources */,
 				1F322310B6F0CC622EA27559 /* OpponentInspectorView.swift in Sources */,
 				6B3CB6DB2CBB08A3A90EE0B8 /* Reset.swift in Sources */,
+				AAD1D9353116FEB7126068E1 /* ReviewPlacement.swift in Sources */,
 				E8EF27F4B0CB36A77F56711D /* ScoreGraphMath.swift in Sources */,
 				6432D897EECCED0ABCF23BC3 /* ScoreGraphView.swift in Sources */,
 				80B0E4144BC9ED6E00B35CED /* ScoreSummary.swift in Sources */,
