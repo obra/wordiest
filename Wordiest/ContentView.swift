@@ -1,9 +1,11 @@
 import SpriteKit
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @State private var scene = GameScene(size: .zero)
     @State private var didLongPressReset = false
+    @State private var wiktionaryWord: String?
 
     var body: some View {
         GeometryReader { proxy in
@@ -11,6 +13,9 @@ struct ContentView: View {
                 SpriteView(scene: scene)
                     .ignoresSafeArea()
                     .onAppear {
+                        scene.onRequestOpenWiktionary = { word in
+                            wiktionaryWord = word
+                        }
                         scene.configure(size: proxy.size)
                     }
                     .onChange(of: proxy.size) { _, newSize in
@@ -40,6 +45,19 @@ struct ContentView: View {
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 24)
             }
+        }
+        .alert(
+            "Wiktionary",
+            isPresented: Binding(
+                get: { wiktionaryWord != nil },
+                set: { if !$0 { wiktionaryWord = nil } }
+            ),
+            presenting: wiktionaryWord
+        ) { word in
+            Button("Cancel", role: .cancel) {}
+            Button("Search") { Wiktionary.open(lookupWord: word) }
+        } message: { word in
+            Text("Search '\(word)' in Wiktionary?")
         }
     }
 }

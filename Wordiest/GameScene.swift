@@ -29,6 +29,11 @@ final class GameScene: SKScene {
     private let definition1Label = SKLabelNode(fontNamed: "IstokWeb-Bold")
     private let definition2Label = SKLabelNode(fontNamed: "IstokWeb-Bold")
 
+    var onRequestOpenWiktionary: ((String) -> Void)?
+
+    private var lastWord1Definition: Definitions.Definition?
+    private var lastWord2Definition: Definitions.Definition?
+
     func configure(size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
         if self.size != size {
@@ -101,6 +106,15 @@ final class GameScene: SKScene {
                 rebalanceBanks()
                 layoutAll(animated: true)
             }
+            return
+        }
+
+        if nodes(at: point).contains(definition1Label), let def = lastWord1Definition {
+            onRequestOpenWiktionary?(def.lookupWord)
+            return
+        }
+        if nodes(at: point).contains(definition2Label), let def = lastWord2Definition {
+            onRequestOpenWiktionary?(def.lookupWord)
             return
         }
 
@@ -332,6 +346,8 @@ final class GameScene: SKScene {
         removeAllChildren()
         bestTracker.reset()
         currentScore = 0
+        lastWord1Definition = nil
+        lastWord2Definition = nil
 
         tileNodes = match.tiles.map { tile in
             let node = TileNode(tile: tile, size: baseTileSize(), fontName: "IstokWeb-Bold")
@@ -413,6 +429,8 @@ final class GameScene: SKScene {
 
         let isWord1Valid = word1Definition != nil
         let isWord2Valid = word2Definition != nil
+        lastWord1Definition = word1Definition
+        lastWord2Definition = word2Definition
 
         if isWord1Valid {
             score += (try? WordiestScoring.scoreWord(word1Tiles.map(\.tile))) ?? 0
