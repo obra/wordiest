@@ -8,6 +8,7 @@ final class AppModel: ObservableObject {
         case match
         case score(ScoreContext)
         case history
+        case leaders
         case credits
         case help
     }
@@ -59,6 +60,10 @@ final class AppModel: ObservableObject {
 
     func showHistory() {
         route = .history
+    }
+
+    func showLeaders() {
+        route = .leaders
     }
 
     func showCredits() {

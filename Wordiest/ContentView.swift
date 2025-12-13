@@ -13,6 +13,8 @@ struct ContentView: View {
             ScoreView(model: model, context: context)
         case .history:
             HistoryView(model: model)
+        case .leaders:
+            LeadersView(model: model)
         case .credits:
             CreditsView(model: model)
         case .help:

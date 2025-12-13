@@ -12,6 +12,7 @@
 		0FC82588D992E409837154FC /* Wiktionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5225FF87A1FB7866D1400D /* Wiktionary.swift */; };
 		119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3391FCFCAB86B2ECF9EDFEC6 /* GameScene.swift */; };
 		14C5DAC860D98383DEE2EC1F /* ReviewPlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */; };
+		1ECB608E0A57B24B56373C7D /* LeadersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3591D07FD23D8FC70BCCFE6 /* LeadersView.swift */; };
 		1F322310B6F0CC622EA27559 /* OpponentInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809CFFC4DED651870EA2D4CC /* OpponentInspectorView.swift */; };
 		2207CBC2419BEFA2F0734B6A /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8F9E574C7B06F3C62160A /* SplashView.swift */; };
 		26B13FFED6FF5647CCC8DAC2 /* BestTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */; };
@@ -131,6 +132,7 @@
 		A3D799B470740295E4500221 /* matchdata.packed */ = {isa = PBXFileReference; path = matchdata.packed; sourceTree = "<group>"; };
 		A664D6989DB175F712994177 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		ACD18196E19A38E5C924013A /* HistoryJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryJSON.swift; sourceTree = "<group>"; };
+		B3591D07FD23D8FC70BCCFE6 /* LeadersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadersView.swift; sourceTree = "<group>"; };
 		B5207887F149771E88F60A2C /* ScoreGraphMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreGraphMathTests.swift; sourceTree = "<group>"; };
 		C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IstokWeb-Bold.ttf"; sourceTree = "<group>"; };
 		C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleTests.swift; sourceTree = "<group>"; };
@@ -240,6 +242,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		7E65ED450FA462619761F587 /* Leaders */ = {
+			isa = PBXGroup;
+			children = (
+				B3591D07FD23D8FC70BCCFE6 /* LeadersView.swift */,
+			);
+			path = Leaders;
+			sourceTree = "<group>";
+		};
 		8756AA17A0240060BB1C4BB1 /* Splash */ = {
 			isa = PBXGroup;
 			children = (
@@ -347,6 +357,7 @@
 				070DA6FC3F02E0B735160BB4 /* Credits */,
 				CB753C7D167178FC1FFB003C /* Help */,
 				B22071725CE4433158135F1C /* History */,
+				7E65ED450FA462619761F587 /* Leaders */,
 				49865D288CD585F056635DF4 /* Match */,
 				36E6AD5F66962A19455A76D5 /* Navigation */,
 				A35BCAD5A012CEEE471D053F /* Resources */,
@@ -493,6 +504,7 @@
 				942CD3C7218F833B7F4621A4 /* HistoryRowView.swift in Sources */,
 				DAAB0B626E79BEA1559ACB41 /* HistoryStore.swift in Sources */,
 				66C0FAE191A38A8668E508B4 /* HistoryView.swift in Sources */,
+				1ECB608E0A57B24B56373C7D /* LeadersView.swift in Sources */,
 				75138C854F137E34BE774674 /* MatchView.swift in Sources */,
 				F8F26157D366CC95A3714085 /* MenuButton.swift in Sources */,
 				8F3DB8AED24D624B6DC2698D /* MenuView.swift in Sources */,

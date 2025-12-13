@@ -34,6 +34,8 @@ struct SplashView: View {
                     .disabled(model.isLoadingAssets)
                 Button("History") { model.showHistory() }
                     .disabled(model.isLoadingAssets)
+                Button("Leaders") { model.showLeaders() }
+                    .disabled(model.isLoadingAssets)
                 Button("Help") { model.showHelp() }
                 Button("Credits") { model.showCredits() }
             }

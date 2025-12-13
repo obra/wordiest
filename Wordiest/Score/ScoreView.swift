@@ -71,6 +71,7 @@ struct ScoreView: View {
             HStack(spacing: 12) {
                 Button("Play") { model.startNewMatchFromScore() }
                 Button("History") { model.showHistory() }
+                Button("Leaders") { model.showLeaders() }
             }
             .buttonStyle(.borderedProminent)
             .padding(.bottom, 24)
