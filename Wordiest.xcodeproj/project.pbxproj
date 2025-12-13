@@ -20,8 +20,10 @@
 		8B6F12D72169877249B30C47 /* BestTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769ACE542B56513F86A2199D /* BestTracker.swift */; };
 		A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C40B1DFA81C8CCB804B864 /* WordiestApp.swift */; };
 		B9427B4C04DE39A52790B8E3 /* words.idx in Resources */ = {isa = PBXBuildFile; fileRef = 7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */; };
+		BC714A895A670E4E9A344927 /* Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */; };
 		D88E00D37D73131DC57F3FAC /* TileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B897F46C3F7C85641AFC8A /* TileNode.swift */; };
 		D9817B1C83BDC63ABA6E257A /* IstokWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */; };
+		FB5D32B38E6F1544E859C1C1 /* ShuffleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,7 @@
 		5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestTrackerTests.swift; sourceTree = "<group>"; };
 		644D9E8D0F4BE0F878EFFF75 /* WordiestTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WordiestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		68B4F4B96FF1CE6302534A72 /* WordiestCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WordiestCore; path = WordiestCore; sourceTree = SOURCE_ROOT; };
+		68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shuffle.swift; sourceTree = "<group>"; };
 		769ACE542B56513F86A2199D /* BestTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestTracker.swift; sourceTree = "<group>"; };
 		7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */ = {isa = PBXFileReference; path = words.idx; sourceTree = "<group>"; };
 		8C69A70A47AD183693307C5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -50,6 +53,7 @@
 		9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestTests.swift; sourceTree = "<group>"; };
 		A3D799B470740295E4500221 /* matchdata.packed */ = {isa = PBXFileReference; path = matchdata.packed; sourceTree = "<group>"; };
 		C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IstokWeb-Bold.ttf"; sourceTree = "<group>"; };
+		C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleTests.swift; sourceTree = "<group>"; };
 		D70B9D5A29CEBED88B284BE9 /* words.def */ = {isa = PBXFileReference; path = words.def; sourceTree = "<group>"; };
 		DC980312C975A57FB84E133C /* Wordiest.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Wordiest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -78,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */,
+				C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */,
 				9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */,
 			);
 			path = WordiestTests;
@@ -97,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				769ACE542B56513F86A2199D /* BestTracker.swift */,
+				68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */,
 			);
 			path = Match;
 			sourceTree = "<group>";
@@ -242,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26B13FFED6FF5647CCC8DAC2 /* BestTrackerTests.swift in Sources */,
+				FB5D32B38E6F1544E859C1C1 /* ShuffleTests.swift in Sources */,
 				4847F99B07C9FE1876BB7C24 /* WordiestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,6 +260,7 @@
 				8B6F12D72169877249B30C47 /* BestTracker.swift in Sources */,
 				278D4E22A44E81FD2E38C653 /* ContentView.swift in Sources */,
 				119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */,
+				BC714A895A670E4E9A344927 /* Shuffle.swift in Sources */,
 				D88E00D37D73131DC57F3FAC /* TileNode.swift in Sources */,
 				A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */,
 			);

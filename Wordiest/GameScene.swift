@@ -53,14 +53,9 @@ final class GameScene: SKScene {
     }
 
     func shuffle() {
-        let all = Row.allCases.flatMap { tilesByRow[$0] ?? [] }
-        for row in Row.allCases {
-            tilesByRow[row]?.removeAll(keepingCapacity: true)
-        }
-        let shuffled = all.shuffled()
-        let split = min(bankCapacity, shuffled.count)
-        tilesByRow[.bank1] = Array(shuffled.prefix(split))
-        tilesByRow[.bank2] = Array(shuffled.dropFirst(split))
+        let state = currentRackState()
+        applyRackState(Shuffle.shuffled(state: state))
+        rebalanceBanks()
         layoutAll(animated: true)
         run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
     }
@@ -344,6 +339,33 @@ final class GameScene: SKScene {
         rebalanceBanks()
 
         layoutAll(animated: false)
+    }
+
+    private func currentRackState() -> RackState {
+        let indexByNode = Dictionary(uniqueKeysWithValues: tileNodes.enumerated().map { (ObjectIdentifier($0.element), $0.offset) })
+
+        func indices(in row: Row) -> [Int] {
+            (tilesByRow[row] ?? []).map { node in
+                guard let index = indexByNode[ObjectIdentifier(node)] else {
+                    preconditionFailure("Tile node not found in tileNodes")
+                }
+                return index
+            }
+        }
+
+        return RackState(
+            word1: indices(in: .word1),
+            word2: indices(in: .word2),
+            bank1: indices(in: .bank1),
+            bank2: indices(in: .bank2)
+        )
+    }
+
+    private func applyRackState(_ state: RackState) {
+        tilesByRow[.word1] = state.word1.map { tileNodes[$0] }
+        tilesByRow[.word2] = state.word2.map { tileNodes[$0] }
+        tilesByRow[.bank1] = state.bank1.map { tileNodes[$0] }
+        tilesByRow[.bank2] = state.bank2.map { tileNodes[$0] }
     }
 
     private func updateScoreAndDefinitions() {
