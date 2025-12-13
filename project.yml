@@ -41,5 +41,8 @@ targets:
     dependencies:
       - target: Wordiest
       - package: WordiestCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     sources:
       - path: WordiestTests
