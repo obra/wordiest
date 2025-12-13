@@ -16,7 +16,7 @@ struct ScoreView: View {
                 .foregroundStyle(palette.foreground)
                 .padding(.horizontal, 18)
 
-            Text(ScoreSummary.ratingText(old: context.oldRating, new: context.newRating, matchCount: model.settings.numMatches))
+            Text(ScoreSummary.ratingText(old: context.oldRating, new: context.newRating, matchCount: context.matchCountBefore))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(palette.foreground)
                 .padding(.horizontal, 18)
@@ -30,7 +30,13 @@ struct ScoreView: View {
                     .padding(.horizontal, 18)
             }
 
-            Button("OK") { model.finishScoreAndAdvance() }
+            Button("OK") {
+                if context.isReview {
+                    model.showHistory()
+                } else {
+                    model.finishScoreAndAdvance()
+                }
+            }
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 24)
         }
@@ -65,4 +71,3 @@ struct ScoreView: View {
         .aspectRatio(1, contentMode: .fit)
     }
 }
-

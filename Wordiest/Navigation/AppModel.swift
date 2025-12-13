@@ -23,8 +23,10 @@ final class AppModel: ObservableObject {
         var playerEncoding: UInt64
         var playerScore: Int
         var percentile: Int
+        var matchCountBefore: Int
         var oldRating: Double
         var newRating: Double
+        var isReview: Bool
     }
 
     @Published var route: Route = .splash
@@ -81,6 +83,7 @@ final class AppModel: ObservableObject {
 
         let playerScore = scene.currentScoreValue()
 
+        let matchCountBefore = settings.numMatches
         let oldRating = settings.rating
         var update = UpdateRating(rating: settings.rating, ratingDeviation: settings.ratingDeviation)
         let opponents: [UpdateRating.ScoreRating] = match.scoreSamples.map { sample in
@@ -116,8 +119,10 @@ final class AppModel: ObservableObject {
                 playerEncoding: encoding,
                 playerScore: playerScore,
                 percentile: Int(update.percentile),
+                matchCountBefore: matchCountBefore,
                 oldRating: oldRating,
-                newRating: update.newRating
+                newRating: update.newRating,
+                isReview: false
             )
         )
     }
@@ -149,4 +154,3 @@ final class AppModel: ObservableObject {
         }
     }
 }
-
