@@ -114,6 +114,7 @@ struct ScoreView: View {
                         }
                         .onEnded { _ in
                             isScrubbing = false
+                            highlightIndex = nil
                         }
                 )
         }

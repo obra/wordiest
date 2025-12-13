@@ -18,10 +18,12 @@ struct ScoreGraphView: View {
                 let midX = rect.midX
                 let midY = rect.midY
 
-                context.fill(Path(CGRect(x: rect.minX, y: rect.minY, width: midX - rect.minX, height: midY - rect.minY)), with: .color(Color(white: 0.12)))
-                context.fill(Path(CGRect(x: midX, y: rect.minY, width: rect.maxX - midX, height: midY - rect.minY)), with: .color(Color(white: 0.08)))
-                context.fill(Path(CGRect(x: rect.minX, y: midY, width: midX - rect.minX, height: rect.maxY - midY)), with: .color(Color(white: 0.08)))
-                context.fill(Path(CGRect(x: midX, y: midY, width: rect.maxX - midX, height: rect.maxY - midY)), with: .color(Color(white: 0.12)))
+                let shadeA = palette.faded.opacity(0.18)
+                let shadeB = palette.faded.opacity(0.10)
+                context.fill(Path(CGRect(x: rect.minX, y: rect.minY, width: midX - rect.minX, height: midY - rect.minY)), with: .color(shadeA))
+                context.fill(Path(CGRect(x: midX, y: rect.minY, width: rect.maxX - midX, height: midY - rect.minY)), with: .color(shadeB))
+                context.fill(Path(CGRect(x: rect.minX, y: midY, width: midX - rect.minX, height: rect.maxY - midY)), with: .color(shadeB))
+                context.fill(Path(CGRect(x: midX, y: midY, width: rect.maxX - midX, height: rect.maxY - midY)), with: .color(shadeA))
 
                 var axis = Path()
                 axis.move(to: CGPoint(x: rect.minX, y: midY))
@@ -35,6 +37,18 @@ struct ScoreGraphView: View {
                     let dotRect = CGRect(x: p.x - 3, y: p.y - 3, width: 6, height: 6)
                     context.fill(Path(ellipseIn: dotRect), with: .color(isHighlight ? .red : palette.foreground))
                 }
+
+                let centerDotRect = CGRect(x: rect.midX - 4, y: rect.midY - 4, width: 8, height: 8)
+                context.fill(Path(ellipseIn: centerDotRect), with: .color(palette.foreground))
+                context.stroke(Path(ellipseIn: centerDotRect), with: .color(palette.background), lineWidth: 1)
+
+                context.draw(
+                    Text("You")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(palette.foreground),
+                    at: CGPoint(x: rect.midX, y: rect.midY - 14),
+                    anchor: .center
+                )
             }
         }
         .aspectRatio(1, contentMode: .fit)
