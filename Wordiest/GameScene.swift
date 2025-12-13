@@ -22,6 +22,8 @@ final class GameScene: SKScene {
     private var tilesByRow: [Row: [TileNode]] = [:]
 
     private var dragging: (node: TileNode, offset: CGPoint)?
+    private let bestTracker = BestTracker()
+    private var currentScore: Int = 0
 
     private let scoreLabel = SKLabelNode(fontNamed: "IstokWeb-Bold")
     private let definition1Label = SKLabelNode(fontNamed: "IstokWeb-Bold")
@@ -92,6 +94,16 @@ final class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard dragging == nil, let touch = touches.first else { return }
         let point = touch.location(in: self)
+
+        if nodes(at: point).contains(scoreLabel) {
+            if let restore = bestTracker.restoreIfBetterThanCurrent(currentScore: currentScore) {
+                applyRackState(restore)
+                rebalanceBanks()
+                layoutAll(animated: true)
+            }
+            return
+        }
+
         guard let node = tileNode(at: point) else { return }
 
         removeTileFromRows(node)
@@ -318,6 +330,8 @@ final class GameScene: SKScene {
 
     private func applyMatch(_ match: Match) {
         removeAllChildren()
+        bestTracker.reset()
+        currentScore = 0
 
         tileNodes = match.tiles.map { tile in
             let node = TileNode(tile: tile, size: baseTileSize(), fontName: "IstokWeb-Bold")
@@ -407,18 +421,20 @@ final class GameScene: SKScene {
             score += (try? WordiestScoring.scoreWord(word2Tiles.map(\.tile))) ?? 0
         }
 
-        scoreLabel.text = "Score: \(score)"
+        currentScore = score
+        bestTracker.observe(state: currentRackState(), bestScoreCandidate: score)
+        scoreLabel.text = MatchStrings.totalScoreWithBest(score, best: bestTracker.bestScore)
 
         if let d = word1Definition {
             definition1Label.text = "\(d.partOfSpeech): \(d.definition)"
         } else {
-            definition1Label.text = word1.isEmpty ? "" : "\(word1.uppercased()) is not a word"
+            definition1Label.text = word1.isEmpty ? "" : "Not a word."
         }
 
         if let d = word2Definition {
             definition2Label.text = "\(d.partOfSpeech): \(d.definition)"
         } else {
-            definition2Label.text = word2.isEmpty ? "" : "\(word2.uppercased()) is not a word"
+            definition2Label.text = word2.isEmpty ? "" : "Not a word."
         }
     }
 }
