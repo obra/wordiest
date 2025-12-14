@@ -13,9 +13,9 @@ struct HistoryView: View {
         VStack(spacing: 12) {
             HStack {
                 Button("Back") { model.returnToSplash() }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(palette.foreground)
                 Spacer()
-                MenuButton(model: model)
             }
             .padding(.horizontal, 18)
             .padding(.top, 18)
