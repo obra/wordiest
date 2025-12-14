@@ -38,6 +38,11 @@ final class GameScene: SKScene {
     private let baseline2 = SKShapeNode()
 
     var onRequestOpenWiktionary: ((String) -> Void)?
+    var safeAreaInsetsOverride: UIEdgeInsets? {
+        didSet {
+            layoutAll(animated: false)
+        }
+    }
 
     private var lastWord1Definition: Definitions.Definition?
     private var lastWord2Definition: Definitions.Definition?
@@ -311,7 +316,7 @@ final class GameScene: SKScene {
     }
 
     private func contentLayout() -> (leftX: CGFloat, contentWidth: CGFloat, safeInsets: UIEdgeInsets) {
-        let insets = view?.safeAreaInsets ?? .zero
+        let insets = safeAreaInsetsOverride ?? view?.safeAreaInsets ?? .zero
         let width = max(0, size.width - (appSpacer * 2) - insets.left - insets.right)
         let leftX = appSpacer + insets.left
         return (leftX, width, insets)

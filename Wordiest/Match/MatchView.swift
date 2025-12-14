@@ -15,6 +15,8 @@ struct MatchView: View {
                 SpriteView(scene: model.scene)
                     .ignoresSafeArea()
                     .onAppear {
+                        let safe = proxy.safeAreaInsets
+                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: safe.top, left: safe.leading, bottom: safe.bottom, right: safe.trailing)
                         model.scene.onRequestOpenWiktionary = { word in
                             wiktionaryWord = word
                         }
@@ -23,6 +25,9 @@ struct MatchView: View {
                     }
                     .onChange(of: proxy.size) { _, newSize in
                         model.configureSceneIfReady(size: newSize)
+                    }
+                    .onChange(of: proxy.safeAreaInsets) { _, newInsets in
+                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: newInsets.top, left: newInsets.leading, bottom: newInsets.bottom, right: newInsets.trailing)
                     }
                     .onChange(of: model.settings.soundEnabled) { _, _ in
                         model.applySettingsToScene()
