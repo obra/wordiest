@@ -54,9 +54,12 @@ struct MatchView: View {
                         model.applySettingsToScene()
                     }
 
-                HStack(spacing: 1) {
+                WordiestButtonBar(palette: model.settings.palette) { wideWidth, menuWidth in
                     Button("Shuffle") { model.scene.shuffle() }
+                        .frame(width: wideWidth)
+
                     Button("Reset") {}
+                        .frame(width: wideWidth)
                         .highPriorityGesture(
                             LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                                 didLongPressReset = true
@@ -70,8 +73,9 @@ struct MatchView: View {
                                     return
                                 }
                                 model.scene.resetWords(clearOnlyInvalid: false)
-                        }
-                    )
+                            }
+                        )
+
                     Button(model.scene.isReview ? "OK" : "Submit") {
                         if model.scene.isReview {
                             model.returnToScoreFromMatchReview()
@@ -85,18 +89,20 @@ struct MatchView: View {
                             model.handleConfirmedSubmission()
                         }
                     }
+                    .frame(width: wideWidth)
+
                     Button {
                         isPresentingMenu = true
                     } label: {
                         Image("ic_core_overflow")
                             .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
                     }
-                    .frame(width: 50)
+                    .frame(width: menuWidth)
                 }
                 .buttonStyle(WordiestBarButtonStyle(palette: model.settings.palette))
-                .padding(.top, 1)
-                .frame(height: 50)
-                .background(model.settings.palette.faded)
 
                 if model.scene.isReview {
                     VStack {

@@ -21,6 +21,7 @@
 		2D4729687DB3B8FDB155E9F4 /* SparklineMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BC2801CCD81718501E0465 /* SparklineMath.swift */; };
 		2E61D87E0E2C021967C9164B /* pickup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5D02CD1E40D850281D3C60BF /* pickup.mp3 */; };
 		385E725BDC00E83925E34036 /* ScoreCelebrateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F472E4195AA51F1F5326DF /* ScoreCelebrateTests.swift */; };
+		3BB480040FC6CE5B982F1832 /* WordiestButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37461A220D5F9F1CEECA7C6A /* WordiestButtonBar.swift */; };
 		3E0BCAADF3CDED83C58A1C13 /* WordiestBarButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AF29676AA2BFF50B45889A /* WordiestBarButtonStyle.swift */; };
 		3E855925282209DA497D8AD3 /* SparklineMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A2E0BB20DBD4EF0D7D5AB6 /* SparklineMathTests.swift */; };
 		3F6FB1B0B83C3946CECF615B /* TileRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C21FA2E8E42EA22E1C581C2 /* TileRowLayout.swift */; };
@@ -121,6 +122,7 @@
 		322D33785A9C32666D0D3217 /* DragMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragMathTests.swift; sourceTree = "<group>"; };
 		329726C0D29742A45EAC5044 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		3391FCFCAB86B2ECF9EDFEC6 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		37461A220D5F9F1CEECA7C6A /* WordiestButtonBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestButtonBar.swift; sourceTree = "<group>"; };
 		39FBE3B2001E0B84CEF211D8 /* DragMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragMath.swift; sourceTree = "<group>"; };
 		3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPlacementTests.swift; sourceTree = "<group>"; };
 		3BDBA30E2A8B01579566BB54 /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 			children = (
 				689FF527B02291029D5DEC89 /* HTMLText.swift */,
 				A8AF29676AA2BFF50B45889A /* WordiestBarButtonStyle.swift */,
+				37461A220D5F9F1CEECA7C6A /* WordiestButtonBar.swift */,
 				EF062FC01912786D8B838F81 /* WordiestButtonColors.swift */,
 			);
 			path = Shared;
@@ -610,6 +613,7 @@
 				0FC82588D992E409837154FC /* Wiktionary.swift in Sources */,
 				A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */,
 				3E0BCAADF3CDED83C58A1C13 /* WordiestBarButtonStyle.swift in Sources */,
+				3BB480040FC6CE5B982F1832 /* WordiestButtonBar.swift in Sources */,
 				F67EA85DAA092EABDFFBD9C0 /* WordiestButtonColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

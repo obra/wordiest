@@ -36,22 +36,25 @@ struct SplashView: View {
                     .frame(height: 50)
                     .background(palette.faded)
             } else {
-                HStack(spacing: 1) {
+                WordiestButtonBar(palette: palette) { wideWidth, menuWidth in
                     Button("Play") { model.startPlay() }
+                        .frame(width: wideWidth)
                     Button("History") { model.showHistory() }
+                        .frame(width: wideWidth)
                     Button("Leaders") { model.showLeaders() }
+                        .frame(width: wideWidth)
                     Button {
                         isPresentingMenu = true
                     } label: {
                         Image("ic_core_overflow")
                             .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
                     }
-                    .frame(width: 50)
+                    .frame(width: menuWidth)
                 }
                 .buttonStyle(WordiestBarButtonStyle(palette: palette))
-                .padding(.top, 1)
-                .frame(height: 50)
-                .background(palette.faded)
             }
 
             OverflowMenuOverlay(model: model, isPresented: $isPresentingMenu)
