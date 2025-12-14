@@ -3,6 +3,7 @@ import WordiestCore
 
 final class TileNode: SKNode {
     let tile: Tile
+    let baseSize: CGSize
 
     private let bonusBackground: SKShapeNode?
     private let tileBackground: SKShapeNode
@@ -15,6 +16,7 @@ final class TileNode: SKNode {
 
     init(tile: Tile, size: CGSize, fontName: String?) {
         self.tile = tile
+        self.baseSize = size
 
         let cornerRadius = size.width * WordiestTileStyle.cornerRadiusRatio
         let borderWidth = max(1, size.width * WordiestTileStyle.borderWidthRatio)

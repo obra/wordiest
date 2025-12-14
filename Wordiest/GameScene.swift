@@ -228,7 +228,8 @@ final class GameScene: SKScene {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let dragging else { return }
         let point = touch.location(in: self)
-        dragging.node.position = CGPoint(x: point.x - dragging.offset.x, y: point.y - dragging.offset.y)
+        let proposed = CGPoint(x: point.x - dragging.offset.x, y: point.y - dragging.offset.y)
+        dragging.node.position = clampedDragPosition(node: dragging.node, proposed: proposed)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -272,6 +273,22 @@ final class GameScene: SKScene {
         if soundEnabled {
             run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
         }
+    }
+
+    private func clampedDragPosition(node: TileNode, proposed: CGPoint) -> CGPoint {
+        let insets = safeAreaInsetsOverride ?? view?.safeAreaInsets ?? .zero
+        let halfWidth = (node.baseSize.width * node.xScale) / 2.0
+        let halfHeight = (node.baseSize.height * node.yScale) / 2.0
+
+        let minX = appSpacer + insets.left + halfWidth
+        let maxX = size.width - appSpacer - insets.right - halfWidth
+        let minY = appSpacer + insets.bottom + halfHeight
+        let maxY = size.height - appSpacer - insets.top - halfHeight
+
+        return CGPoint(
+            x: min(maxX, max(minX, proposed.x)),
+            y: min(maxY, max(minY, proposed.y))
+        )
     }
 
     private func removeTileFromRows(_ node: TileNode) {
