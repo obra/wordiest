@@ -11,8 +11,9 @@ final class GameScene: SKScene {
         case bank2
     }
 
-    private let tileGap: CGFloat = 10
-    private let scenePadding: CGFloat = 16
+    private let tileGap: CGFloat = 3
+    private let appSpacer: CGFloat = 6
+    private let baselineInset: CGFloat = 12
     private let bankCapacity = 7
 
     private var matchStore: MatchDataStore?
@@ -304,15 +305,15 @@ final class GameScene: SKScene {
             label.verticalAlignmentMode = .top
             label.zPosition = 20
             label.numberOfLines = 3
-            label.preferredMaxLayoutWidth = max(200, size.width - (scenePadding * 2))
+            label.preferredMaxLayoutWidth = max(200, size.width - (appSpacer * 2))
             if label.parent == nil { addChild(label) }
         }
     }
 
     private func contentLayout() -> (leftX: CGFloat, contentWidth: CGFloat, safeInsets: UIEdgeInsets) {
         let insets = view?.safeAreaInsets ?? .zero
-        let width = max(0, size.width - (scenePadding * 2) - insets.left - insets.right)
-        let leftX = scenePadding + insets.left
+        let width = max(0, size.width - (appSpacer * 2) - insets.left - insets.right)
+        let leftX = appSpacer + insets.left
         return (leftX, width, insets)
     }
 
@@ -326,7 +327,7 @@ final class GameScene: SKScene {
 
         updateScoreAndDefinitions()
 
-        let scoreY = size.height - scenePadding - insets.top
+        let scoreY = size.height - appSpacer - insets.top
         scoreLabel.position = CGPoint(x: leftX + (contentWidth / 2), y: scoreY)
 
         let baseTileSize = baseTileSize(availableWidth: contentWidth)
@@ -355,16 +356,16 @@ final class GameScene: SKScene {
         let bank2TileMetrics = tileMetrics(row: .bank2, tileCount: bank2Count)
 
         let scoreLabelHeight = max(scoreLabel.frame.height, scoreLabel.fontSize)
-        let scoreAreaHeight = scenePadding + scoreLabelHeight
+        let scoreAreaHeight = appSpacer + scoreLabelHeight
 
         let word1ExtraBelow = ((definition1Label.text ?? "").isEmpty ? 0 : (tileGap + definition1Label.frame.height))
         let word2ExtraBelow = ((definition2Label.text ?? "").isEmpty ? 0 : (tileGap + definition2Label.frame.height))
 
         let centers = MatchVerticalLayout.centers(
             containerHeight: size.height,
-            topInset: scenePadding + insets.top,
-            bottomInset: scenePadding + insets.bottom,
-            spacer: scenePadding,
+            topInset: appSpacer + insets.top,
+            bottomInset: appSpacer + insets.bottom,
+            spacer: appSpacer,
             scoreAreaHeight: scoreAreaHeight,
             word1Height: word1TileMetrics.tileSize.height + word1ExtraBelow,
             word2Height: word2TileMetrics.tileSize.height + word2ExtraBelow,
@@ -406,8 +407,11 @@ final class GameScene: SKScene {
     private func layoutBaselines(rowYs: [Row: CGFloat], word1TileHeight: CGFloat, word2TileHeight: CGFloat, leftX: CGFloat, contentWidth: CGFloat) {
         let baselineHeight1 = max(3, word1TileHeight * 0.06)
         let baselineHeight2 = max(3, word2TileHeight * 0.06)
-        let rect1 = CGRect(x: leftX, y: (rowYs[.word1] ?? 0) - (word1TileHeight / 2) - baselineHeight1 - 2, width: contentWidth, height: baselineHeight1)
-        let rect2 = CGRect(x: leftX, y: (rowYs[.word2] ?? 0) - (word2TileHeight / 2) - baselineHeight2 - 2, width: contentWidth, height: baselineHeight2)
+        let inset = max(0, baselineInset - appSpacer)
+        let baselineLeftX = leftX + inset
+        let baselineWidth = max(0, contentWidth - (inset * 2))
+        let rect1 = CGRect(x: baselineLeftX, y: (rowYs[.word1] ?? 0) - (word1TileHeight / 2) - baselineHeight1 - 2, width: baselineWidth, height: baselineHeight1)
+        let rect2 = CGRect(x: baselineLeftX, y: (rowYs[.word2] ?? 0) - (word2TileHeight / 2) - baselineHeight2 - 2, width: baselineWidth, height: baselineHeight2)
 
         baseline1.path = CGPath(rect: rect1, transform: nil)
         baseline2.path = CGPath(rect: rect2, transform: nil)
