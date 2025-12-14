@@ -39,36 +39,27 @@ struct ScoreView: View {
                     .padding(.horizontal, 18)
 
                 VStack(spacing: 6) {
-                    HStack {
+                    HStack(alignment: .top) {
                         Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
-                            .foregroundStyle(palette.foreground)
-                            .font(.footnote)
-                        Spacer()
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
-                            .foregroundStyle(palette.foreground)
-                            .font(.footnote)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
                     }
 
-                    HStack {
+                    HStack(alignment: .top) {
                         Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
-                            .foregroundStyle(palette.foreground)
-                            .font(.footnote)
-                        Spacer()
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
-                            .foregroundStyle(palette.foreground)
-                            .font(.footnote)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                 }
+                .foregroundStyle(palette.foreground)
+                .font(.footnote)
                 .padding(.horizontal, 18)
 
                 scoreGraph()
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 18)
-
-                if let idx = highlightIndex {
-                    OpponentInspectorView(model: model, match: context.match, sampleIndex: idx)
-                        .padding(.horizontal, 18)
-                }
 
                 HStack(spacing: 12) {
                     Button("Play") { model.startNewMatchFromScore() }
@@ -127,6 +118,12 @@ struct ScoreView: View {
 
             ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
                 .contentShape(Rectangle())
+                .overlay(alignment: .bottomLeading) {
+                    if let idx = highlightIndex {
+                        OpponentInspectorView(model: model, match: context.match, sampleIndex: idx)
+                            .padding(12)
+                    }
+                }
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
