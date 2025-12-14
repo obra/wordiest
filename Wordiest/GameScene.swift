@@ -235,7 +235,17 @@ final class GameScene: SKScene {
 
     private func drop(_ node: TileNode, at point: CGPoint) {
         let row = closestRow(to: point)
-        tilesByRow[row, default: []].append(node)
+        let (leftX, contentWidth, _) = contentLayout()
+        let baseTileSize = baseTileSize(availableWidth: contentWidth)
+        let existing = tilesByRow[row] ?? []
+        let metrics = TileRowLayout.metrics(
+            baseTileSize: baseTileSize,
+            baseGap: tileGap,
+            tileCount: existing.count + 1,
+            availableWidth: contentWidth,
+            leftX: leftX
+        )
+        tilesByRow[row] = TileRowLayout.insert(element: node, into: existing, dropX: point.x, metrics: metrics)
 
         if row == .bank1 || row == .bank2 {
             rebalanceBanks()
@@ -294,33 +304,44 @@ final class GameScene: SKScene {
         }
     }
 
+    private func contentLayout() -> (leftX: CGFloat, contentWidth: CGFloat, safeInsets: UIEdgeInsets) {
+        let insets = view?.safeAreaInsets ?? .zero
+        let width = max(0, size.width - (scenePadding * 2) - insets.left - insets.right)
+        let leftX = scenePadding + insets.left
+        return (leftX, width, insets)
+    }
+
     private func layoutAll(animated: Bool) {
         guard size.width > 0, size.height > 0 else { return }
 
-        let scoreY = size.height - scenePadding
-        scoreLabel.position = CGPoint(x: size.width / 2, y: scoreY)
+        let (leftX, contentWidth, insets) = contentLayout()
 
-        let rowYs = rowYPositions()
-        let tileSize = baseTileSize()
+        let scoreY = size.height - scenePadding - insets.top
+        scoreLabel.position = CGPoint(x: leftX + (contentWidth / 2), y: scoreY)
+
+        let rowYs = rowYPositions(safeInsets: insets)
+        let tileSize = baseTileSize(availableWidth: contentWidth)
 
         for row in Row.allCases {
             let tiles = tilesByRow[row] ?? []
-            layoutRow(tiles, atY: rowYs[row] ?? 0, baseTileSize: tileSize, animated: animated)
+            layoutRow(tiles, atY: rowYs[row] ?? 0, baseTileSize: tileSize, leftX: leftX, contentWidth: contentWidth, animated: animated)
         }
 
-        layoutBaselines(rowYs: rowYs, tileSize: tileSize)
+        layoutBaselines(rowYs: rowYs, tileSize: tileSize, leftX: leftX, contentWidth: contentWidth)
 
-        definition1Label.position = CGPoint(x: size.width / 2, y: (rowYs[.word1] ?? 0) - tileSize.height * 0.75)
-        definition2Label.position = CGPoint(x: size.width / 2, y: (rowYs[.word2] ?? 0) - tileSize.height * 0.75)
+        definition1Label.preferredMaxLayoutWidth = max(200, contentWidth)
+        definition2Label.preferredMaxLayoutWidth = max(200, contentWidth)
+
+        definition1Label.position = CGPoint(x: leftX + (contentWidth / 2), y: (rowYs[.word1] ?? 0) - tileSize.height * 0.75)
+        definition2Label.position = CGPoint(x: leftX + (contentWidth / 2), y: (rowYs[.word2] ?? 0) - tileSize.height * 0.75)
 
         updateScoreAndDefinitions()
     }
 
-    private func layoutBaselines(rowYs: [Row: CGFloat], tileSize: CGSize) {
+    private func layoutBaselines(rowYs: [Row: CGFloat], tileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat) {
         let baselineHeight = max(3, tileSize.height * 0.06)
-        let width = size.width - (scenePadding * 2)
-        let rect1 = CGRect(x: scenePadding, y: (rowYs[.word1] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: width, height: baselineHeight)
-        let rect2 = CGRect(x: scenePadding, y: (rowYs[.word2] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: width, height: baselineHeight)
+        let rect1 = CGRect(x: leftX, y: (rowYs[.word1] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: contentWidth, height: baselineHeight)
+        let rect2 = CGRect(x: leftX, y: (rowYs[.word2] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: contentWidth, height: baselineHeight)
 
         baseline1.path = CGPath(rect: rect1, transform: nil)
         baseline2.path = CGPath(rect: rect2, transform: nil)
@@ -328,21 +349,13 @@ final class GameScene: SKScene {
         baseline2.fillColor = palette.faded
     }
 
-    private func layoutRow(_ tiles: [TileNode], atY y: CGFloat, baseTileSize: CGSize, animated: Bool) {
-        let count = max(tiles.count, 1)
-        let maxWidth = size.width - (scenePadding * 2)
-        let neededWidth = (CGFloat(count) * baseTileSize.width) + (CGFloat(count - 1) * tileGap)
-        let scale = min(1, maxWidth / neededWidth)
+    private func layoutRow(_ tiles: [TileNode], atY y: CGFloat, baseTileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat, animated: Bool) {
+        let metrics = TileRowLayout.metrics(baseTileSize: baseTileSize, baseGap: tileGap, tileCount: tiles.count, availableWidth: contentWidth, leftX: leftX)
+        let scale = baseTileSize.width > 0 ? metrics.tileSize.width / baseTileSize.width : 1
+        let step = metrics.tileSize.width + metrics.gap
 
-        let tileWidth = baseTileSize.width * scale
-        let tileHeight = baseTileSize.height * scale
-
-        let totalWidth = (CGFloat(tiles.count) * tileWidth) + (CGFloat(max(tiles.count - 1, 0)) * tileGap)
-        var x = (size.width - totalWidth) / 2 + (tileWidth / 2)
-
-        for tile in tiles {
-            let target = CGPoint(x: x, y: y)
-            x += tileWidth + tileGap
+        for (idx, tile) in tiles.enumerated() {
+            let target = CGPoint(x: metrics.startX + (CGFloat(idx) * step), y: y)
 
             if animated {
                 let duration: TimeInterval = 0.20
@@ -361,25 +374,27 @@ final class GameScene: SKScene {
         }
     }
 
-    private func baseTileSize() -> CGSize {
-        let available = size.width - (scenePadding * 2) - (tileGap * CGFloat(bankCapacity - 1))
+    private func baseTileSize(availableWidth: CGFloat) -> CGSize {
+        let available = availableWidth - (tileGap * CGFloat(bankCapacity - 1))
         let width = floor(max(36, min(64, available / CGFloat(bankCapacity))))
         return CGSize(width: width, height: floor(width * 1.1))
     }
 
-    private func rowYPositions() -> [Row: CGFloat] {
-        let usableHeight = size.height - (scenePadding * 2)
-        let top = scenePadding + usableHeight
+    private func rowYPositions(safeInsets: UIEdgeInsets) -> [Row: CGFloat] {
+        let bottom = scenePadding + safeInsets.bottom
+        let top = size.height - scenePadding - safeInsets.top
+        let usableHeight = max(0, top - bottom)
         return [
-            .word1: top * 0.70,
-            .word2: top * 0.56,
-            .bank1: top * 0.28,
-            .bank2: top * 0.14,
+            .word1: bottom + usableHeight * 0.70,
+            .word2: bottom + usableHeight * 0.56,
+            .bank1: bottom + usableHeight * 0.28,
+            .bank2: bottom + usableHeight * 0.14,
         ]
     }
 
     private func closestRow(to point: CGPoint) -> Row {
-        let rowYs = rowYPositions()
+        let (_, _, insets) = contentLayout()
+        let rowYs = rowYPositions(safeInsets: insets)
         return Row.allCases.min(by: { abs((rowYs[$0] ?? 0) - point.y) < abs((rowYs[$1] ?? 0) - point.y) }) ?? .bank1
     }
 
@@ -443,8 +458,11 @@ final class GameScene: SKScene {
         lastWord1Definition = nil
         lastWord2Definition = nil
 
+        let (_, contentWidth, _) = contentLayout()
+        let tileSize = baseTileSize(availableWidth: contentWidth)
+
         tileNodes = match.tiles.map { tile in
-            let node = TileNode(tile: tile, size: baseTileSize(), fontName: "IstokWeb-Bold")
+            let node = TileNode(tile: tile, size: tileSize, fontName: "IstokWeb-Bold")
             node.applyPalette(background: palette.background, foreground: palette.foreground, faded: palette.faded)
             node.zPosition = 1
             return node
