@@ -12,68 +12,68 @@ struct OverflowMenuOverlay: View {
 
     var body: some View {
         if isPresented {
-            let palette = model.settings.palette
             ZStack(alignment: .bottomTrailing) {
-                Color.black.opacity(0.35)
+                Color.clear
+                    .contentShape(Rectangle())
                     .ignoresSafeArea()
                     .onTapGesture { isPresented = false }
 
                 VStack(alignment: .leading, spacing: 0) {
                     if let onBack {
-                        menuButton("Back", palette: palette) {
+                        menuButton("Back") {
                             isPresented = false
                             onBack()
                         }
-                        Divider().background(palette.faded.opacity(0.6))
+                        Divider()
                     }
 
-                    menuButton("Change colors", palette: palette) {
+                    menuButton("Change colors") {
                         model.settings.colorPaletteIndex = (model.settings.colorPaletteIndex % 6) + 1
                         model.applySettingsToScene()
                         isPresented = false
                     }
-                    Divider().background(palette.faded.opacity(0.6))
+                    Divider()
 
-                    menuButton("Share screenshot", palette: palette) {
+                    menuButton("Share screenshot") {
                         isPresentingShare = true
                     }
-                    Divider().background(palette.faded.opacity(0.6))
+                    Divider()
 
-                    menuButton(model.settings.soundEnabled ? "Disable sound" : "Enable sound", palette: palette) {
+                    menuButton(model.settings.soundEnabled ? "Disable sound" : "Enable sound") {
                         model.settings.soundEnabled.toggle()
                         model.applySettingsToScene()
                         isPresented = false
                     }
-                    Divider().background(palette.faded.opacity(0.6))
+                    Divider()
 
-                    menuButton("Reset rating", palette: palette, role: .destructive) {
+                    menuButton("Reset rating", role: .destructive) {
                         isConfirmingReset = true
                     }
-                    Divider().background(palette.faded.opacity(0.6))
+                    Divider()
 
-                    menuButton("Privacy policy", palette: palette) {
+                    menuButton("Privacy policy") {
                         if let url = URL(string: "https://concreterose.github.io/privacypolicy.html") {
                             UIApplication.shared.open(url)
                         }
                         isPresented = false
                     }
-                    Divider().background(palette.faded.opacity(0.6))
+                    Divider()
 
-                    menuButton("Help", palette: palette) {
+                    menuButton("Help") {
                         isPresented = false
                         model.showHelp()
                     }
-                    Divider().background(palette.faded.opacity(0.6))
+                    Divider()
 
-                    menuButton("About game", palette: palette) {
+                    menuButton("About game") {
                         isPresented = false
                         model.showCredits()
                     }
                 }
                 .frame(width: 240)
-                .background(palette.background)
-                .overlay(Rectangle().stroke(palette.faded.opacity(0.8), lineWidth: 1))
-                .shadow(color: .black.opacity(0.4), radius: 10, x: 0, y: 6)
+                .background(Color.white)
+                .overlay(Rectangle().stroke(Color.black.opacity(0.15), lineWidth: 1))
+                .shadow(color: .black.opacity(0.35), radius: 10, x: 0, y: 6)
                 .padding(.trailing, 12)
                 .padding(.bottom, 50 + 12)
             }
@@ -98,26 +98,23 @@ struct OverflowMenuOverlay: View {
         }
     }
 
-    private func menuButton(_ title: String, palette: ColorPalette, role: ButtonRole? = nil, action: @escaping () -> Void) -> some View {
+    private func menuButton(_ title: String, role: ButtonRole? = nil, action: @escaping () -> Void) -> some View {
         Button(role: role, action: action) {
             Text(title)
-                .font(.system(size: 18))
-                .foregroundStyle(role == .destructive ? Color.red : palette.foreground)
+                .font(.system(size: 16))
+                .foregroundStyle(role == .destructive ? Color.red : Color.black)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 10)
+                .padding(.vertical, 8)
                 .contentShape(Rectangle())
         }
-        .buttonStyle(WordiestMenuRowButtonStyle(palette: palette))
+        .buttonStyle(WordiestMenuRowButtonStyle())
     }
 }
 
 private struct WordiestMenuRowButtonStyle: ButtonStyle {
-    var palette: ColorPalette
-
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .background(Color(uiColor: WordiestButtonColors.backgroundUIColor(palette: palette, isPressed: configuration.isPressed)))
+            .background(configuration.isPressed ? Color.black.opacity(0.08) : Color.clear)
     }
 }
-
