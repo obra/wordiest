@@ -74,6 +74,7 @@ final class TileNode: SKNode {
         self.letterLabel.horizontalAlignmentMode = .center
         self.letterLabel.fontSize = size.width * WordiestTileStyle.letterFontRatio
         self.letterLabel.text = tile.letter.uppercased()
+        self.letterLabel.zPosition = 10
 
         self.valueLabel = SKLabelNode(fontNamed: fontName)
         self.valueLabel.fontColor = .white
@@ -81,18 +82,21 @@ final class TileNode: SKNode {
         self.valueLabel.horizontalAlignmentMode = .right
         self.valueLabel.fontSize = size.width * WordiestTileStyle.smallFontRatio
         self.valueLabel.text = tile.value > 0 ? String(tile.value) : nil
+        self.valueLabel.zPosition = 10
 
         self.bonusLabelTop = SKLabelNode(fontNamed: fontName)
         self.bonusLabelTop.fontColor = .white
         self.bonusLabelTop.verticalAlignmentMode = .baseline
         self.bonusLabelTop.horizontalAlignmentMode = .center
         self.bonusLabelTop.fontSize = size.width * WordiestTileStyle.smallFontRatio
+        self.bonusLabelTop.zPosition = 10
 
         self.bonusLabelBottom = SKLabelNode(fontNamed: fontName)
         self.bonusLabelBottom.fontColor = .white
         self.bonusLabelBottom.verticalAlignmentMode = .baseline
         self.bonusLabelBottom.horizontalAlignmentMode = .center
         self.bonusLabelBottom.fontSize = size.width * WordiestTileStyle.smallFontRatio
+        self.bonusLabelBottom.zPosition = 10
 
         super.init()
 
