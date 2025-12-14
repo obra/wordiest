@@ -8,6 +8,7 @@ struct MatchView: View {
     @State private var wiktionaryWord: String?
     @State private var submitWarningMessage: String?
     @State private var isConfirmingLeave = false
+    @State private var isPresentingMenu = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -20,7 +21,8 @@ struct MatchView: View {
                     .ignoresSafeArea()
                     .onAppear {
                         let safe = proxy.safeAreaInsets
-                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: safe.top, left: safe.leading, bottom: safe.bottom, right: safe.trailing)
+                        let extraTop: CGFloat = model.scene.isReview ? 50 : 0
+                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: safe.top + extraTop, left: safe.leading, bottom: safe.bottom, right: safe.trailing)
                         model.scene.onRequestOpenWiktionary = { word in
                             wiktionaryWord = word
                         }
@@ -36,7 +38,8 @@ struct MatchView: View {
                         )
                     }
                     .onChange(of: proxy.safeAreaInsets) { _, newInsets in
-                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: newInsets.top, left: newInsets.leading, bottom: newInsets.bottom, right: newInsets.trailing)
+                        let extraTop: CGFloat = model.scene.isReview ? 50 : 0
+                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: newInsets.top + extraTop, left: newInsets.leading, bottom: newInsets.bottom, right: newInsets.trailing)
                         model.configureSceneIfReady(
                             size: CGSize(
                                 width: proxy.size.width + newInsets.leading + newInsets.trailing,
@@ -82,45 +85,44 @@ struct MatchView: View {
                             model.handleConfirmedSubmission()
                         }
                     }
+                    Button {
+                        isPresentingMenu = true
+                    } label: {
+                        Image(systemName: "ellipsis.vertical")
+                    }
                 }
                 .buttonStyle(WordiestBarButtonStyle(palette: model.settings.palette))
                 .padding(.top, 1)
                 .frame(height: 50)
                 .background(model.settings.palette.faded)
 
-                VStack {
-                    HStack {
-                        Button("Back") {
-                            if model.scene.isReview, model.matchReviewContext != nil {
-                                model.returnToScoreFromMatchReview()
-                                return
-                            }
-                            if model.scene.hasInProgressMove && !model.scene.isReview {
-                                isConfirmingLeave = true
-                                return
-                            }
-                            model.returnToSplash()
-                        }
-                        .buttonStyle(.bordered)
-                        Spacer()
-                        MenuButton(model: model)
-                    }
-                    .padding(.horizontal, 18)
-                    .padding(.top, 12)
-
-                    if model.scene.isReview {
+                if model.scene.isReview {
+                    VStack {
                         Text(MatchStrings.reviewBanner)
-                            .font(.footnote)
+                            .font(.system(size: 18))
                             .foregroundStyle(model.settings.palette.foreground)
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(model.settings.palette.faded.opacity(0.25))
-                            .padding(.horizontal, 18)
-                            .padding(.top, 6)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(model.settings.palette.faded)
+                        Spacer()
                     }
-                    Spacer()
+                    .ignoresSafeArea(edges: .top)
                 }
+
+                OverflowMenuOverlay(
+                    model: model,
+                    isPresented: $isPresentingMenu,
+                    onBack: {
+                        if model.scene.isReview, model.matchReviewContext != nil {
+                            model.returnToScoreFromMatchReview()
+                            return
+                        }
+                        if model.scene.hasInProgressMove && !model.scene.isReview {
+                            isConfirmingLeave = true
+                            return
+                        }
+                        model.returnToSplash()
+                    }
+                )
             }
         }
         .tint(model.settings.palette.foreground)

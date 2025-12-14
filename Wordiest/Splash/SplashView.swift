@@ -2,53 +2,58 @@ import SwiftUI
 
 struct SplashView: View {
     @ObservedObject var model: AppModel
+    @State private var isPresentingMenu = false
 
     var body: some View {
         let palette = model.settings.palette
-        VStack(spacing: 16) {
-            HStack {
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 12) {
                 Spacer()
-                MenuButton(model: model)
+
+                Text("Wordiest")
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundStyle(palette.foreground)
+
+                Text(summaryText())
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(palette.foreground)
+                    .padding(.horizontal, 24)
+
+                Spacer()
+
+                Text("Definitions powered by Wiktionary.org")
+                    .font(.footnote)
+                    .foregroundStyle(palette.faded)
+                    .padding(.bottom, 50 + 12)
             }
-            .padding(.horizontal, 18)
-            .padding(.top, 12)
-
-            Spacer()
-
-            Text("Wordiest")
-                .font(.system(size: 40, weight: .bold))
-                .foregroundStyle(palette.foreground)
-
-            Text(summaryText())
-                .multilineTextAlignment(.center)
-                .foregroundStyle(palette.foreground)
-                .padding(.horizontal, 24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             if model.isLoadingAssets {
                 Text("Loading…")
-                    .foregroundStyle(palette.faded)
+                    .font(.system(size: 18))
+                    .foregroundStyle(palette.foreground)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(palette.faded)
+            } else {
+                HStack(spacing: 1) {
+                    Button("Play") { model.startPlay() }
+                    Button("History") { model.showHistory() }
+                    Button("Leaders") { model.showLeaders() }
+                    Button {
+                        isPresentingMenu = true
+                    } label: {
+                        Image(systemName: "ellipsis.vertical")
+                    }
+                }
+                .buttonStyle(WordiestBarButtonStyle(palette: palette))
+                .padding(.top, 1)
+                .frame(height: 50)
+                .background(palette.faded)
             }
 
-            VStack(spacing: 10) {
-                Button("Play") { model.startPlay() }
-                    .disabled(model.isLoadingAssets)
-                Button("History") { model.showHistory() }
-                    .disabled(model.isLoadingAssets)
-                Button("Leaders") { model.showLeaders() }
-                    .disabled(model.isLoadingAssets)
-                Button("Help") { model.showHelp() }
-                Button("Credits") { model.showCredits() }
-            }
-            .buttonStyle(.borderedProminent)
-
-            Spacer()
-
-            Text("Definitions powered by Wiktionary.org")
-                .font(.footnote)
-                .foregroundStyle(palette.faded)
-                .padding(.bottom, 24)
+            OverflowMenuOverlay(model: model, isPresented: $isPresentingMenu)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
         .tint(palette.foreground)
         .highPriorityGesture(

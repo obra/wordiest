@@ -8,20 +8,12 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
+    @State private var isPresentingMenu = false
 
     var body: some View {
         let palette = model.settings.palette
         ZStack {
             VStack(spacing: 16) {
-                HStack {
-                    Button("Back") { model.showMatchReviewFromScore() }
-                        .buttonStyle(.bordered)
-                    Spacer()
-                    MenuButton(model: model)
-                }
-                .padding(.horizontal, 18)
-                .padding(.top, 12)
-
                 if let tiles = playerTiles(), !tiles.isEmpty {
                     ScoreTileRowView(palette: palette, tiles: tiles)
                         .padding(.horizontal, 18)
@@ -65,6 +57,11 @@ struct ScoreView: View {
                     Button("Play") { model.startNewMatchFromScore() }
                     Button("History") { model.showHistory() }
                     Button("Leaders") { model.showLeaders() }
+                    Button {
+                        isPresentingMenu = true
+                    } label: {
+                        Image(systemName: "ellipsis.vertical")
+                    }
                 }
                 .buttonStyle(WordiestBarButtonStyle(palette: palette))
                 .padding(.top, 1)
@@ -79,6 +76,14 @@ struct ScoreView: View {
                     .ignoresSafeArea()
                     .transition(.opacity)
             }
+
+            OverflowMenuOverlay(
+                model: model,
+                isPresented: $isPresentingMenu,
+                onBack: {
+                    model.showMatchReviewFromScore()
+                }
+            )
         }
         .tint(palette.foreground)
         .onAppear {
