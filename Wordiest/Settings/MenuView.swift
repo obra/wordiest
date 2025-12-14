@@ -57,6 +57,7 @@ struct MenuView: View {
                     }
                 }
             }
+            .foregroundStyle(palette.foreground)
             .scrollContentBackground(.hidden)
             .background(palette.background)
             .navigationTitle("Menu")
@@ -78,6 +79,7 @@ struct MenuView: View {
                 Text("Reset rating and clear history?")
             }
         }
+        .tint(palette.foreground)
         .sheet(isPresented: $isPresentingShare) {
             ShareScreenshotView(model: model)
         }

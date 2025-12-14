@@ -42,6 +42,7 @@ struct CreditsView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
+        .tint(palette.foreground)
         .sheet(isPresented: $isPresentingLookup) {
             if let defs = model.assets?.definitions {
                 DictionaryLookupView(definitions: defs, palette: palette)

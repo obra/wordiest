@@ -50,6 +50,7 @@ struct SplashView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
+        .tint(palette.foreground)
         .highPriorityGesture(
             DragGesture(minimumDistance: 20)
                 .onEnded { value in

@@ -101,6 +101,7 @@ struct MatchView: View {
                 }
             }
         }
+        .tint(model.settings.palette.foreground)
         .alert(
             "Wiktionary",
             isPresented: Binding(

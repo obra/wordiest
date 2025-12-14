@@ -27,6 +27,6 @@ struct LeadersView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
+        .tint(palette.foreground)
     }
 }
-

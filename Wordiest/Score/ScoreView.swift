@@ -78,6 +78,7 @@ struct ScoreView: View {
                     .transition(.opacity)
             }
         }
+        .tint(palette.foreground)
         .onAppear {
             let should = ScoreSummary.shouldCelebrate(
                 opponentsCount: context.match.scoreSamples.count,

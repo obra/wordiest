@@ -52,6 +52,7 @@ struct DictionaryLookupView: View {
             .padding(18)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(palette.background)
+            .tint(palette.foreground)
             .navigationTitle("Dictionary")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -82,4 +83,3 @@ struct DictionaryLookupView: View {
         }
     }
 }
-

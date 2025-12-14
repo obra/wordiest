@@ -71,6 +71,7 @@ struct HistoryView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
+        .tint(palette.foreground)
         .alert("Confirm", isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
