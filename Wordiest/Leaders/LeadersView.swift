@@ -1,8 +1,10 @@
+import GameKit
 import SwiftUI
 
 struct LeadersView: View {
     @ObservedObject var model: AppModel
     @State private var showingGameCenter = false
+    @State private var showingSignInAlert = false
 
     var body: some View {
         let palette = model.settings.palette
@@ -20,7 +22,14 @@ struct LeadersView: View {
             Text("Leaders")
                 .font(.title.bold())
                 .foregroundStyle(palette.foreground)
-            Button("Show Leaderboards") { showingGameCenter = true }
+            Button("Show Leaderboards") {
+                if GKLocalPlayer.local.isAuthenticated {
+                    showingGameCenter = true
+                } else {
+                    model.gameCenter.authenticateIfNeeded()
+                    showingSignInAlert = true
+                }
+            }
                 .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
             Spacer()
         }
@@ -35,6 +44,11 @@ struct LeadersView: View {
                 showingGameCenter = false
             }
             .ignoresSafeArea()
+        }
+        .alert("Game Center Sign-In Required", isPresented: $showingSignInAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Sign in to Game Center in Settings to view leaderboards and post scores.")
         }
     }
 }
