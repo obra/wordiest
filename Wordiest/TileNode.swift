@@ -15,7 +15,7 @@ final class TileNode: SKNode {
     init(tile: Tile, size: CGSize, fontName: String?) {
         self.tile = tile
 
-        let rect = CGRect(origin: .zero, size: size)
+        let rect = CGRect(origin: CGPoint(x: -size.width / 2.0, y: -size.height / 2.0), size: size)
         self.background = SKShapeNode(rect: rect, cornerRadius: min(size.width, size.height) * 0.12)
         self.background.lineWidth = max(1, size.width * 0.06)
         self.background.strokeColor = .white
@@ -54,10 +54,10 @@ final class TileNode: SKNode {
 
         addChild(background)
 
-        letterLabel.position = CGPoint(x: rect.midX, y: rect.midY)
+        letterLabel.position = .zero
         addChild(letterLabel)
 
-        valueLabel.position = CGPoint(x: rect.maxX - size.width * 0.10, y: rect.minY + size.height * 0.06)
+        valueLabel.position = CGPoint(x: (size.width / 2.0) - (size.width * 0.10), y: (-size.height / 2.0) + (size.height * 0.06))
         addChild(valueLabel)
 
         let bonus = tile.bonus?.uppercased()
@@ -65,8 +65,8 @@ final class TileNode: SKNode {
         bonusLabelBottom.text = bonus
 
         if bonus != nil {
-            bonusLabelTop.position = CGPoint(x: rect.midX, y: rect.maxY - size.height * 0.06)
-            bonusLabelBottom.position = CGPoint(x: rect.midX, y: rect.minY + size.height * 0.06)
+            bonusLabelTop.position = CGPoint(x: 0, y: (size.height / 2.0) - (size.height * 0.06))
+            bonusLabelBottom.position = CGPoint(x: 0, y: (-size.height / 2.0) + (size.height * 0.06))
             addChild(bonusLabelTop)
             addChild(bonusLabelBottom)
         }
