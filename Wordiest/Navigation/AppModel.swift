@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import WordiestCore
 
 @MainActor
@@ -95,6 +96,17 @@ final class AppModel: ObservableObject {
     func applySettingsToScene() {
         scene.soundEnabled = settings.soundEnabled
         scene.applyPalette(settings.palette)
+    }
+
+    func resetRatingAndHistory() {
+        settings.resetRatingAndStats()
+        historyStore.clear()
+        applySettingsToScene()
+    }
+
+    func openPrivacyPolicy() {
+        guard let url = URL(string: "https://concreterose.github.io/privacypolicy.html") else { return }
+        UIApplication.shared.open(url)
     }
 
     func configureSceneIfReady(size: CGSize) {

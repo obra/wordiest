@@ -8,7 +8,6 @@ struct MatchView: View {
     @State private var wiktionaryWord: String?
     @State private var submitWarningMessage: String?
     @State private var isConfirmingLeave = false
-    @State private var isPresentingMenu = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -33,12 +32,11 @@ struct MatchView: View {
                         model.applySettingsToScene()
                     }
 
-                WordiestButtonBar(palette: model.settings.palette) { wideWidth, menuWidth in
+                WordiestBottomBar(palette: model.settings.palette) {
                     Button("Shuffle") { model.scene.shuffle() }
-                        .frame(width: wideWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: model.settings.palette))
 
                     Button("Reset") {}
-                        .frame(width: wideWidth)
                         .highPriorityGesture(
                             LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                                 didLongPressReset = true
@@ -54,6 +52,7 @@ struct MatchView: View {
                                 model.scene.resetWords(clearOnlyInvalid: false)
                             }
                         )
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: model.settings.palette))
 
                     Button(model.scene.isReview ? "OK" : "Submit") {
                         if model.scene.isReview {
@@ -68,20 +67,25 @@ struct MatchView: View {
                             model.handleConfirmedSubmission()
                         }
                     }
-                    .frame(width: wideWidth)
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: model.settings.palette))
 
-                    Button {
-                        isPresentingMenu = true
-                    } label: {
-                        Image("ic_core_overflow")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                    }
-                    .frame(width: menuWidth)
+                    WordiestMenu(
+                        model: model,
+                        onBack: {
+                            if model.scene.isReview, model.matchReviewContext != nil {
+                                model.returnToScoreFromMatchReview()
+                                return
+                            }
+                            if model.scene.hasInProgressMove && !model.scene.isReview {
+                                isConfirmingLeave = true
+                                return
+                            }
+                            model.returnToSplash()
+                        }
+                    )
+                    .frame(width: 52)
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: model.settings.palette))
                 }
-                .buttonStyle(WordiestBarButtonStyle(palette: model.settings.palette))
 
                 if model.scene.isReview {
                     VStack {
@@ -94,22 +98,6 @@ struct MatchView: View {
                     }
                     .ignoresSafeArea(edges: .top)
                 }
-
-                OverflowMenuOverlay(
-                    model: model,
-                    isPresented: $isPresentingMenu,
-                    onBack: {
-                        if model.scene.isReview, model.matchReviewContext != nil {
-                            model.returnToScoreFromMatchReview()
-                            return
-                        }
-                        if model.scene.hasInProgressMove && !model.scene.isReview {
-                            isConfirmingLeave = true
-                            return
-                        }
-                        model.returnToSplash()
-                    }
-                )
             }
         }
         .tint(model.settings.palette.foreground)

@@ -8,7 +8,6 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
-    @State private var isPresentingMenu = false
 
     var body: some View {
         let palette = model.settings.palette
@@ -53,25 +52,22 @@ struct ScoreView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 18)
 
-                WordiestButtonBar(palette: palette) { wideWidth, menuWidth in
+                WordiestBottomBar(palette: palette) {
                     Button("Play") { model.startNewMatchFromScore() }
-                        .frame(width: wideWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                     Button("History") { model.showHistory() }
-                        .frame(width: wideWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                     Button("Leaders") { model.showLeaders() }
-                        .frame(width: wideWidth)
-                    Button {
-                        isPresentingMenu = true
-                    } label: {
-                        Image("ic_core_overflow")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                    }
-                    .frame(width: menuWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
+                    WordiestMenu(
+                        model: model,
+                        onBack: {
+                            model.showMatchReviewFromScore()
+                        }
+                    )
+                    .frame(width: 52)
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                 }
-                .buttonStyle(WordiestBarButtonStyle(palette: palette))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(palette.background)
@@ -82,13 +78,6 @@ struct ScoreView: View {
                     .transition(.opacity)
             }
 
-            OverflowMenuOverlay(
-                model: model,
-                isPresented: $isPresentingMenu,
-                onBack: {
-                    model.showMatchReviewFromScore()
-                }
-            )
         }
         .tint(palette.foreground)
         .onAppear {

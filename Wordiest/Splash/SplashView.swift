@@ -2,7 +2,6 @@ import SwiftUI
 
 struct SplashView: View {
     @ObservedObject var model: AppModel
-    @State private var isPresentingMenu = false
 
     var body: some View {
         let palette = model.settings.palette
@@ -24,7 +23,7 @@ struct SplashView: View {
                 Text("Definitions powered by Wiktionary.org")
                     .font(.footnote)
                     .foregroundStyle(palette.faded)
-                    .padding(.bottom, 50 + 12)
+                    .padding(.bottom, 12)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
@@ -33,31 +32,21 @@ struct SplashView: View {
                     .font(.system(size: 18))
                     .foregroundStyle(palette.foreground)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(palette.faded)
+                    .padding(.vertical, 16)
+                    .background(palette.background.opacity(0.98))
             } else {
-                WordiestButtonBar(palette: palette) { wideWidth, menuWidth in
+                WordiestBottomBar(palette: palette) {
                     Button("Play") { model.startPlay() }
-                        .frame(width: wideWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                     Button("History") { model.showHistory() }
-                        .frame(width: wideWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                     Button("Leaders") { model.showLeaders() }
-                        .frame(width: wideWidth)
-                    Button {
-                        isPresentingMenu = true
-                    } label: {
-                        Image("ic_core_overflow")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                    }
-                    .frame(width: menuWidth)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
+                    WordiestMenu(model: model)
+                        .frame(width: 52)
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                 }
-                .buttonStyle(WordiestBarButtonStyle(palette: palette))
             }
-
-            OverflowMenuOverlay(model: model, isPresented: $isPresentingMenu)
         }
         .background(palette.background)
         .tint(palette.foreground)
