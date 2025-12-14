@@ -23,6 +23,7 @@ final class GameScene: SKScene {
 
     private var tileNodes: [TileNode] = []
     private var tilesByRow: [Row: [TileNode]] = [:]
+    private var lastRowCenters: [Row: CGFloat] = [:]
 
     private var dragging: (node: TileNode, offset: CGPoint, baseScale: CGFloat)?
     private let bestTracker = BestTracker()
@@ -222,30 +223,34 @@ final class GameScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let dragging else { return }
         let point = touch.location(in: self)
-        drop(dragging.node, at: point)
+        let dropX = DragMath.draggedCenterX(touchX: point.x, touchOffsetX: dragging.offset.x)
+        drop(dragging.node, dropX: dropX, at: point)
         self.dragging = nil
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let dragging else { return }
         let point = touch.location(in: self)
-        drop(dragging.node, at: point)
+        let dropX = DragMath.draggedCenterX(touchX: point.x, touchOffsetX: dragging.offset.x)
+        drop(dragging.node, dropX: dropX, at: point)
         self.dragging = nil
     }
 
-    private func drop(_ node: TileNode, at point: CGPoint) {
+    private func drop(_ node: TileNode, dropX: CGFloat, at point: CGPoint) {
         let row = closestRow(to: point)
         let (leftX, contentWidth, _) = contentLayout()
         let baseTileSize = baseTileSize(availableWidth: contentWidth)
         let existing = tilesByRow[row] ?? []
+        let scaleCount = row == .bank1 || row == .bank2 ? bankCapacity : (existing.count + 1)
         let metrics = TileRowLayout.metrics(
             baseTileSize: baseTileSize,
             baseGap: tileGap,
-            tileCount: existing.count + 1,
+            layoutCount: existing.count + 1,
+            scaleCount: scaleCount,
             availableWidth: contentWidth,
             leftX: leftX
         )
-        tilesByRow[row] = TileRowLayout.insert(element: node, into: existing, dropX: point.x, metrics: metrics)
+        tilesByRow[row] = TileRowLayout.insert(element: node, into: existing, dropX: dropX, metrics: metrics)
 
         if row == .bank1 || row == .bank2 {
             rebalanceBanks()
@@ -316,32 +321,93 @@ final class GameScene: SKScene {
 
         let (leftX, contentWidth, insets) = contentLayout()
 
-        let scoreY = size.height - scenePadding - insets.top
-        scoreLabel.position = CGPoint(x: leftX + (contentWidth / 2), y: scoreY)
-
-        let rowYs = rowYPositions(safeInsets: insets)
-        let tileSize = baseTileSize(availableWidth: contentWidth)
-
-        for row in Row.allCases {
-            let tiles = tilesByRow[row] ?? []
-            layoutRow(tiles, atY: rowYs[row] ?? 0, baseTileSize: tileSize, leftX: leftX, contentWidth: contentWidth, animated: animated)
-        }
-
-        layoutBaselines(rowYs: rowYs, tileSize: tileSize, leftX: leftX, contentWidth: contentWidth)
-
         definition1Label.preferredMaxLayoutWidth = max(200, contentWidth)
         definition2Label.preferredMaxLayoutWidth = max(200, contentWidth)
 
-        definition1Label.position = CGPoint(x: leftX + (contentWidth / 2), y: (rowYs[.word1] ?? 0) - tileSize.height * 0.75)
-        definition2Label.position = CGPoint(x: leftX + (contentWidth / 2), y: (rowYs[.word2] ?? 0) - tileSize.height * 0.75)
-
         updateScoreAndDefinitions()
+
+        let scoreY = size.height - scenePadding - insets.top
+        scoreLabel.position = CGPoint(x: leftX + (contentWidth / 2), y: scoreY)
+
+        let baseTileSize = baseTileSize(availableWidth: contentWidth)
+
+        func tileMetrics(row: Row, tileCount: Int) -> TileRowLayout.Metrics {
+            let layoutCount = max(tileCount, 1)
+            let scaleCount = (row == .bank1 || row == .bank2) ? bankCapacity : layoutCount
+            return TileRowLayout.metrics(
+                baseTileSize: baseTileSize,
+                baseGap: tileGap,
+                layoutCount: layoutCount,
+                scaleCount: scaleCount,
+                availableWidth: contentWidth,
+                leftX: leftX
+            )
+        }
+
+        let word1Count = tilesByRow[.word1]?.count ?? 0
+        let word2Count = tilesByRow[.word2]?.count ?? 0
+        let bank1Count = tilesByRow[.bank1]?.count ?? 0
+        let bank2Count = tilesByRow[.bank2]?.count ?? 0
+
+        let word1TileMetrics = tileMetrics(row: .word1, tileCount: word1Count)
+        let word2TileMetrics = tileMetrics(row: .word2, tileCount: word2Count)
+        let bank1TileMetrics = tileMetrics(row: .bank1, tileCount: bank1Count)
+        let bank2TileMetrics = tileMetrics(row: .bank2, tileCount: bank2Count)
+
+        let scoreLabelHeight = max(scoreLabel.frame.height, scoreLabel.fontSize)
+        let scoreAreaHeight = scenePadding + scoreLabelHeight
+
+        let word1ExtraBelow = ((definition1Label.text ?? "").isEmpty ? 0 : (tileGap + definition1Label.frame.height))
+        let word2ExtraBelow = ((definition2Label.text ?? "").isEmpty ? 0 : (tileGap + definition2Label.frame.height))
+
+        let centers = MatchVerticalLayout.centers(
+            containerHeight: size.height,
+            topInset: scenePadding + insets.top,
+            bottomInset: scenePadding + insets.bottom,
+            spacer: scenePadding,
+            scoreAreaHeight: scoreAreaHeight,
+            word1Height: word1TileMetrics.tileSize.height + word1ExtraBelow,
+            word2Height: word2TileMetrics.tileSize.height + word2ExtraBelow,
+            bank1Height: bank1TileMetrics.tileSize.height,
+            bank2Height: bank2TileMetrics.tileSize.height
+        )
+
+        let rowYs: [Row: CGFloat] = [
+            .word1: centers.word1 + (word1ExtraBelow / 2.0),
+            .word2: centers.word2 + (word2ExtraBelow / 2.0),
+            .bank1: centers.bank1,
+            .bank2: centers.bank2,
+        ]
+        lastRowCenters = rowYs
+
+        for row in Row.allCases {
+            let tiles = tilesByRow[row] ?? []
+            layoutRow(tiles, row: row, atY: rowYs[row] ?? 0, baseTileSize: baseTileSize, leftX: leftX, contentWidth: contentWidth, animated: animated)
+        }
+
+        layoutBaselines(
+            rowYs: rowYs,
+            word1TileHeight: word1TileMetrics.tileSize.height,
+            word2TileHeight: word2TileMetrics.tileSize.height,
+            leftX: leftX,
+            contentWidth: contentWidth
+        )
+
+        definition1Label.position = CGPoint(
+            x: leftX + (contentWidth / 2),
+            y: (rowYs[.word1] ?? 0) - (word1TileMetrics.tileSize.height / 2.0) - tileGap
+        )
+        definition2Label.position = CGPoint(
+            x: leftX + (contentWidth / 2),
+            y: (rowYs[.word2] ?? 0) - (word2TileMetrics.tileSize.height / 2.0) - tileGap
+        )
     }
 
-    private func layoutBaselines(rowYs: [Row: CGFloat], tileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat) {
-        let baselineHeight = max(3, tileSize.height * 0.06)
-        let rect1 = CGRect(x: leftX, y: (rowYs[.word1] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: contentWidth, height: baselineHeight)
-        let rect2 = CGRect(x: leftX, y: (rowYs[.word2] ?? 0) - (tileSize.height / 2) - baselineHeight - 2, width: contentWidth, height: baselineHeight)
+    private func layoutBaselines(rowYs: [Row: CGFloat], word1TileHeight: CGFloat, word2TileHeight: CGFloat, leftX: CGFloat, contentWidth: CGFloat) {
+        let baselineHeight1 = max(3, word1TileHeight * 0.06)
+        let baselineHeight2 = max(3, word2TileHeight * 0.06)
+        let rect1 = CGRect(x: leftX, y: (rowYs[.word1] ?? 0) - (word1TileHeight / 2) - baselineHeight1 - 2, width: contentWidth, height: baselineHeight1)
+        let rect2 = CGRect(x: leftX, y: (rowYs[.word2] ?? 0) - (word2TileHeight / 2) - baselineHeight2 - 2, width: contentWidth, height: baselineHeight2)
 
         baseline1.path = CGPath(rect: rect1, transform: nil)
         baseline2.path = CGPath(rect: rect2, transform: nil)
@@ -349,8 +415,10 @@ final class GameScene: SKScene {
         baseline2.fillColor = palette.faded
     }
 
-    private func layoutRow(_ tiles: [TileNode], atY y: CGFloat, baseTileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat, animated: Bool) {
-        let metrics = TileRowLayout.metrics(baseTileSize: baseTileSize, baseGap: tileGap, tileCount: tiles.count, availableWidth: contentWidth, leftX: leftX)
+    private func layoutRow(_ tiles: [TileNode], row: Row, atY y: CGFloat, baseTileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat, animated: Bool) {
+        let layoutCount = max(tiles.count, 1)
+        let scaleCount = (row == .bank1 || row == .bank2) ? bankCapacity : layoutCount
+        let metrics = TileRowLayout.metrics(baseTileSize: baseTileSize, baseGap: tileGap, layoutCount: layoutCount, scaleCount: scaleCount, availableWidth: contentWidth, leftX: leftX)
         let scale = baseTileSize.width > 0 ? metrics.tileSize.width / baseTileSize.width : 1
         let step = metrics.tileSize.width + metrics.gap
 
@@ -380,22 +448,8 @@ final class GameScene: SKScene {
         return CGSize(width: width, height: floor(width * 1.1))
     }
 
-    private func rowYPositions(safeInsets: UIEdgeInsets) -> [Row: CGFloat] {
-        let bottom = scenePadding + safeInsets.bottom
-        let top = size.height - scenePadding - safeInsets.top
-        let usableHeight = max(0, top - bottom)
-        return [
-            .word1: bottom + usableHeight * 0.70,
-            .word2: bottom + usableHeight * 0.56,
-            .bank1: bottom + usableHeight * 0.28,
-            .bank2: bottom + usableHeight * 0.14,
-        ]
-    }
-
     private func closestRow(to point: CGPoint) -> Row {
-        let (_, _, insets) = contentLayout()
-        let rowYs = rowYPositions(safeInsets: insets)
-        return Row.allCases.min(by: { abs((rowYs[$0] ?? 0) - point.y) < abs((rowYs[$1] ?? 0) - point.y) }) ?? .bank1
+        return Row.allCases.min(by: { abs((lastRowCenters[$0] ?? 0) - point.y) < abs((lastRowCenters[$1] ?? 0) - point.y) }) ?? .bank1
     }
 
     private func rebalanceBanks() {

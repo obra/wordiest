@@ -13,7 +13,8 @@ final class TileRowLayoutTests: XCTestCase {
         let metrics = TileRowLayout.metrics(
             baseTileSize: baseTileSize,
             baseGap: gap,
-            tileCount: 5,
+            layoutCount: 5,
+            scaleCount: 5,
             availableWidth: availableWidth,
             leftX: leftX
         )
@@ -36,7 +37,8 @@ final class TileRowLayoutTests: XCTestCase {
         let metrics = TileRowLayout.metrics(
             baseTileSize: baseTileSize,
             baseGap: gap,
-            tileCount: existing.count + 1,
+            layoutCount: existing.count + 1,
+            scaleCount: existing.count + 1,
             availableWidth: availableWidth,
             leftX: leftX
         )
@@ -58,12 +60,40 @@ final class TileRowLayoutTests: XCTestCase {
         let metrics = TileRowLayout.metrics(
             baseTileSize: baseTileSize,
             baseGap: gap,
-            tileCount: 10,
+            layoutCount: 10,
+            scaleCount: 10,
             availableWidth: availableWidth,
             leftX: leftX
         )
 
         let totalWidth = (CGFloat(10) * metrics.tileSize.width) + (CGFloat(9) * metrics.gap)
         XCTAssertLessThanOrEqual(totalWidth, availableWidth + 0.001)
+    }
+
+    func testFixedCapacityScalingKeepsBankTileSizeConsistent() {
+        let baseTileSize = CGSize(width: 64, height: 70)
+        let gap: CGFloat = 10
+        let availableWidth: CGFloat = 320
+        let leftX: CGFloat = 0
+
+        let full = TileRowLayout.metrics(
+            baseTileSize: baseTileSize,
+            baseGap: gap,
+            layoutCount: 7,
+            scaleCount: 7,
+            availableWidth: availableWidth,
+            leftX: leftX
+        )
+        let singleTile = TileRowLayout.metrics(
+            baseTileSize: baseTileSize,
+            baseGap: gap,
+            layoutCount: 1,
+            scaleCount: 7,
+            availableWidth: availableWidth,
+            leftX: leftX
+        )
+
+        XCTAssertEqual(singleTile.tileSize.width, full.tileSize.width)
+        XCTAssertEqual(singleTile.gap, full.gap)
     }
 }

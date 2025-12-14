@@ -8,16 +8,18 @@ struct TileRowLayout {
         var tileCount: Int
     }
 
-    static func metrics(baseTileSize: CGSize, baseGap: CGFloat, tileCount: Int, availableWidth: CGFloat, leftX: CGFloat) -> Metrics {
-        let count = max(tileCount, 1)
-        let neededWidth = (CGFloat(count) * baseTileSize.width) + (CGFloat(count - 1) * baseGap)
+    static func metrics(baseTileSize: CGSize, baseGap: CGFloat, layoutCount: Int, scaleCount: Int, availableWidth: CGFloat, leftX: CGFloat) -> Metrics {
+        let layoutCount = max(layoutCount, 1)
+        let scaleCount = max(scaleCount, 1)
+
+        let neededWidth = (CGFloat(scaleCount) * baseTileSize.width) + (CGFloat(scaleCount - 1) * baseGap)
         let scale = min(1, availableWidth / neededWidth)
 
         let tileSize = CGSize(width: baseTileSize.width * scale, height: baseTileSize.height * scale)
         let gap = baseGap * scale
-        let totalWidth = (CGFloat(count) * tileSize.width) + (CGFloat(count - 1) * gap)
+        let totalWidth = (CGFloat(layoutCount) * tileSize.width) + (CGFloat(layoutCount - 1) * gap)
         let startX = leftX + ((availableWidth - totalWidth) / 2) + (tileSize.width / 2)
-        return Metrics(tileSize: tileSize, gap: gap, startX: startX, tileCount: count)
+        return Metrics(tileSize: tileSize, gap: gap, startX: startX, tileCount: layoutCount)
     }
 
     static func insertionIndex(dropX: CGFloat, metrics: Metrics) -> Int {
