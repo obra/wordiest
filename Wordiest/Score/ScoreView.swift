@@ -61,13 +61,15 @@ struct ScoreView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 18)
 
-                HStack(spacing: 12) {
+                HStack(spacing: 1) {
                     Button("Play") { model.startNewMatchFromScore() }
                     Button("History") { model.showHistory() }
                     Button("Leaders") { model.showLeaders() }
                 }
-                .buttonStyle(.borderedProminent)
-                .padding(.bottom, 24)
+                .buttonStyle(WordiestBarButtonStyle(palette: palette))
+                .padding(.top, 1)
+                .frame(height: 50)
+                .background(palette.faded)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(palette.background)

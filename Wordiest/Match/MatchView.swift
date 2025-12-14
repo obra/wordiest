@@ -31,7 +31,7 @@ struct MatchView: View {
                         model.applySettingsToScene()
                     }
 
-                HStack(spacing: 12) {
+                HStack(spacing: 1) {
                     Button("Shuffle") { model.scene.shuffle() }
                     Button("Reset") {}
                         .highPriorityGesture(
@@ -47,8 +47,8 @@ struct MatchView: View {
                                     return
                                 }
                                 model.scene.resetWords(clearOnlyInvalid: false)
-                            }
-                        )
+                        }
+                    )
                     Button(model.scene.isReview ? "OK" : "Submit") {
                         if model.scene.isReview {
                             model.returnToScoreFromMatchReview()
@@ -63,8 +63,10 @@ struct MatchView: View {
                         }
                     }
                 }
-                .buttonStyle(.borderedProminent)
-                .padding(.bottom, 24)
+                .buttonStyle(WordiestBarButtonStyle(palette: model.settings.palette))
+                .padding(.top, 1)
+                .frame(height: 50)
+                .background(model.settings.palette.faded)
 
                 VStack {
                     HStack {
