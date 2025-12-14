@@ -90,6 +90,7 @@ struct MatchView: View {
                     } label: {
                         Image(systemName: "ellipsis.vertical")
                     }
+                    .frame(width: 50)
                 }
                 .buttonStyle(WordiestBarButtonStyle(palette: model.settings.palette))
                 .padding(.top, 1)

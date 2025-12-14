@@ -62,6 +62,7 @@ struct ScoreView: View {
                     } label: {
                         Image(systemName: "ellipsis.vertical")
                     }
+                    .frame(width: 50)
                 }
                 .buttonStyle(WordiestBarButtonStyle(palette: palette))
                 .padding(.top, 1)
