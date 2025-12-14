@@ -462,7 +462,7 @@ final class GameScene: SKScene {
     private func baseTileSize(availableWidth: CGFloat) -> CGSize {
         let available = availableWidth - (tileGap * CGFloat(bankCapacity - 1))
         let width = floor(max(36, min(64, available / CGFloat(bankCapacity))))
-        return CGSize(width: width, height: floor(width * 1.1))
+        return CGSize(width: width, height: floor(width * WordiestTileStyle.aspectRatio))
     }
 
     private func closestRow(to point: CGPoint) -> Row {

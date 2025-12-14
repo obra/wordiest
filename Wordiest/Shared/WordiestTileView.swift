@@ -1,0 +1,86 @@
+import SwiftUI
+import WordiestCore
+
+struct WordiestTileView: View {
+    enum Kind: Equatable {
+        case tile(Tile)
+        case plus
+    }
+
+    var palette: ColorPalette
+    var kind: Kind
+    var width: CGFloat
+
+    var body: some View {
+        let height = width * WordiestTileStyle.aspectRatio
+        let cornerRadius = width * WordiestTileStyle.cornerRadiusRatio
+        let borderWidth = max(1, width * WordiestTileStyle.borderWidthRatio)
+        let tileOffsetY = height * WordiestTileStyle.tileOffsetYRatio
+        let bodyHeight = height - (tileOffsetY * 2)
+
+        ZStack {
+            switch kind {
+            case let .tile(t):
+                if let bonus = t.bonus, !bonus.isEmpty {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(palette.background)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: cornerRadius)
+                                .strokeBorder(palette.foreground, lineWidth: borderWidth)
+                        )
+                        .frame(width: width * 0.5, height: height)
+                }
+
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(palette.background)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .strokeBorder(palette.foreground, lineWidth: borderWidth)
+                    )
+                    .frame(width: width, height: bodyHeight)
+
+                if let bonus = t.bonus, !bonus.isEmpty {
+                    VStack(spacing: 0) {
+                        Text(bonus.uppercased())
+                            .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.smallFontRatio))
+                            .foregroundStyle(palette.foreground)
+                            .padding(.top, width * WordiestTileStyle.padding3dpRatio)
+
+                        Spacer(minLength: 0)
+
+                        Text(bonus.uppercased())
+                            .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.smallFontRatio))
+                            .foregroundStyle(palette.foreground)
+                            .padding(.bottom, width * WordiestTileStyle.padding6dpRatio)
+                    }
+                    .frame(width: width, height: height)
+                }
+
+                Text(t.letter.uppercased())
+                    .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.letterFontRatio))
+                    .foregroundStyle(palette.foreground)
+
+                if t.value > 0 {
+                    VStack {
+                        Spacer(minLength: 0)
+                        HStack {
+                            Spacer(minLength: 0)
+                            Text(String(t.value))
+                                .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.smallFontRatio))
+                                .foregroundStyle(palette.foreground)
+                                .padding(.trailing, width * WordiestTileStyle.padding7dpRatio)
+                                .padding(.bottom, tileOffsetY + (width * WordiestTileStyle.padding7dpRatio))
+                        }
+                    }
+                    .frame(width: width, height: height)
+                }
+            case .plus:
+                Text("+")
+                    .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.letterFontRatio))
+                    .foregroundStyle(palette.foreground)
+            }
+        }
+        .frame(width: width, height: height)
+    }
+}
+
