@@ -11,19 +11,32 @@ struct ScoreTileRowView: View {
     var tiles: [ScoreTile]
 
     var body: some View {
-        HStack(spacing: 8) {
-            ForEach(Array(tiles.enumerated()), id: \.offset) { _, tile in
-                ScoreTileView(palette: palette, tile: tile)
+        GeometryReader { proxy in
+            let maxTileSize: CGFloat = 44
+            let minTileSize: CGFloat = 26
+            let spacing: CGFloat = 6
+
+            let count = max(tiles.count, 1)
+            let totalSpacing = spacing * CGFloat(max(0, count - 1))
+            let raw = floor((proxy.size.width - totalSpacing) / CGFloat(count))
+            let tileSize = min(maxTileSize, max(minTileSize, raw))
+
+            HStack(spacing: spacing) {
+                ForEach(Array(tiles.enumerated()), id: \.offset) { _, tile in
+                    ScoreTileView(palette: palette, tile: tile, size: tileSize)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
+        .frame(height: 44 * 1.10)
     }
 
     private struct ScoreTileView: View {
         var palette: ColorPalette
         var tile: ScoreTile
+        var size: CGFloat
 
         var body: some View {
-            let size: CGFloat = 44
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
                     .fill(palette.background)
@@ -72,4 +85,3 @@ struct ScoreTileRowView: View {
         }
     }
 }
-
