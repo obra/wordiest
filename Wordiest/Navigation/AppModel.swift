@@ -40,16 +40,19 @@ final class AppModel: ObservableObject {
 
     let settings: AppSettings
     let historyStore: HistoryStore
+    let gameCenter: GameCenterSubmitting
     let scene: GameScene
 
     private(set) var assets: GameAssets?
     private(set) var matchReviewContext: ScoreContext?
 
-    init(settings: AppSettings = AppSettings(), historyStore: HistoryStore = HistoryStore()) {
+    init(settings: AppSettings = AppSettings(), historyStore: HistoryStore = HistoryStore(), gameCenter: GameCenterSubmitting = GameCenterManager()) {
         self.settings = settings
         self.historyStore = historyStore
+        self.gameCenter = gameCenter
         self.scene = GameScene(size: .zero)
 
+        gameCenter.authenticateIfNeeded()
         Task { await loadAssets() }
     }
 
@@ -137,6 +140,7 @@ final class AppModel: ObservableObject {
         settings.numMatches += 1
         settings.cumulativeScore += Int64(playerScore)
         settings.rating = update.newRating
+        submitLeaderboardsAfterMatch(playerScore: playerScore, newRating: update.newRating)
 
         let entry = HistoryEntry(
             matchId: String(matchIndex),
@@ -168,6 +172,16 @@ final class AppModel: ObservableObject {
                 isReview: false
             ),
             prepareMatchReview: false
+        )
+    }
+
+    func submitLeaderboardsAfterMatch(playerScore: Int, newRating: Double) {
+        gameCenter.submit(
+            scoreSubmissions: GameCenterLeaderboards.scoreSubmissions(
+                cumulativeScore: settings.cumulativeScore,
+                bestRoundScore: playerScore,
+                rating: newRating
+            )
         )
     }
 

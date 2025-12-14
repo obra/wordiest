@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LeadersView: View {
     @ObservedObject var model: AppModel
+    @State private var showingGameCenter = false
 
     var body: some View {
         let palette = model.settings.palette
@@ -19,14 +20,21 @@ struct LeadersView: View {
             Text("Leaders")
                 .font(.title.bold())
                 .foregroundStyle(palette.foreground)
-            Text("Leaderboards aren’t available in this iOS port.")
-                .multilineTextAlignment(.center)
-                .foregroundStyle(palette.foreground)
-                .padding(.horizontal, 24)
+            Button("Show Leaderboards") { showingGameCenter = true }
+                .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)
         .tint(palette.foreground)
+        .onAppear {
+            model.gameCenter.authenticateIfNeeded()
+        }
+        .sheet(isPresented: $showingGameCenter) {
+            GameCenterView(state: .leaderboards) {
+                showingGameCenter = false
+            }
+            .ignoresSafeArea()
+        }
     }
 }
