@@ -29,20 +29,11 @@ struct ScoreView: View {
                     .foregroundStyle(palette.foreground)
                     .padding(.horizontal, 18)
 
-                VStack(spacing: 6) {
-                    HStack(alignment: .top) {
-                        Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
-
-                    HStack(alignment: .top) {
-                        Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
+                HStack(alignment: .top) {
+                    Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .foregroundStyle(palette.foreground)
                 .font(.footnote)
@@ -51,6 +42,16 @@ struct ScoreView: View {
                 scoreGraph()
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 18)
+
+                HStack(alignment: .top) {
+                    Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .foregroundStyle(palette.foreground)
+                .font(.footnote)
+                .padding(.horizontal, 18)
 
                 Spacer(minLength: 0)
 
