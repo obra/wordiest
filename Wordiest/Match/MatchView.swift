@@ -12,10 +12,7 @@ struct MatchView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let sceneSize = CGSize(
-                width: proxy.size.width + proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing,
-                height: proxy.size.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom
-            )
+            let sceneSize = proxy.size
             ZStack(alignment: .bottom) {
                 SpriteView(scene: model.scene)
                     .ignoresSafeArea()
@@ -27,12 +24,7 @@ struct MatchView: View {
                         model.applySettingsToScene()
                     }
                     .onChange(of: proxy.size) { _, newSize in
-                        model.configureSceneIfReady(
-                            size: CGSize(
-                                width: newSize.width + proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing,
-                                height: newSize.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom
-                            )
-                        )
+                        model.configureSceneIfReady(size: newSize)
                     }
                     .onChange(of: model.settings.soundEnabled) { _, _ in
                         model.applySettingsToScene()
