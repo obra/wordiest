@@ -21,23 +21,25 @@ struct WordiestTileView: View {
         ZStack {
             switch kind {
             case let .tile(t):
-                if let bonus = t.bonus, !bonus.isEmpty {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(palette.background)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: cornerRadius)
-                                .strokeBorder(palette.foreground, lineWidth: borderWidth)
-                        )
-                        .frame(width: width * 0.5, height: height)
-                }
-
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(palette.background)
+                    .frame(width: width, height: bodyHeight)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
                             .strokeBorder(palette.foreground, lineWidth: borderWidth)
                     )
-                    .frame(width: width, height: bodyHeight)
+
+                if let bonus = t.bonus, !bonus.isEmpty {
+                    // Put the bonus fill *above* the main stroke so it erases the stroke segments
+                    // that would otherwise appear as lines across the tab.
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(palette.background)
+                        .frame(width: width * 0.5, height: height)
+
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .strokeBorder(palette.foreground, lineWidth: borderWidth)
+                        .frame(width: width * 0.5, height: height)
+                }
 
                 if let bonus = t.bonus, !bonus.isEmpty {
                     VStack(spacing: 0) {
@@ -83,4 +85,3 @@ struct WordiestTileView: View {
         .frame(width: width, height: height)
     }
 }
-

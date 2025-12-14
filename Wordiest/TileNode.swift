@@ -5,8 +5,10 @@ final class TileNode: SKNode {
     let tile: Tile
     let baseSize: CGSize
 
-    private let bonusBackground: SKShapeNode?
-    private let tileBackground: SKShapeNode
+    private let bonusStroke: SKShapeNode?
+    private let bonusFill: SKShapeNode?
+    private let tileStroke: SKShapeNode
+    private let tileFill: SKShapeNode
     private let letterLabel: SKLabelNode
     private let valueLabel: SKLabelNode
     private let bonusLabelTop: SKLabelNode
@@ -28,11 +30,17 @@ final class TileNode: SKNode {
             width: size.width,
             height: size.height - (tileOffsetY * 2)
         )
-        self.tileBackground = SKShapeNode(rect: mainRect, cornerRadius: cornerRadius)
-        self.tileBackground.lineWidth = borderWidth
-        self.tileBackground.strokeColor = .white
-        self.tileBackground.fillColor = .black
-        self.tileBackground.isAntialiased = true
+        self.tileStroke = SKShapeNode(rect: mainRect, cornerRadius: cornerRadius)
+        self.tileStroke.lineWidth = borderWidth
+        self.tileStroke.strokeColor = .white
+        self.tileStroke.fillColor = .clear
+        self.tileStroke.isAntialiased = true
+
+        self.tileFill = SKShapeNode(rect: mainRect, cornerRadius: cornerRadius)
+        self.tileFill.lineWidth = 0
+        self.tileFill.strokeColor = .clear
+        self.tileFill.fillColor = .black
+        self.tileFill.isAntialiased = true
 
         if let bonus = tile.bonus, !bonus.isEmpty {
             let bonusInsetX = size.width * WordiestTileStyle.bonusInsetXRatio
@@ -42,14 +50,22 @@ final class TileNode: SKNode {
                 width: size.width - (bonusInsetX * 2),
                 height: size.height
             )
-            let bonusBackground = SKShapeNode(rect: bonusRect, cornerRadius: cornerRadius)
-            bonusBackground.lineWidth = borderWidth
-            bonusBackground.strokeColor = .white
-            bonusBackground.fillColor = .black
-            bonusBackground.isAntialiased = true
-            self.bonusBackground = bonusBackground
+            let bonusStroke = SKShapeNode(rect: bonusRect, cornerRadius: cornerRadius)
+            bonusStroke.lineWidth = borderWidth
+            bonusStroke.strokeColor = .white
+            bonusStroke.fillColor = .clear
+            bonusStroke.isAntialiased = true
+            self.bonusStroke = bonusStroke
+
+            let bonusFill = SKShapeNode(rect: bonusRect, cornerRadius: cornerRadius)
+            bonusFill.lineWidth = 0
+            bonusFill.strokeColor = .clear
+            bonusFill.fillColor = .black
+            bonusFill.isAntialiased = true
+            self.bonusFill = bonusFill
         } else {
-            self.bonusBackground = nil
+            self.bonusStroke = nil
+            self.bonusFill = nil
         }
 
         self.letterLabel = SKLabelNode(fontNamed: fontName)
@@ -82,10 +98,18 @@ final class TileNode: SKNode {
 
         isUserInteractionEnabled = false
 
-        if let bonusBackground {
-            addChild(bonusBackground)
+        if let bonusStroke {
+            bonusStroke.zPosition = 0
+            addChild(bonusStroke)
         }
-        addChild(tileBackground)
+        tileStroke.zPosition = 1
+        addChild(tileStroke)
+        if let bonusFill {
+            bonusFill.zPosition = 2
+            addChild(bonusFill)
+        }
+        tileFill.zPosition = 3
+        addChild(tileFill)
 
         letterLabel.position = .zero
         addChild(letterLabel)
@@ -114,18 +138,18 @@ final class TileNode: SKNode {
 
     func setStyle(isValidWordTile: Bool) {
         let stroke = isValidWordTile ? validStrokeColor : invalidStrokeColor
-        tileBackground.strokeColor = stroke
-        bonusBackground?.strokeColor = stroke
+        tileStroke.strokeColor = stroke
+        bonusStroke?.strokeColor = stroke
     }
 
     func applyPalette(background: SKColor, foreground: SKColor, faded: SKColor) {
         validStrokeColor = foreground
         invalidStrokeColor = faded
 
-        tileBackground.fillColor = background
-        tileBackground.strokeColor = validStrokeColor
-        bonusBackground?.fillColor = background
-        bonusBackground?.strokeColor = validStrokeColor
+        tileFill.fillColor = background
+        tileStroke.strokeColor = validStrokeColor
+        bonusFill?.fillColor = background
+        bonusStroke?.strokeColor = validStrokeColor
 
         letterLabel.fontColor = foreground
         valueLabel.fontColor = foreground

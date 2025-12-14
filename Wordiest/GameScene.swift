@@ -216,7 +216,7 @@ final class GameScene: SKScene {
         removeTileFromRows(node)
 
         let offset = CGPoint(x: point.x - node.position.x, y: point.y - node.position.y)
-        node.zPosition = 10
+        node.zPosition = 30
         let baseScale = node.xScale
         node.setScale(baseScale * DragConstants.draggingScaleMultiplier)
         dragging = (node, offset, baseScale)
