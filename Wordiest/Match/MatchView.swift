@@ -11,6 +11,10 @@ struct MatchView: View {
 
     var body: some View {
         GeometryReader { proxy in
+            let sceneSize = CGSize(
+                width: proxy.size.width + proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing,
+                height: proxy.size.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom
+            )
             ZStack(alignment: .bottom) {
                 SpriteView(scene: model.scene)
                     .ignoresSafeArea()
@@ -20,14 +24,25 @@ struct MatchView: View {
                         model.scene.onRequestOpenWiktionary = { word in
                             wiktionaryWord = word
                         }
-                        model.configureSceneIfReady(size: proxy.size)
+                        model.configureSceneIfReady(size: sceneSize)
                         model.applySettingsToScene()
                     }
                     .onChange(of: proxy.size) { _, newSize in
-                        model.configureSceneIfReady(size: newSize)
+                        model.configureSceneIfReady(
+                            size: CGSize(
+                                width: newSize.width + proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing,
+                                height: newSize.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom
+                            )
+                        )
                     }
                     .onChange(of: proxy.safeAreaInsets) { _, newInsets in
                         model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: newInsets.top, left: newInsets.leading, bottom: newInsets.bottom, right: newInsets.trailing)
+                        model.configureSceneIfReady(
+                            size: CGSize(
+                                width: proxy.size.width + newInsets.leading + newInsets.trailing,
+                                height: proxy.size.height + newInsets.top + newInsets.bottom
+                            )
+                        )
                     }
                     .onChange(of: model.settings.soundEnabled) { _, _ in
                         model.applySettingsToScene()
