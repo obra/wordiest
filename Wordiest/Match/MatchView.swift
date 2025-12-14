@@ -88,7 +88,8 @@ struct MatchView: View {
                     Button {
                         isPresentingMenu = true
                     } label: {
-                        Image(systemName: "ellipsis.vertical")
+                        Image("ic_core_overflow")
+                            .renderingMode(.template)
                     }
                     .frame(width: 50)
                 }
