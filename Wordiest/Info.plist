@@ -8,13 +8,17 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleDisplayName</key>
-	<string>Wordiest</string>
-	<key>CFBundleName</key>
-	<string>Wordiest</string>
-	<key>UILaunchScreen</key>
-	<dict/>
-	<key>UIAppFonts</key>
+		<key>CFBundleDisplayName</key>
+		<string>Wordiest</string>
+		<key>CFBundleName</key>
+		<string>Wordiest</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(MARKETING_VERSION)</string>
+		<key>CFBundleVersion</key>
+		<string>$(CURRENT_PROJECT_VERSION)</string>
+		<key>UILaunchScreen</key>
+		<dict/>
+		<key>UIAppFonts</key>
 	<array>
 		<string>IstokWeb-Bold.ttf</string>
 	</array>

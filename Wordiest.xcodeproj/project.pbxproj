@@ -24,6 +24,7 @@
 		279B1C9FC862C92985A64296 /* ic_core_overflow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FA5B90D17C7A17847B9724F /* ic_core_overflow@2x.png */; };
 		2D4729687DB3B8FDB155E9F4 /* SparklineMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BC2801CCD81718501E0465 /* SparklineMath.swift */; };
 		2E61D87E0E2C021967C9164B /* pickup.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5D02CD1E40D850281D3C60BF /* pickup.mp3 */; };
+		2F92E1A5E42B67266BD12B56 /* InfoPlistVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD5E800A5FD3B3D028B9975 /* InfoPlistVersionTests.swift */; };
 		385E725BDC00E83925E34036 /* ScoreCelebrateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F472E4195AA51F1F5326DF /* ScoreCelebrateTests.swift */; };
 		3BB480040FC6CE5B982F1832 /* WordiestButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37461A220D5F9F1CEECA7C6A /* WordiestButtonBar.swift */; };
 		3E0BCAADF3CDED83C58A1C13 /* WordiestBarButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AF29676AA2BFF50B45889A /* WordiestBarButtonStyle.swift */; };
@@ -150,6 +151,7 @@
 		5D02CD1E40D850281D3C60BF /* pickup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pickup.mp3; sourceTree = "<group>"; };
 		5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestTrackerTests.swift; sourceTree = "<group>"; };
 		5FA5B90D17C7A17847B9724F /* ic_core_overflow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_core_overflow@2x.png"; sourceTree = "<group>"; };
+		5FD5E800A5FD3B3D028B9975 /* InfoPlistVersionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistVersionTests.swift; sourceTree = "<group>"; };
 		6056ACCC7610E8028C9C8B7D /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		62A295CD4E3A1179405FFBE5 /* GameCenterManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManagerTests.swift; sourceTree = "<group>"; };
 		63ECC64839C5B613AA8D5BE8 /* ScoreSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreSummaryTests.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				62A295CD4E3A1179405FFBE5 /* GameCenterManagerTests.swift */,
 				8B5341805D0B857442F9365D /* GameCenterSubmissionHookTests.swift */,
 				9A928AA3DB3FFDC6DD5A0270 /* HistoryStoreTests.swift */,
+				5FD5E800A5FD3B3D028B9975 /* InfoPlistVersionTests.swift */,
 				311EA536309027DA6DDBD7E1 /* MatchDefinitionStringsTests.swift */,
 				9E3C2BF0CD6C53A74BB7823A /* MatchVerticalLayoutTests.swift */,
 				2C3CA83283E7FF700891D617 /* PrettyRelativeTimeTests.swift */,
@@ -601,6 +604,7 @@
 				9B3493F589FB95B981E098AD /* GameCenterManagerTests.swift in Sources */,
 				01BCCBF368EA01000BCBBDDF /* GameCenterSubmissionHookTests.swift in Sources */,
 				BEAAA1F597E1077AB1859A95 /* HistoryStoreTests.swift in Sources */,
+				2F92E1A5E42B67266BD12B56 /* InfoPlistVersionTests.swift in Sources */,
 				5243366987C79EA8431D1A3B /* MatchDefinitionStringsTests.swift in Sources */,
 				A5DFE8E13E5903EE3F370D2D /* MatchVerticalLayoutTests.swift in Sources */,
 				90BCA8337F328CD4CC7E2D41 /* PrettyRelativeTimeTests.swift in Sources */,
@@ -841,11 +845,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Wordiest/Wordiest.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Wordiest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fsck.wordiest;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -875,11 +881,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Wordiest/Wordiest.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Wordiest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fsck.wordiest;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
