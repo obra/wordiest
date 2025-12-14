@@ -24,6 +24,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.concreterose.wordiest.ios
         INFOPLIST_FILE: Wordiest/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     sources:
       - path: Wordiest
         excludes:
