@@ -7,28 +7,34 @@ enum ScoreTile {
 }
 
 struct ScoreTileRowView: View {
+    struct Style: Equatable {
+        var maxTileSize: CGFloat
+        var minTileSize: CGFloat
+        var spacing: CGFloat
+
+        static let standard = Style(maxTileSize: 44, minTileSize: 26, spacing: 6)
+        static let compact = Style(maxTileSize: 40, minTileSize: 18, spacing: 4)
+    }
+
     var palette: ColorPalette
     var tiles: [ScoreTile]
+    var style: Style = .standard
 
     var body: some View {
         GeometryReader { proxy in
-            let maxTileSize: CGFloat = 44
-            let minTileSize: CGFloat = 26
-            let spacing: CGFloat = 6
-
             let count = max(tiles.count, 1)
-            let totalSpacing = spacing * CGFloat(max(0, count - 1))
+            let totalSpacing = style.spacing * CGFloat(max(0, count - 1))
             let raw = floor((proxy.size.width - totalSpacing) / CGFloat(count))
-            let tileSize = min(maxTileSize, max(minTileSize, raw))
+            let tileSize = min(style.maxTileSize, max(style.minTileSize, raw))
 
-            HStack(spacing: spacing) {
+            HStack(spacing: style.spacing) {
                 ForEach(Array(tiles.enumerated()), id: \.offset) { _, tile in
                     ScoreTileView(palette: palette, tile: tile, size: tileSize)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
-        .frame(height: 44 * 1.10)
+        .frame(height: style.maxTileSize * 1.10)
     }
 
     private struct ScoreTileView: View {
@@ -37,18 +43,23 @@ struct ScoreTileRowView: View {
         var size: CGFloat
 
         var body: some View {
-            ZStack {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(palette.background)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(palette.foreground, lineWidth: 2)
-                    )
-
+            if case .plus = tile {
                 content()
-                    .padding(.horizontal, 5)
+                    .frame(width: size, height: size * 1.10)
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(palette.background)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(palette.foreground, lineWidth: 2)
+                        )
+
+                    content()
+                        .padding(.horizontal, 5)
+                }
+                .frame(width: size, height: size * 1.10)
             }
-            .frame(width: size, height: size * 1.10)
         }
 
         @ViewBuilder

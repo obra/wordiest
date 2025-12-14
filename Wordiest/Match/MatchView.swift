@@ -8,6 +8,7 @@ struct MatchView: View {
     @State private var wiktionaryWord: String?
     @State private var submitWarningMessage: String?
     @State private var isConfirmingLeave = false
+    @State private var bottomBarHeight: CGFloat = 0
 
     var body: some View {
         GeometryReader { proxy in
@@ -21,9 +22,13 @@ struct MatchView: View {
                         }
                         model.configureSceneIfReady(size: sceneSize)
                         model.applySettingsToScene()
+                        updateSceneInsets(proxy: proxy)
                     }
                     .onChange(of: proxy.size) { _, newSize in
                         model.configureSceneIfReady(size: newSize)
+                    }
+                    .onChange(of: proxy.safeAreaInsets) { _, _ in
+                        updateSceneInsets(proxy: proxy)
                     }
                     .onChange(of: model.settings.soundEnabled) { _, _ in
                         model.applySettingsToScene()
@@ -86,6 +91,12 @@ struct MatchView: View {
                     .frame(width: 52)
                     .buttonStyle(WordiestCapsuleButtonStyle(palette: model.settings.palette))
                 }
+                .onPreferenceChange(WordiestHeightPreferenceKey.self) { newHeight in
+                    if abs(bottomBarHeight - newHeight) > 0.5 {
+                        bottomBarHeight = newHeight
+                        updateSceneInsets(proxy: proxy)
+                    }
+                }
 
                 if model.scene.isReview {
                     VStack {
@@ -136,5 +147,15 @@ struct MatchView: View {
         } message: {
             Text("Leave game in progress?")
         }
+    }
+
+    private func updateSceneInsets(proxy: GeometryProxy) {
+        let safe = proxy.safeAreaInsets
+        model.scene.safeAreaInsetsOverride = UIEdgeInsets(
+            top: safe.top,
+            left: safe.leading,
+            bottom: safe.bottom + bottomBarHeight,
+            right: safe.trailing
+        )
     }
 }

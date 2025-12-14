@@ -52,6 +52,8 @@ struct ScoreView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 18)
 
+                Spacer(minLength: 0)
+
                 WordiestBottomBar(palette: palette) {
                     Button("Play") { model.startNewMatchFromScore() }
                         .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
@@ -114,21 +116,23 @@ struct ScoreView: View {
         let points: [CGPoint] = context.match.scoreSamples.map { CGPoint(x: Double($0.ratingX10) / 10.0, y: Double($0.score)) }
         let center = CGPoint(x: context.newRating, y: Double(context.playerScore))
 
-        GeometryReader { proxy in
-            let rect = CGRect(origin: .zero, size: proxy.size).insetBy(dx: 12, dy: 12)
-            let mapping = ScoreGraphMath.mappedPoints(points: points, center: center, rect: rect)
+                GeometryReader { proxy in
+                    let rect = CGRect(origin: .zero, size: proxy.size).insetBy(dx: 12, dy: 12)
+                    let mapping = ScoreGraphMath.mappedPoints(points: points, center: center, rect: rect)
+                    let inspectorWidth = min(proxy.size.width - 24, 360)
 
-            ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
-                .contentShape(Rectangle())
-                .overlay(alignment: .bottomLeading) {
-                    if let idx = highlightIndex {
-                        OpponentInspectorView(model: model, match: context.match, sampleIndex: idx)
-                            .padding(12)
-                    }
-                }
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
+                    ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
+                        .contentShape(Rectangle())
+                        .overlay(alignment: .bottomLeading) {
+                            if let idx = highlightIndex {
+                                OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
+                                    .padding(.leading, 12)
+                                    .padding(.bottom, 12)
+                            }
+                        }
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
                             isScrubbing = true
                             let location = value.location
                             highlightIndex = ScoreGraphMath.nearestPointIndex(inScreenSpace: location, mappedPoints: mapping.mapped)

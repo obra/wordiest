@@ -16,6 +16,10 @@ struct WordiestBottomBar<Content: View>: View {
             .padding(.vertical, 10)
             .background(palette.background.opacity(0.98))
         }
+        .background(
+            GeometryReader { proxy in
+                Color.clear.preference(key: WordiestHeightPreferenceKey.self, value: proxy.size.height)
+            }
+        )
     }
 }
-

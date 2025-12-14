@@ -5,6 +5,7 @@ struct OpponentInspectorView: View {
     @ObservedObject var model: AppModel
     var match: Match
     var sampleIndex: Int
+    var maxWidth: CGFloat = 360
 
     var body: some View {
         let palette = model.settings.palette
@@ -24,7 +25,7 @@ struct OpponentInspectorView: View {
 
                 let rowTiles = tilesForRow(word1Tiles: word1Tiles, word2Tiles: word2Tiles)
                 if !rowTiles.isEmpty {
-                    ScoreTileRowView(palette: palette, tiles: rowTiles)
+                    ScoreTileRowView(palette: palette, tiles: rowTiles, style: .compact)
                 }
 
                 if let defs = model.assets?.definitions {
@@ -44,6 +45,7 @@ struct OpponentInspectorView: View {
                 .stroke(palette.faded.opacity(0.6), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(width: maxWidth, alignment: .leading)
     }
 
     private struct DefinitionBlock: View {
