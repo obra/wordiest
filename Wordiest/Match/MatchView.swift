@@ -20,9 +20,6 @@ struct MatchView: View {
                 SpriteView(scene: model.scene)
                     .ignoresSafeArea()
                     .onAppear {
-                        let safe = proxy.safeAreaInsets
-                        let extraTop: CGFloat = model.scene.isReview ? 50 : 0
-                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: safe.top + extraTop, left: safe.leading, bottom: safe.bottom, right: safe.trailing)
                         model.scene.onRequestOpenWiktionary = { word in
                             wiktionaryWord = word
                         }
@@ -34,16 +31,6 @@ struct MatchView: View {
                             size: CGSize(
                                 width: newSize.width + proxy.safeAreaInsets.leading + proxy.safeAreaInsets.trailing,
                                 height: newSize.height + proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom
-                            )
-                        )
-                    }
-                    .onChange(of: proxy.safeAreaInsets) { _, newInsets in
-                        let extraTop: CGFloat = model.scene.isReview ? 50 : 0
-                        model.scene.safeAreaInsetsOverride = UIEdgeInsets(top: newInsets.top + extraTop, left: newInsets.leading, bottom: newInsets.bottom, right: newInsets.trailing)
-                        model.configureSceneIfReady(
-                            size: CGSize(
-                                width: proxy.size.width + newInsets.leading + newInsets.trailing,
-                                height: proxy.size.height + newInsets.top + newInsets.bottom
                             )
                         )
                     }

@@ -47,7 +47,11 @@ final class GameScene: SKScene {
     private var lastWord1Definition: Definitions.Definition?
     private var lastWord2Definition: Definitions.Definition?
 
-    var isReview: Bool = false
+    var isReview: Bool = false {
+        didSet {
+            layoutAll(animated: false)
+        }
+    }
     var soundEnabled: Bool = true
     private var palette: (background: SKColor, foreground: SKColor, faded: SKColor) = (.black, .white, .gray)
 
@@ -63,6 +67,7 @@ final class GameScene: SKScene {
     }
 
     override func didMove(to view: SKView) {
+        configure(size: view.bounds.size)
         backgroundColor = palette.background
 
         if tilesByRow.isEmpty {
@@ -316,7 +321,10 @@ final class GameScene: SKScene {
     }
 
     private func contentLayout() -> (leftX: CGFloat, contentWidth: CGFloat, safeInsets: UIEdgeInsets) {
-        let insets = safeAreaInsetsOverride ?? view?.safeAreaInsets ?? .zero
+        var insets = safeAreaInsetsOverride ?? view?.safeAreaInsets ?? .zero
+        if isReview {
+            insets.top += 50
+        }
         let width = max(0, size.width - (appSpacer * 2) - insets.left - insets.right)
         let leftX = appSpacer + insets.left
         return (leftX, width, insets)
