@@ -27,7 +27,6 @@ struct WordiestTileView: View {
                     scale: scale
                 )
                 Image(uiImage: image)
-                    .interpolation(.none)
             case .plus:
                 let image = WordiestTileRenderer.image(
                     kind: .plus,
@@ -37,7 +36,6 @@ struct WordiestTileView: View {
                     scale: scale
                 )
                 Image(uiImage: image)
-                    .interpolation(.none)
             }
         }
         .frame(width: width, height: height)

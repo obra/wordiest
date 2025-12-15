@@ -165,52 +165,31 @@ enum WordiestTileRenderer {
             cg.setAllowsAntialiasing(true)
             cg.setShouldAntialias(true)
 
-            let strokeInset = borderWidth / 2.0
-            let strokeCornerRadius = max(0, cornerRadius - strokeInset)
             let bodyFillRect = snapRect(CGRect(x: 0, y: tileOffsetY, width: width, height: bodyHeight))
             let bodyFillPath = UIBezierPath(roundedRect: bodyFillRect, cornerRadius: cornerRadius)
-            let bodyStrokeRect = bodyFillRect.insetBy(dx: strokeInset, dy: strokeInset)
-            let bodyStrokePath = UIBezierPath(roundedRect: bodyStrokeRect, cornerRadius: strokeCornerRadius)
 
             let hasBonus = (tile.bonus?.isEmpty == false)
             let bonusFillRect: CGRect? = {
                 guard hasBonus else { return nil }
                 return snapRect(CGRect(x: bonusInsetX, y: 0, width: width - (bonusInsetX * 2), height: height))
             }()
-            let bonusFillPath: UIBezierPath? = bonusFillRect.map { UIBezierPath(roundedRect: $0, cornerRadius: cornerRadius) }
-            let bonusStrokePath: UIBezierPath? = bonusFillRect.map {
-                UIBezierPath(roundedRect: $0.insetBy(dx: strokeInset, dy: strokeInset), cornerRadius: strokeCornerRadius)
-            }
+            let bonusFillPath: UIBezierPath? = bonusFillRect.map { bonusTileFillPath(bodyRect: bodyFillRect, bonusRect: $0, cornerRadius: cornerRadius) }
+
+            let tileFillPath: UIBezierPath = bonusFillPath ?? bodyFillPath
 
             cg.setFillColor(background.cgColor)
-            bodyFillPath.fill()
+            tileFillPath.fill()
 
-            cg.setLineWidth(borderWidth)
+            // Stroke only inside the filled tile shape to avoid clipped top/bottom edges (bonus tiles)
+            // and to avoid "double-stroke" artifacts from layering multiple overlapping strokes.
+            cg.saveGState()
+            cg.addPath(tileFillPath.cgPath)
+            cg.clip()
+            cg.setLineWidth(borderWidth * 2.0)
             cg.setStrokeColor(stroke.cgColor)
-            bodyStrokePath.stroke()
-
-            // Draw the bonus tab after the body stroke so the tab fill erases the stroke segment that
-            // would otherwise appear as a line across the tab/body overlap.
-            if let bonusFillPath, let bonusStrokePath {
-                cg.setFillColor(background.cgColor)
-                bonusFillPath.fill()
-                cg.setStrokeColor(stroke.cgColor)
-                // Only stroke the portions of the tab that extend beyond the body. The tab's left/right
-                // vertical edges are *inside* the body in the overlap region, and stroking them creates
-                // the "double outline through the center of the tile" artifact.
-                cg.saveGState()
-                let topClipHeight = bodyFillRect.minY + strokeInset
-                let bottomClipY = bodyFillRect.maxY - strokeInset
-                if topClipHeight > 0 {
-                    cg.addRect(CGRect(x: 0, y: 0, width: width, height: topClipHeight))
-                }
-                if bottomClipY < height {
-                    cg.addRect(CGRect(x: 0, y: bottomClipY, width: width, height: height - bottomClipY))
-                }
-                cg.clip()
-                bonusStrokePath.stroke()
-                cg.restoreGState()
-            }
+            cg.addPath(tileFillPath.cgPath)
+            cg.strokePath()
+            cg.restoreGState()
 
             drawGlyphText(
                 text: tile.letter.uppercased(),
@@ -262,6 +241,90 @@ enum WordiestTileRenderer {
                 )
             }
         }
+    }
+
+    private static func bonusTileFillPath(bodyRect: CGRect, bonusRect: CGRect, cornerRadius: CGFloat) -> UIBezierPath {
+        let r = max(0, cornerRadius)
+
+        let bodyMinX = bodyRect.minX
+        let bodyMaxX = bodyRect.maxX
+        let bodyMinY = bodyRect.minY
+        let bodyMaxY = bodyRect.maxY
+
+        let bonusMinX = bonusRect.minX
+        let bonusMaxX = bonusRect.maxX
+        let bonusMinY = bonusRect.minY
+        let bonusMaxY = bonusRect.maxY
+
+        let path = UIBezierPath()
+
+        path.move(to: CGPoint(x: bodyMinX + r, y: bodyMinY))
+        path.addLine(to: CGPoint(x: bonusMinX, y: bodyMinY))
+        path.addArc(
+            withCenter: CGPoint(x: bonusMinX + r, y: bonusMinY + r),
+            radius: r,
+            startAngle: .pi,
+            endAngle: 3.0 * .pi / 2.0,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bonusMaxX - r, y: bonusMinY))
+        path.addArc(
+            withCenter: CGPoint(x: bonusMaxX - r, y: bonusMinY + r),
+            radius: r,
+            startAngle: 3.0 * .pi / 2.0,
+            endAngle: 0,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bodyMaxX - r, y: bodyMinY))
+        path.addArc(
+            withCenter: CGPoint(x: bodyMaxX - r, y: bodyMinY + r),
+            radius: r,
+            startAngle: 3.0 * .pi / 2.0,
+            endAngle: 0,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bodyMaxX, y: bodyMaxY - r))
+        path.addArc(
+            withCenter: CGPoint(x: bodyMaxX - r, y: bodyMaxY - r),
+            radius: r,
+            startAngle: 0,
+            endAngle: .pi / 2.0,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bonusMaxX, y: bodyMaxY))
+        path.addArc(
+            withCenter: CGPoint(x: bonusMaxX - r, y: bonusMaxY - r),
+            radius: r,
+            startAngle: 0,
+            endAngle: .pi / 2.0,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bonusMinX + r, y: bonusMaxY))
+        path.addArc(
+            withCenter: CGPoint(x: bonusMinX + r, y: bonusMaxY - r),
+            radius: r,
+            startAngle: .pi / 2.0,
+            endAngle: .pi,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bodyMinX + r, y: bodyMaxY))
+        path.addArc(
+            withCenter: CGPoint(x: bodyMinX + r, y: bodyMaxY - r),
+            radius: r,
+            startAngle: .pi / 2.0,
+            endAngle: .pi,
+            clockwise: true
+        )
+        path.addLine(to: CGPoint(x: bodyMinX, y: bodyMinY + r))
+        path.addArc(
+            withCenter: CGPoint(x: bodyMinX + r, y: bodyMinY + r),
+            radius: r,
+            startAngle: .pi,
+            endAngle: 3.0 * .pi / 2.0,
+            clockwise: true
+        )
+        path.close()
+        return path
     }
 
     private static func renderPlus(width: CGFloat, height: CGFloat, foreground: UIColor, scale: CGFloat) -> UIImage {
