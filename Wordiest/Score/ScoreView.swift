@@ -83,50 +83,54 @@ struct ScoreView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(palette.background)
 
-            if let idx = highlightIndex {
-				let opponentScore = context.match.scoreSamples[idx].score
-				let anchorToBottom = opponentScore >= context.playerScore
-				let inspectorWidth: CGFloat = 360
-				let panelWidth = min(UIScreen.main.bounds.width - 36, inspectorWidth)
-				let maxPanelHeight: CGFloat = 360
+	            if let idx = highlightIndex {
+					let opponentScore = context.match.scoreSamples[idx].score
+					let anchorToBottom = opponentScore >= context.playerScore
+					let inspectorWidth: CGFloat = 360
+					let panelWidth = min(UIScreen.main.bounds.width - 36, inspectorWidth)
+					let maxPanelHeight: CGFloat = 360
 
-				let content = OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
-					.background(
-						GeometryReader { measureProxy in
-							Color.clear.preference(key: InspectorHeightPreferenceKey.self, value: measureProxy.size.height)
+					let content = OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
+						.background(
+							GeometryReader { measureProxy in
+								Color.clear.preference(key: InspectorHeightPreferenceKey.self, value: measureProxy.size.height)
+							}
+						)
+						.onPreferenceChange(InspectorHeightPreferenceKey.self) { newHeight in
+							if abs(inspectorContentHeight - newHeight) > 0.5 {
+								inspectorContentHeight = newHeight
+							}
 						}
-					)
-					.onPreferenceChange(InspectorHeightPreferenceKey.self) { newHeight in
-						if abs(inspectorContentHeight - newHeight) > 0.5 {
-							inspectorContentHeight = newHeight
-						}
-					}
 
 					let panel: AnyView = {
 						if inspectorContentHeight > 0, inspectorContentHeight > maxPanelHeight {
 							return AnyView(
 								ScrollView {
 									content
-							}
-							.scrollIndicators(.hidden)
-							.frame(height: maxPanelHeight)
-						)
-					}
+								}
+								.scrollIndicators(.hidden)
+								.frame(height: maxPanelHeight)
+							)
+						}
 						return AnyView(content)
 					}()
 
-					ZStack(alignment: anchorToBottom ? .bottomLeading : .topLeading) {
-						panel
-							.shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
-							.frame(maxWidth: panelWidth, alignment: .leading)
-							.padding(.leading, 18)
-							.padding(.top, anchorToBottom ? 0 : 12)
-							.padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
-							.safeAreaPadding(anchorToBottom ? .bottom : .top, 12)
+					let panelView = panel
+						.shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+
+					VStack(spacing: 0) {
+						if !anchorToBottom { panelView }
+						Spacer(minLength: 0)
+						if anchorToBottom { panelView }
 					}
 					.frame(maxWidth: .infinity, maxHeight: .infinity)
+					.padding(.horizontal, 18)
+					.padding(.top, anchorToBottom ? 0 : 12)
+					.padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
+					.safeAreaPadding(.top, anchorToBottom ? 0 : 12)
+					.safeAreaPadding(.bottom, anchorToBottom ? 12 : 0)
 					.allowsHitTesting(false)
-	            }
+		            }
 
             if isCelebrating {
                 ConfettiView()
