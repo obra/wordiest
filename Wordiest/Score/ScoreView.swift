@@ -102,28 +102,31 @@ struct ScoreView: View {
 						}
 					}
 
-				let panel: AnyView = {
-					if inspectorContentHeight > 0, inspectorContentHeight > maxPanelHeight {
-						return AnyView(
-							ScrollView {
-								content
+					let panel: AnyView = {
+						if inspectorContentHeight > 0, inspectorContentHeight > maxPanelHeight {
+							return AnyView(
+								ScrollView {
+									content
 							}
 							.scrollIndicators(.hidden)
 							.frame(height: maxPanelHeight)
 						)
 					}
-					return AnyView(content)
-				}()
+						return AnyView(content)
+					}()
 
-				panel
-					.shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+					ZStack(alignment: anchorToBottom ? .bottomLeading : .topLeading) {
+						panel
+							.shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+							.frame(maxWidth: panelWidth, alignment: .leading)
+							.padding(.leading, 18)
+							.padding(.top, anchorToBottom ? 0 : 12)
+							.padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
+							.safeAreaPadding(anchorToBottom ? .bottom : .top, 12)
+					}
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
 					.allowsHitTesting(false)
-					.frame(maxWidth: panelWidth, alignment: .leading)
-					.padding(.leading, 18)
-					.padding(.top, anchorToBottom ? 0 : 12)
-					.padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
-					.safeAreaPadding(anchorToBottom ? .bottom : .top, 12)
-            }
+	            }
 
             if isCelebrating {
                 ConfettiView()
