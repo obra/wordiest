@@ -558,6 +558,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					1260EF58E6BBDE5FFDF3CAFF = {
+						DevelopmentTeam = 87WJ58S66M;
+					};
+				};
 			};
 			buildConfigurationList = 3237D099D288F61286AF9F2D /* Build configuration list for PBXProject "Wordiest" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -862,6 +867,7 @@
 				CODE_SIGN_ENTITLEMENTS = Wordiest/Wordiest.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 87WJ58S66M;
 				INFOPLIST_FILE = Wordiest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -898,6 +904,7 @@
 				CODE_SIGN_ENTITLEMENTS = Wordiest/Wordiest.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 87WJ58S66M;
 				INFOPLIST_FILE = Wordiest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
