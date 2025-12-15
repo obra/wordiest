@@ -9,7 +9,6 @@ struct ScoreView: View {
     @State private var isScrubbing = false
     @State private var isCelebrating = false
     @State private var bottomBarHeight: CGFloat = 0
-    @State private var scoreGraphFrame: CGRect = .zero
 
     var body: some View {
         let palette = model.settings.palette
@@ -45,11 +44,6 @@ struct ScoreView: View {
                     scoreGraph()
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal, 18)
-                        .background(
-                            GeometryReader { proxy in
-                                Color.clear.preference(key: ScoreGraphFramePreferenceKey.self, value: proxy.frame(in: .named("ScoreViewSpace")))
-                            }
-                        )
 
                     HStack(alignment: .top) {
                         Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
@@ -88,30 +82,40 @@ struct ScoreView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(palette.background)
 
-                if let idx = highlightIndex, scoreGraphFrame != .zero {
+                if let idx = highlightIndex {
+                    let opponentScore = context.match.scoreSamples[idx].score
+                    let anchorToBottom = opponentScore >= context.playerScore
                     let inspectorWidth = min(rootProxy.size.width - 36, 360)
-                    let topY = scoreGraphFrame.maxY + 12
-                    let bottomY = rootProxy.size.height - bottomBarHeight - 12
-                    let availableHeight = max(0, bottomY - topY)
-                    let panelHeight = min(availableHeight, 260)
-                    if panelHeight >= 80 {
-                        ScrollView {
-                            OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .scrollIndicators(.hidden)
-                        .frame(width: inspectorWidth, height: panelHeight, alignment: .top)
-                        .padding(12)
-                        .background(palette.background.opacity(0.98))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(palette.faded.opacity(0.6), lineWidth: 1)
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
-                        .offset(x: 18, y: topY)
-                        .allowsHitTesting(false)
-                        .zIndex(1)
+                    let maxPanelHeight = min(360, max(180, rootProxy.size.height - bottomBarHeight - 24))
+
+                    let panel = ScrollView {
+                        OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .scrollIndicators(.hidden)
+                    .frame(width: inspectorWidth)
+                    .frame(maxHeight: maxPanelHeight)
+                    .padding(12)
+                    .background(palette.background.opacity(0.98))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(palette.faded.opacity(0.6), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+                    .allowsHitTesting(false)
+                    .zIndex(1)
+
+                    if anchorToBottom {
+                        panel
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                            .padding(.leading, 18)
+                            .padding(.bottom, bottomBarHeight + 12)
+                    } else {
+                        panel
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                            .padding(.leading, 18)
+                            .padding(.top, rootProxy.safeAreaInsets.top + 12)
                     }
                 }
 
@@ -121,12 +125,6 @@ struct ScoreView: View {
                         .transition(.opacity)
                 }
 
-            }
-            .coordinateSpace(name: "ScoreViewSpace")
-            .onPreferenceChange(ScoreGraphFramePreferenceKey.self) { newFrame in
-                if newFrame != .zero {
-                    scoreGraphFrame = newFrame
-                }
             }
         }
         .tint(palette.foreground)
@@ -185,9 +183,4 @@ struct ScoreView: View {
         }
         .aspectRatio(1, contentMode: .fit)
     }
-}
-
-private struct ScoreGraphFramePreferenceKey: PreferenceKey {
-    static var defaultValue: CGRect { .zero }
-    static func reduce(value: inout CGRect, nextValue: () -> CGRect) { value = nextValue() }
 }
