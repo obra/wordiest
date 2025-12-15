@@ -45,7 +45,7 @@ struct OpponentInspectorView: View {
                 .stroke(palette.faded.opacity(0.6), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .frame(width: maxWidth, alignment: .leading)
+        .frame(maxWidth: maxWidth, alignment: .leading)
     }
 
     private struct DefinitionBlock: View {

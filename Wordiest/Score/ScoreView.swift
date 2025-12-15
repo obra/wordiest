@@ -8,16 +8,16 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
-    @State private var bottomBarHeight: CGFloat = 0
-    @State private var inspectorContentHeight: CGFloat = 0
+	@State private var bottomBarHeight: CGFloat = 0
+	@State private var inspectorContentHeight: CGFloat = 0
 
-    var body: some View {
-        let palette = model.settings.palette
-        ZStack {
-            VStack(spacing: 16) {
-                if let tiles = playerTiles(), !tiles.isEmpty {
-                    ScoreTileRowView(palette: palette, tiles: tiles)
-                        .padding(.horizontal, 18)
+	var body: some View {
+		let palette = model.settings.palette
+		ZStack {
+			VStack(spacing: 16) {
+				if let tiles = playerTiles(), !tiles.isEmpty {
+					ScoreTileRowView(palette: palette, tiles: tiles)
+						.padding(.horizontal, 18)
                         .padding(.top, 6)
                 }
 
@@ -80,57 +80,53 @@ struct ScoreView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(palette.background)
+			.background(palette.background)
 
-            if let idx = highlightIndex {
-                let opponentScore = context.match.scoreSamples[idx].score
-                let anchorToBottom = opponentScore >= context.playerScore
-                let inspectorWidth: CGFloat = 360
+			if let idx = highlightIndex {
+				let opponentScore = context.match.scoreSamples[idx].score
+				let anchorToBottom = opponentScore >= context.playerScore
+				let inspectorWidth: CGFloat = 360
+				let panelWidth = min(UIScreen.main.bounds.width - 36, inspectorWidth)
+				let maxPanelHeight: CGFloat = 360
 
-                GeometryReader { proxy in
-                    let panelWidth = min(proxy.size.width - 36, inspectorWidth)
-                    let maxPanelHeight = max(120, min(360, proxy.size.height - proxy.safeAreaInsets.top - bottomBarHeight - 24))
+				let content = OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
+					.background(
+						GeometryReader { measureProxy in
+							Color.clear.preference(key: InspectorHeightPreferenceKey.self, value: measureProxy.size.height)
+						}
+					)
+					.onPreferenceChange(InspectorHeightPreferenceKey.self) { newHeight in
+						if abs(inspectorContentHeight - newHeight) > 0.5 {
+							inspectorContentHeight = newHeight
+						}
+					}
 
-                    let content = OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
-                        .background(
-                            GeometryReader { measureProxy in
-                                Color.clear.preference(key: InspectorHeightPreferenceKey.self, value: measureProxy.size.height)
-                            }
-                        )
-                        .onPreferenceChange(InspectorHeightPreferenceKey.self) { newHeight in
-                            if abs(inspectorContentHeight - newHeight) > 0.5 {
-                                inspectorContentHeight = newHeight
-                            }
-                        }
+				let panel: AnyView = {
+					if inspectorContentHeight > 0, inspectorContentHeight > maxPanelHeight {
+						return AnyView(
+							ScrollView {
+								content
+							}
+							.scrollIndicators(.hidden)
+							.frame(height: maxPanelHeight)
+						)
+					}
+					return AnyView(content)
+				}()
 
-                    let panel: AnyView = {
-                        if inspectorContentHeight > 0, inspectorContentHeight > maxPanelHeight {
-                            return AnyView(
-                                ScrollView {
-                                    content
-                                }
-                                .scrollIndicators(.hidden)
-                                .frame(height: maxPanelHeight)
-                            )
-                        }
-                        return AnyView(content)
-                    }()
+				panel
+					.shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+					.allowsHitTesting(false)
+					.frame(maxWidth: panelWidth, alignment: .leading)
+					.padding(.leading, 18)
+					.padding(.top, anchorToBottom ? 0 : 12)
+					.padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
+					.safeAreaPadding(anchorToBottom ? .bottom : .top, 12)
+			}
 
-                    ZStack(alignment: anchorToBottom ? .bottomLeading : .topLeading) {
-                        panel
-                            .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
-                            .allowsHitTesting(false)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.leading, 18)
-                    .padding(.top, anchorToBottom ? 0 : (proxy.safeAreaInsets.top + 12))
-                    .padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
-                }
-            }
-
-            if isCelebrating {
-                ConfettiView()
-                    .ignoresSafeArea()
+			if isCelebrating {
+				ConfettiView()
+					.ignoresSafeArea()
                     .transition(.opacity)
             }
 
