@@ -152,7 +152,7 @@ enum WordiestTileRenderer {
         // space inside the tile. Nudge the value left so it sits more evenly within the border.
         let valuePadding = snapDown((width * WordiestTileStyle.padding6dpRatio) + (borderWidth / 2.0))
 
-        let letterFontSize = width * WordiestTileStyle.letterFontRatio
+        let letterFontSize = width * WordiestTileStyle.letterFontRatio * 0.97
         let smallFontSize = width * WordiestTileStyle.smallFontRatio
         let letterFont = UIFont(name: "IstokWeb-Bold", size: letterFontSize) ?? .systemFont(ofSize: letterFontSize, weight: .bold)
         let smallFont = UIFont(name: "IstokWeb-Bold", size: smallFontSize) ?? .systemFont(ofSize: smallFontSize, weight: .bold)
@@ -206,8 +206,7 @@ enum WordiestTileRenderer {
 
             if let bonus = tile.bonus, !bonus.isEmpty {
                 let bonusText = bonus.uppercased()
-                let bonusBounds = glyphBounds(text: bonusText, font: smallFont)
-                let verticalInset = bonusBounds.height * 0.10
+                let verticalInset = snapDown(smallFont.lineHeight * 0.10)
 
                 let topBaselineY = snapDown((height * WordiestTileStyle.bonusTopBaselineFromTopRatio) + verticalInset)
                 let bottomBaselineY = snapDown(height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio) - verticalInset)
