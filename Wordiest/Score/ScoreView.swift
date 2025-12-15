@@ -8,124 +8,79 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
-    @State private var bottomBarHeight: CGFloat = 0
 
     var body: some View {
         let palette = model.settings.palette
-        GeometryReader { rootProxy in
-            ZStack {
-                VStack(spacing: 16) {
-                    if let tiles = playerTiles(), !tiles.isEmpty {
-                        ScoreTileRowView(palette: palette, tiles: tiles)
-                            .padding(.horizontal, 18)
-                            .padding(.top, 6)
-                    }
-
-                    Text(ScoreSummary.scoreText(score: context.playerScore, percentile: context.percentile))
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(palette.foreground)
+        ZStack {
+            VStack(spacing: 16) {
+                if let tiles = playerTiles(), !tiles.isEmpty {
+                    ScoreTileRowView(palette: palette, tiles: tiles)
                         .padding(.horizontal, 18)
+                        .padding(.top, 6)
+                }
 
-                    Text(ScoreSummary.ratingText(old: context.oldRating, new: context.newRating, matchCount: context.matchCountBefore))
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(palette.foreground)
-                        .padding(.horizontal, 18)
-
-                    HStack(alignment: .top) {
-                        Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
+                Text(ScoreSummary.scoreText(score: context.playerScore, percentile: context.percentile))
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(palette.foreground)
-                    .font(.footnote)
                     .padding(.horizontal, 18)
 
-                    scoreGraph()
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 18)
-
-                    HStack(alignment: .top) {
-                        Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
+                Text(ScoreSummary.ratingText(old: context.oldRating, new: context.newRating, matchCount: context.matchCountBefore))
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(palette.foreground)
-                    .font(.footnote)
                     .padding(.horizontal, 18)
 
-                    Spacer(minLength: 0)
+                HStack(alignment: .top) {
+                    Text(ScoreSummary.upsetLossesText(count: context.upsetLosses))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(ScoreSummary.expectedLossesText(count: context.expectedLosses))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .foregroundStyle(palette.foreground)
+                .font(.footnote)
+                .padding(.horizontal, 18)
 
-                    WordiestBottomBar(palette: palette) {
-                        Button("Play") { model.startNewMatchFromScore() }
-                            .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
-                        Button("History") { model.showHistory() }
-                            .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
-                        Button("Leaders") { model.showLeaders() }
-                            .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
-                        WordiestMenu(
-                            model: model,
-                            onBack: {
-                                model.showMatchReviewFromScore()
-                            }
-                        )
-                        .frame(width: 52)
+                scoreGraph()
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 18)
+
+                HStack(alignment: .top) {
+                    Text(ScoreSummary.expectedWinsText(count: context.expectedWins))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(ScoreSummary.upsetWinsText(count: context.upsetWins))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .foregroundStyle(palette.foreground)
+                .font(.footnote)
+                .padding(.horizontal, 18)
+
+                Spacer(minLength: 0)
+
+                WordiestBottomBar(palette: palette) {
+                    Button("Play") { model.startNewMatchFromScore() }
                         .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
-                    }
-                    .onPreferenceChange(WordiestHeightPreferenceKey.self) { newHeight in
-                        if abs(bottomBarHeight - newHeight) > 0.5 {
-                            bottomBarHeight = newHeight
+                    Button("History") { model.showHistory() }
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
+                    Button("Leaders") { model.showLeaders() }
+                        .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
+                    WordiestMenu(
+                        model: model,
+                        onBack: {
+                            model.showMatchReviewFromScore()
                         }
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(palette.background)
-
-                if let idx = highlightIndex {
-                    let opponentScore = context.match.scoreSamples[idx].score
-                    let anchorToBottom = opponentScore >= context.playerScore
-                    let inspectorWidth = min(rootProxy.size.width - 36, 360)
-                    let maxPanelHeight = min(360, max(180, rootProxy.size.height - bottomBarHeight - 24))
-
-                    let panel = ScrollView {
-                        OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .scrollIndicators(.hidden)
-                    .frame(width: inspectorWidth)
-                    .frame(maxHeight: maxPanelHeight)
-                    .padding(12)
-                    .background(palette.background.opacity(0.98))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(palette.faded.opacity(0.6), lineWidth: 1)
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
-                    .allowsHitTesting(false)
-                    .zIndex(1)
-
-                    if anchorToBottom {
-                        panel
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                            .padding(.leading, 18)
-                            .padding(.bottom, bottomBarHeight + 12)
-                    } else {
-                        panel
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                            .padding(.leading, 18)
-                            .padding(.top, rootProxy.safeAreaInsets.top + 12)
-                    }
+                    .frame(width: 52)
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                 }
-
-                if isCelebrating {
-                    ConfettiView()
-                        .ignoresSafeArea()
-                        .transition(.opacity)
-                }
-
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(palette.background)
+
+            if isCelebrating {
+                ConfettiView()
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+            }
+
         }
         .tint(palette.foreground)
         .onAppear {
@@ -165,9 +120,18 @@ struct ScoreView: View {
                 GeometryReader { proxy in
                     let rect = CGRect(origin: .zero, size: proxy.size).insetBy(dx: 12, dy: 12)
                     let mapping = ScoreGraphMath.mappedPoints(points: points, center: center, rect: rect)
+                    let inspectorWidth = min(proxy.size.width - 24, 360)
 
                     ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
                         .contentShape(Rectangle())
+                        .overlay(alignment: .topLeading) {
+                            if let idx = highlightIndex {
+                                OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
+                                    .padding(.leading, 12)
+                                    .offset(y: proxy.size.height + 12)
+                                    .zIndex(1)
+                            }
+                        }
                         .gesture(
                             DragGesture(minimumDistance: 0)
                                 .onChanged { value in
