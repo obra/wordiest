@@ -195,7 +195,21 @@ enum WordiestTileRenderer {
                 cg.setFillColor(background.cgColor)
                 bonusFillPath.fill()
                 cg.setStrokeColor(stroke.cgColor)
+                // Only stroke the portions of the tab that extend beyond the body. The tab's left/right
+                // vertical edges are *inside* the body in the overlap region, and stroking them creates
+                // the "double outline through the center of the tile" artifact.
+                cg.saveGState()
+                let topClipHeight = bodyFillRect.minY + strokeInset
+                let bottomClipY = bodyFillRect.maxY - strokeInset
+                if topClipHeight > 0 {
+                    cg.addRect(CGRect(x: 0, y: 0, width: width, height: topClipHeight))
+                }
+                if bottomClipY < height {
+                    cg.addRect(CGRect(x: 0, y: bottomClipY, width: width, height: height - bottomClipY))
+                }
+                cg.clip()
                 bonusStrokePath.stroke()
+                cg.restoreGState()
             }
 
             drawGlyphText(
