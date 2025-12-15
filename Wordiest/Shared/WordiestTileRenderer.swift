@@ -128,12 +128,27 @@ enum WordiestTileRenderer {
     }
 
     private static func renderTile(tile: Tile, width: CGFloat, height: CGFloat, background: UIColor, foreground: UIColor, stroke: UIColor, scale: CGFloat) -> UIImage {
-        let cornerRadius = width * WordiestTileStyle.cornerRadiusRatio
-        let borderWidth = max(1, width * WordiestTileStyle.borderWidthRatio)
-        let tileOffsetY = height * WordiestTileStyle.tileOffsetYRatio
+        let pixel = 1.0 / scale
+        func snapDown(_ value: CGFloat) -> CGFloat { floor(value / pixel) * pixel }
+        func snapUp(_ value: CGFloat) -> CGFloat { ceil(value / pixel) * pixel }
+        func snapRect(_ rect: CGRect) -> CGRect {
+            let x1 = snapDown(rect.minX)
+            let y1 = snapDown(rect.minY)
+            let x2 = snapUp(rect.maxX)
+            let y2 = snapUp(rect.maxY)
+            return CGRect(x: x1, y: y1, width: x2 - x1, height: y2 - y1)
+        }
+
+        let cornerRadius = (width * WordiestTileStyle.cornerRadiusRatio)
+        let borderWidthPxUnrounded = (width * WordiestTileStyle.borderWidthRatio) * scale
+        var borderWidthPx = max(1, Int(borderWidthPxUnrounded.rounded()))
+        if borderWidthPx % 2 != 0 { borderWidthPx += 1 } // keep strokeInset pixel-aligned
+        let borderWidth = CGFloat(borderWidthPx) / scale
+
+        let tileOffsetY = snapDown(height * WordiestTileStyle.tileOffsetYRatio)
         let bodyHeight = height - (tileOffsetY * 2)
-        let bonusInsetX = width * WordiestTileStyle.bonusInsetXRatio
-        let valuePadding = width * WordiestTileStyle.padding6dpRatio
+        let bonusInsetX = snapDown(width * WordiestTileStyle.bonusInsetXRatio)
+        let valuePadding = snapDown(width * WordiestTileStyle.padding6dpRatio)
 
         let letterFontSize = width * WordiestTileStyle.letterFontRatio
         let smallFontSize = width * WordiestTileStyle.smallFontRatio
@@ -152,22 +167,20 @@ enum WordiestTileRenderer {
 
             let strokeInset = borderWidth / 2.0
             let strokeCornerRadius = max(0, cornerRadius - strokeInset)
-            let bodyFillRect = CGRect(x: 0, y: tileOffsetY, width: width, height: bodyHeight)
+            let bodyFillRect = snapRect(CGRect(x: 0, y: tileOffsetY, width: width, height: bodyHeight))
             let bodyFillPath = UIBezierPath(roundedRect: bodyFillRect, cornerRadius: cornerRadius)
             let bodyStrokeRect = bodyFillRect.insetBy(dx: strokeInset, dy: strokeInset)
             let bodyStrokePath = UIBezierPath(roundedRect: bodyStrokeRect, cornerRadius: strokeCornerRadius)
 
             let hasBonus = (tile.bonus?.isEmpty == false)
-            let bonusFillPath: UIBezierPath? = {
+            let bonusFillRect: CGRect? = {
                 guard hasBonus else { return nil }
-                let bonusRect = CGRect(x: bonusInsetX, y: 0, width: width - (bonusInsetX * 2), height: height)
-                return UIBezierPath(roundedRect: bonusRect, cornerRadius: cornerRadius)
+                return snapRect(CGRect(x: bonusInsetX, y: 0, width: width - (bonusInsetX * 2), height: height))
             }()
-            let bonusStrokePath: UIBezierPath? = {
-                guard hasBonus else { return nil }
-                let bonusRect = CGRect(x: bonusInsetX, y: 0, width: width - (bonusInsetX * 2), height: height).insetBy(dx: strokeInset, dy: strokeInset)
-                return UIBezierPath(roundedRect: bonusRect, cornerRadius: strokeCornerRadius)
-            }()
+            let bonusFillPath: UIBezierPath? = bonusFillRect.map { UIBezierPath(roundedRect: $0, cornerRadius: cornerRadius) }
+            let bonusStrokePath: UIBezierPath? = bonusFillRect.map {
+                UIBezierPath(roundedRect: $0.insetBy(dx: strokeInset, dy: strokeInset), cornerRadius: strokeCornerRadius)
+            }
 
             cg.setFillColor(background.cgColor)
             bodyFillPath.fill()
@@ -199,8 +212,8 @@ enum WordiestTileRenderer {
                 let bonusBounds = glyphBounds(text: bonusText, font: smallFont)
                 let verticalInset = bonusBounds.height * 0.10
 
-                let topBaselineY = (height * WordiestTileStyle.bonusTopBaselineFromTopRatio) + verticalInset
-                let bottomBaselineY = height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio) - verticalInset
+                let topBaselineY = snapDown((height * WordiestTileStyle.bonusTopBaselineFromTopRatio) + verticalInset)
+                let bottomBaselineY = snapDown(height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio) - verticalInset)
                 drawGlyphTextAtBaseline(
                     text: bonusText,
                     font: smallFont,
@@ -223,7 +236,7 @@ enum WordiestTileRenderer {
 
             if tile.value > 0 {
                 let valueText = String(tile.value)
-                let valueBaselineY = height - (height * WordiestTileStyle.valueBaselineFromBottomRatio)
+                let valueBaselineY = snapDown(height - (height * WordiestTileStyle.valueBaselineFromBottomRatio))
                 drawGlyphTextAtBaseline(
                     text: valueText,
                     font: smallFont,

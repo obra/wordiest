@@ -17,7 +17,7 @@ final class TileNode: SKNode {
         self.baseSize = size
 
         let initialTexture = SKTexture(image: UIImage())
-        initialTexture.filteringMode = .linear
+        initialTexture.filteringMode = .nearest
         self.sprite = SKSpriteNode(texture: initialTexture, size: size)
         self.sprite.zPosition = 10
 
@@ -56,7 +56,7 @@ final class TileNode: SKNode {
             scale: scale
         )
         let texture = SKTexture(image: image)
-        texture.filteringMode = .linear
+        texture.filteringMode = .nearest
         sprite.texture = texture
         sprite.size = baseSize
     }
