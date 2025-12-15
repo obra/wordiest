@@ -1,4 +1,5 @@
 import SpriteKit
+import UIKit
 import WordiestCore
 
 final class TileNode: SKNode {
@@ -10,9 +11,9 @@ final class TileNode: SKNode {
     private let tileStroke: SKShapeNode
     private let tileFill: SKShapeNode
     private let letterLabel: SKLabelNode
-    private let valueLabel: SKLabelNode
-    private let bonusLabelTop: SKLabelNode
-    private let bonusLabelBottom: SKLabelNode
+    private let valueNode: SKSpriteNode?
+    private let bonusNodeTop: SKSpriteNode?
+    private let bonusNodeBottom: SKSpriteNode?
     private var validStrokeColor: SKColor = .white
     private var invalidStrokeColor: SKColor = .gray
 
@@ -76,27 +77,30 @@ final class TileNode: SKNode {
         self.letterLabel.text = tile.letter.uppercased()
         self.letterLabel.zPosition = 10
 
-        self.valueLabel = SKLabelNode(fontNamed: fontName)
-        self.valueLabel.fontColor = .white
-        self.valueLabel.verticalAlignmentMode = .bottom
-        self.valueLabel.horizontalAlignmentMode = .right
-        self.valueLabel.fontSize = size.width * WordiestTileStyle.smallFontRatio
-        self.valueLabel.text = tile.value > 0 ? String(tile.value) : nil
-        self.valueLabel.zPosition = 10
+        let smallFontSize = size.width * WordiestTileStyle.smallFontRatio
+        let smallUIFont = UIFont(name: fontName ?? "", size: smallFontSize) ?? .systemFont(ofSize: smallFontSize, weight: .bold)
+        let scale = UIScreen.main.scale
 
-        self.bonusLabelTop = SKLabelNode(fontNamed: fontName)
-        self.bonusLabelTop.fontColor = .white
-        self.bonusLabelTop.verticalAlignmentMode = .top
-        self.bonusLabelTop.horizontalAlignmentMode = .center
-        self.bonusLabelTop.fontSize = size.width * WordiestTileStyle.smallFontRatio
-        self.bonusLabelTop.zPosition = 10
+        if tile.value > 0 {
+            let node = Self.glyphSprite(text: String(tile.value), font: smallUIFont, scale: scale)
+            node.zPosition = 10
+            self.valueNode = node
+        } else {
+            self.valueNode = nil
+        }
 
-        self.bonusLabelBottom = SKLabelNode(fontNamed: fontName)
-        self.bonusLabelBottom.fontColor = .white
-        self.bonusLabelBottom.verticalAlignmentMode = .bottom
-        self.bonusLabelBottom.horizontalAlignmentMode = .center
-        self.bonusLabelBottom.fontSize = size.width * WordiestTileStyle.smallFontRatio
-        self.bonusLabelBottom.zPosition = 10
+        let bonus = tile.bonus?.uppercased()
+        if let bonus, !bonus.isEmpty {
+            let top = Self.glyphSprite(text: bonus, font: smallUIFont, scale: scale)
+            let bottom = Self.glyphSprite(text: bonus, font: smallUIFont, scale: scale)
+            top.zPosition = 10
+            bottom.zPosition = 10
+            self.bonusNodeTop = top
+            self.bonusNodeBottom = bottom
+        } else {
+            self.bonusNodeTop = nil
+            self.bonusNodeBottom = nil
+        }
 
         super.init()
 
@@ -118,26 +122,42 @@ final class TileNode: SKNode {
         letterLabel.position = .zero
         addChild(letterLabel)
 
-        valueLabel.position = CGPoint(
-            x: (size.width / 2.0) - (size.width * WordiestTileStyle.padding3dpRatio),
-            y: (-size.height / 2.0) + tileOffsetY + (size.width * WordiestTileStyle.padding3dpRatio)
-        )
-        addChild(valueLabel)
+        let edgePadding = size.width * WordiestTileStyle.padding3dpRatio
 
-        let bonus = tile.bonus?.uppercased()
-        bonusLabelTop.text = bonus
-        bonusLabelBottom.text = bonus
+        if let valueNode {
+            valueNode.position = CGPoint(
+                x: (size.width / 2.0) - edgePadding - (valueNode.size.width / 2.0),
+                y: (-size.height / 2.0) + tileOffsetY + edgePadding + (valueNode.size.height / 2.0)
+            )
+            addChild(valueNode)
+        }
 
-        if let bonus, !bonus.isEmpty {
-            bonusLabelTop.position = CGPoint(x: 0, y: (size.height / 2.0) - (size.width * WordiestTileStyle.padding3dpRatio))
-            bonusLabelBottom.position = CGPoint(x: 0, y: (-size.height / 2.0) + (size.width * WordiestTileStyle.padding3dpRatio))
-            addChild(bonusLabelTop)
-            addChild(bonusLabelBottom)
+        if let bonusNodeTop, let bonusNodeBottom {
+            bonusNodeTop.position = CGPoint(
+                x: 0,
+                y: (size.height / 2.0) - edgePadding - (bonusNodeTop.size.height / 2.0)
+            )
+            bonusNodeBottom.position = CGPoint(
+                x: 0,
+                y: (-size.height / 2.0) + edgePadding + (bonusNodeBottom.size.height / 2.0)
+            )
+            addChild(bonusNodeTop)
+            addChild(bonusNodeBottom)
         }
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private static func glyphSprite(text: String, font: UIFont, scale: CGFloat) -> SKSpriteNode {
+        let image = GlyphBoundsText.image(text: text, font: font, scale: scale)
+        let texture = SKTexture(image: image)
+        texture.filteringMode = .linear
+        let node = SKSpriteNode(texture: texture)
+        node.colorBlendFactor = 1
+        node.color = .white
+        return node
     }
 
     func setStyle(isValidWordTile: Bool) {
@@ -156,8 +176,8 @@ final class TileNode: SKNode {
         bonusStroke?.strokeColor = validStrokeColor
 
         letterLabel.fontColor = foreground
-        valueLabel.fontColor = foreground
-        bonusLabelTop.fontColor = foreground
-        bonusLabelBottom.fontColor = foreground
+        valueNode?.color = foreground
+        bonusNodeTop?.color = foreground
+        bonusNodeBottom?.color = foreground
     }
 }

@@ -53,6 +53,7 @@
 		6B3CB6DB2CBB08A3A90EE0B8 /* Reset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE4BBF6191A5D708C142466 /* Reset.swift */; };
 		6D987F1B4BFA93925ABDB607 /* OverflowMenuOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D8C05B428D565DED6E6EB /* OverflowMenuOverlay.swift */; };
 		6FF2CA9226350C2B1E66F106 /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2D09A56E70A553897A8D4E /* AppSettingsTests.swift */; };
+		744D51135899CFFD13571BF7 /* GlyphBoundsText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A22D80F4112E1A6510897C4 /* GlyphBoundsText.swift */; };
 		75138C854F137E34BE774674 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056ACCC7610E8028C9C8B7D /* MatchView.swift */; };
 		761B07CD51A66CCCA04849DF /* ScreenshotCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8E244D1DBBC204D8969A05 /* ScreenshotCapture.swift */; };
 		78768DBEC9C9FDB2D78D4F41 /* DragMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FBE3B2001E0B84CEF211D8 /* DragMath.swift */; };
@@ -189,6 +190,7 @@
 		9350737454352F08400A9BD9 /* GameCenterAuthOnLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterAuthOnLaunchTests.swift; sourceTree = "<group>"; };
 		9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestTests.swift; sourceTree = "<group>"; };
 		9943F9E014213ADBC6EC012A /* GameCenterLeaderboardsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterLeaderboardsTests.swift; sourceTree = "<group>"; };
+		9A22D80F4112E1A6510897C4 /* GlyphBoundsText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphBoundsText.swift; sourceTree = "<group>"; };
 		9A928AA3DB3FFDC6DD5A0270 /* HistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStoreTests.swift; sourceTree = "<group>"; };
 		9CA54F1D75757DFBB8F42740 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
 		9D376FB5C9F385443F903F23 /* SubmissionWarningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionWarningTests.swift; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 		A0DD51504C7A63080762D061 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				9A22D80F4112E1A6510897C4 /* GlyphBoundsText.swift */,
 				689FF527B02291029D5DEC89 /* HTMLText.swift */,
 				A8AF29676AA2BFF50B45889A /* WordiestBarButtonStyle.swift */,
 				AE42689EE7D81834F8FE4429 /* WordiestBottomBar.swift */,
@@ -650,6 +653,7 @@
 				1A005CB3FFD61C77BDF55E13 /* GameCenterManager.swift in Sources */,
 				7A5DD2957CCC05ABFC14D296 /* GameCenterView.swift in Sources */,
 				119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */,
+				744D51135899CFFD13571BF7 /* GlyphBoundsText.swift in Sources */,
 				824B45B303DA6625D7499281 /* HTMLText.swift in Sources */,
 				794DDC6BBC559C20093DAD6A /* HelpPages.swift in Sources */,
 				5BABDCC613067537CC2033E3 /* HelpView.swift in Sources */,

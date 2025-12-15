@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import WordiestCore
 
 struct WordiestTileView: View {
@@ -22,6 +23,10 @@ struct WordiestTileView: View {
         ZStack {
             switch kind {
             case let .tile(t):
+                let scale = UIScreen.main.scale
+                let smallUIFont = UIFont(name: "IstokWeb-Bold", size: smallFontSize) ?? .systemFont(ofSize: smallFontSize, weight: .bold)
+                let edgePadding = width * WordiestTileStyle.padding3dpRatio
+
                 if let bonus = t.bonus, !bonus.isEmpty {
                     RoundedRectangle(cornerRadius: cornerRadius)
                         .stroke(palette.foreground, lineWidth: borderWidth)
@@ -46,20 +51,17 @@ struct WordiestTileView: View {
 
                 if let bonus = t.bonus, !bonus.isEmpty {
                     let bonusText = bonus.uppercased()
-                    VStack(spacing: 0) {
-                        Text(bonusText)
-                            .font(.custom("IstokWeb-Bold", size: smallFontSize))
-                            .foregroundStyle(palette.foreground)
-                            .padding(.top, width * WordiestTileStyle.padding3dpRatio)
+                    let bonusImage = GlyphBoundsText.image(text: bonusText, font: smallUIFont, scale: scale)
 
-                        Spacer(minLength: 0)
+                    Image(uiImage: bonusImage)
+                        .renderingMode(.template)
+                        .foregroundStyle(palette.foreground)
+                        .position(x: width / 2.0, y: edgePadding + (bonusImage.size.height / 2.0))
 
-                        Text(bonusText)
-                            .font(.custom("IstokWeb-Bold", size: smallFontSize))
-                            .foregroundStyle(palette.foreground)
-                            .padding(.bottom, width * WordiestTileStyle.padding3dpRatio)
-                    }
-                    .frame(width: width, height: height)
+                    Image(uiImage: bonusImage)
+                        .renderingMode(.template)
+                        .foregroundStyle(palette.foreground)
+                        .position(x: width / 2.0, y: height - edgePadding - (bonusImage.size.height / 2.0))
                 }
 
                 Text(t.letter.uppercased())
@@ -67,18 +69,14 @@ struct WordiestTileView: View {
                     .foregroundStyle(palette.foreground)
 
                 if t.value > 0 {
-                    VStack {
-                        Spacer(minLength: 0)
-                        HStack {
-                            Spacer(minLength: 0)
-                            Text(String(t.value))
-                                .font(.custom("IstokWeb-Bold", size: smallFontSize))
-                                .foregroundStyle(palette.foreground)
-                                .padding(.trailing, width * WordiestTileStyle.padding3dpRatio)
-                                .padding(.bottom, tileOffsetY + (width * WordiestTileStyle.padding3dpRatio))
-                        }
-                    }
-                    .frame(width: width, height: height)
+                    let valueImage = GlyphBoundsText.image(text: String(t.value), font: smallUIFont, scale: scale)
+                    Image(uiImage: valueImage)
+                        .renderingMode(.template)
+                        .foregroundStyle(palette.foreground)
+                        .position(
+                            x: width - edgePadding - (valueImage.size.width / 2.0),
+                            y: height - tileOffsetY - edgePadding - (valueImage.size.height / 2.0)
+                        )
                 }
             case .plus:
                 Text("+")
