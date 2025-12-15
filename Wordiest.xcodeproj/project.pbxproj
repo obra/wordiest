@@ -10,6 +10,7 @@
 		01BCCBF368EA01000BCBBDDF /* GameCenterSubmissionHookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5341805D0B857442F9365D /* GameCenterSubmissionHookTests.swift */; };
 		043CF4A990A8961A58EDC24D /* WordiestCore in Frameworks */ = {isa = PBXBuildFile; productRef = 01E150662B9290FBD203179D /* WordiestCore */; };
 		04484F5B456442337CD031E6 /* DragConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA732D7CAC7BF7B6D8D8E9D2 /* DragConstants.swift */; };
+		0E6EA089F88EBDC9AF032D4D /* ThemeModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3A2E1375649AEAD3C1C240 /* ThemeModeTests.swift */; };
 		0FC82588D992E409837154FC /* Wiktionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5225FF87A1FB7866D1400D /* Wiktionary.swift */; };
 		119CF9D53859EA0B7A843C47 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3391FCFCAB86B2ECF9EDFEC6 /* GameScene.swift */; };
 		14C5DAC860D98383DEE2EC1F /* ReviewPlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */; };
@@ -163,6 +164,7 @@
 		689FF527B02291029D5DEC89 /* HTMLText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLText.swift; sourceTree = "<group>"; };
 		68B4F4B96FF1CE6302534A72 /* WordiestCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WordiestCore; path = WordiestCore; sourceTree = SOURCE_ROOT; };
 		68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shuffle.swift; sourceTree = "<group>"; };
+		6A3A2E1375649AEAD3C1C240 /* ThemeModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModeTests.swift; sourceTree = "<group>"; };
 		6D2776E45AF69BBFB1627C56 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
 		6F0DDAE2F8D893E2F73880CC /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 		7175E378BA73685D202FCBDE /* ResetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetTests.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 				C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */,
 				21A2E0BB20DBD4EF0D7D5AB6 /* SparklineMathTests.swift */,
 				9D376FB5C9F385443F903F23 /* SubmissionWarningTests.swift */,
+				6A3A2E1375649AEAD3C1C240 /* ThemeModeTests.swift */,
 				1E72A1DDA39CD4A5F998D53B /* TileRowLayoutTests.swift */,
 				83204C9D57F7A56C70B958ED /* WordiestButtonColorsTests.swift */,
 				9489A1FEE3027A8A5AE81734 /* WordiestTests.swift */,
@@ -621,6 +624,7 @@
 				FB5D32B38E6F1544E859C1C1 /* ShuffleTests.swift in Sources */,
 				3E855925282209DA497D8AD3 /* SparklineMathTests.swift in Sources */,
 				DFC4E1A9F4A7C29D2C07869B /* SubmissionWarningTests.swift in Sources */,
+				0E6EA089F88EBDC9AF032D4D /* ThemeModeTests.swift in Sources */,
 				ED59CDB5447757F86473BE3B /* TileRowLayoutTests.swift in Sources */,
 				90072A8A9BB4FB873EADE726 /* WordiestButtonColorsTests.swift in Sources */,
 				4847F99B07C9FE1876BB7C24 /* WordiestTests.swift in Sources */,

@@ -14,9 +14,19 @@ struct MenuView: View {
         NavigationStack {
             List {
                 Section {
-                    Button("Change colors") {
-                        model.settings.colorPaletteIndex = (model.settings.colorPaletteIndex % 6) + 1
-                        model.applySettingsToScene()
+                    Picker(
+                        "Appearance",
+                        selection: Binding(
+                            get: { model.settings.themeMode },
+                            set: { newValue in
+                                model.settings.themeMode = newValue
+                                model.applySettingsToScene()
+                            }
+                        )
+                    ) {
+                        ForEach(AppSettings.ThemeMode.allCases, id: \.rawValue) { mode in
+                            Text(mode.title).tag(mode)
+                        }
                     }
 
                     Button("Share screenshot") {
@@ -67,6 +77,9 @@ struct MenuView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
                 }
+            }
+            .onChange(of: model.settings.themeMode) { _, _ in
+                model.applySettingsToScene()
             }
             .alert("Confirm", isPresented: $isConfirmingReset) {
                 Button("Cancel", role: .cancel) {}

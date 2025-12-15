@@ -33,7 +33,10 @@ struct MatchView: View {
                     .onChange(of: model.settings.soundEnabled) { _, _ in
                         model.applySettingsToScene()
                     }
-                    .onChange(of: model.settings.colorPaletteIndex) { _, _ in
+                    .onChange(of: model.settings.themeMode) { _, _ in
+                        model.applySettingsToScene()
+                    }
+                    .onChange(of: model.settings.effectiveColorScheme) { _, _ in
                         model.applySettingsToScene()
                     }
 

@@ -1,10 +1,27 @@
 import Foundation
+import SwiftUI
 
 @MainActor
 final class AppSettings: ObservableObject {
-    @Published var colorPaletteIndex: Int {
-        didSet { defaults.set(colorPaletteIndex, forKey: Keys.colorPaletteIndex) }
+    enum ThemeMode: Int, CaseIterable, Equatable {
+        case system = 0
+        case light = 1
+        case dark = 2
+
+        var title: String {
+            switch self {
+            case .system: return "System"
+            case .light: return "Light"
+            case .dark: return "Dark"
+            }
+        }
     }
+
+    @Published var themeMode: ThemeMode {
+        didSet { defaults.set(themeMode.rawValue, forKey: Keys.themeMode) }
+    }
+
+    @Published var effectiveColorScheme: ColorScheme = .light
 
     @Published var soundEnabled: Bool {
         didSet { defaults.set(soundEnabled, forKey: Keys.soundEnabled) }
@@ -32,7 +49,8 @@ final class AppSettings: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        self.colorPaletteIndex = defaults.object(forKey: Keys.colorPaletteIndex) as? Int ?? 1
+        let rawTheme = defaults.object(forKey: Keys.themeMode) as? Int ?? ThemeMode.system.rawValue
+        self.themeMode = ThemeMode(rawValue: rawTheme) ?? .system
         self.soundEnabled = defaults.object(forKey: Keys.soundEnabled) as? Bool ?? true
         self.rating = defaults.object(forKey: Keys.rating) as? Double ?? 50.0
         self.ratingDeviation = defaults.object(forKey: Keys.ratingDeviation) as? Double ?? 0.0
@@ -60,11 +78,16 @@ final class AppSettings: ObservableObject {
     }
 
     var palette: ColorPalette {
-        ColorPalette.palette(index: colorPaletteIndex)
+        switch effectiveColorScheme {
+        case .dark:
+            return ColorPalette.palette(index: 2)
+        default:
+            return ColorPalette.palette(index: 1)
+        }
     }
 
     private enum Keys {
-        static let colorPaletteIndex = "colorPaletteIndex"
+        static let themeMode = "themeMode"
         static let soundEnabled = "soundEnabled"
         static let rating = "rating"
         static let ratingDeviation = "ratingDeviation"

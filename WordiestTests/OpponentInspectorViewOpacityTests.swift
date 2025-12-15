@@ -12,7 +12,7 @@ final class OpponentInspectorViewOpacityTests: XCTestCase {
         defaults.removePersistentDomain(forName: suiteName)
 
         let settings = AppSettings(defaults: defaults)
-        settings.colorPaletteIndex = 1
+        settings.effectiveColorScheme = .light
 
         let model = AppModel(settings: settings, historyStore: HistoryStore(), gameCenter: GameCenterNoop())
         let match = Match(

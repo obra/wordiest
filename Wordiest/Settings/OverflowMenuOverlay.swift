@@ -28,8 +28,22 @@ struct OverflowMenuOverlay: View {
                         Divider()
                     }
 
-                    menuButton("Change colors") {
-                        model.settings.colorPaletteIndex = (model.settings.colorPaletteIndex % 6) + 1
+                    menuButton("Appearance: System") {
+                        model.settings.themeMode = .system
+                        model.applySettingsToScene()
+                        isPresented = false
+                    }
+                    Divider()
+
+                    menuButton("Appearance: Light") {
+                        model.settings.themeMode = .light
+                        model.applySettingsToScene()
+                        isPresented = false
+                    }
+                    Divider()
+
+                    menuButton("Appearance: Dark") {
+                        model.settings.themeMode = .dark
                         model.applySettingsToScene()
                         isPresented = false
                     }

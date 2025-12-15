@@ -4,7 +4,6 @@ struct WordiestMenu: View {
     @ObservedObject var model: AppModel
     var onBack: (() -> Void)?
 
-    @State private var isPresentingPalettePicker = false
     @State private var isConfirmingReset = false
     @State private var isPresentingShare = false
     @State private var capturedShareImage: UIImage?
@@ -15,7 +14,11 @@ struct WordiestMenu: View {
                 Button("Back") { onBack() }
             }
 
-            Button("Change colors") { isPresentingPalettePicker = true }
+            Menu("Appearance") {
+                appearanceButton(title: AppSettings.ThemeMode.system.title, mode: .system)
+                appearanceButton(title: AppSettings.ThemeMode.light.title, mode: .light)
+                appearanceButton(title: AppSettings.ThemeMode.dark.title, mode: .dark)
+            }
 
             Button("Share screenshot") {
                 DispatchQueue.main.async {
@@ -47,9 +50,6 @@ struct WordiestMenu: View {
             Image(systemName: "ellipsis.circle")
                 .font(.system(size: 20, weight: .semibold))
         }
-        .sheet(isPresented: $isPresentingPalettePicker) {
-            PalettePickerView(settings: model.settings)
-        }
         .sheet(isPresented: $isPresentingShare) {
             ShareScreenshotView(model: model, initialImage: capturedShareImage)
         }
@@ -63,6 +63,19 @@ struct WordiestMenu: View {
             }
         } message: {
             Text("Reset rating and clear history?")
+        }
+    }
+
+    private func appearanceButton(title: String, mode: AppSettings.ThemeMode) -> some View {
+        Button {
+            model.settings.themeMode = mode
+            model.applySettingsToScene()
+        } label: {
+            if model.settings.themeMode == mode {
+                Text("\(title) ✓")
+            } else {
+                Text(title)
+            }
         }
     }
 }

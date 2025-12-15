@@ -6,34 +6,21 @@ struct PalettePickerView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        let palette = settings.palette
         NavigationStack {
             List {
-                ForEach(1...6, id: \.self) { index in
-                    let palette = ColorPalette.palette(index: index)
+                ForEach(AppSettings.ThemeMode.allCases, id: \.rawValue) { mode in
                     Button {
-                        settings.colorPaletteIndex = index
+                        settings.themeMode = mode
                         dismiss()
                     } label: {
                         HStack(spacing: 12) {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(palette.background)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(palette.foreground, lineWidth: 2)
-                                )
-                                .frame(width: 44, height: 32)
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(label(for: index))
-                                    .foregroundStyle(palette.foreground)
-                                Text("#\(index)")
-                                    .font(.footnote)
-                                    .foregroundStyle(palette.faded)
-                            }
+                            Text(mode.title)
+                                .foregroundStyle(palette.foreground)
 
                             Spacer()
 
-                            if settings.colorPaletteIndex == index {
+                            if settings.themeMode == mode {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(palette.foreground)
                             }
@@ -42,25 +29,15 @@ struct PalettePickerView: View {
                     }
                 }
             }
-            .navigationTitle("Colors")
+            .scrollContentBackground(.hidden)
+            .background(palette.background)
+            .navigationTitle("Appearance")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
                 }
             }
         }
-    }
-
-    private func label(for index: Int) -> String {
-        switch index {
-        case 1: return "Light"
-        case 2: return "Dark"
-        case 3: return "Gold"
-        case 4: return "Purple"
-        case 5: return "Orange"
-        case 6: return "Black"
-        default: return "Palette"
-        }
+        .tint(palette.foreground)
     }
 }
-
