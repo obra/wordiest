@@ -22,10 +22,11 @@ struct WordiestTileView: View {
 
         ZStack {
             switch kind {
-            case let .tile(t):
-                let scale = UIScreen.main.scale
-                let smallUIFont = UIFont(name: "IstokWeb-Bold", size: smallFontSize) ?? .systemFont(ofSize: smallFontSize, weight: .bold)
-                let edgePadding = width * WordiestTileStyle.padding3dpRatio
+	            case let .tile(t):
+	                let scale = UIScreen.main.scale
+	                let smallUIFont = UIFont(name: "IstokWeb-Bold", size: smallFontSize) ?? .systemFont(ofSize: smallFontSize, weight: .bold)
+	                let edgePadding = width * WordiestTileStyle.padding3dpRatio
+	                let valuePadding = width * WordiestTileStyle.padding6dpRatio
 
                 if let bonus = t.bonus, !bonus.isEmpty {
                     RoundedRectangle(cornerRadius: cornerRadius)
@@ -68,16 +69,16 @@ struct WordiestTileView: View {
                     .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.letterFontRatio))
                     .foregroundStyle(palette.foreground)
 
-                if t.value > 0 {
-                    let valueImage = GlyphBoundsText.image(text: String(t.value), font: smallUIFont, scale: scale)
-                    Image(uiImage: valueImage)
-                        .renderingMode(.template)
-                        .foregroundStyle(palette.foreground)
-                        .position(
-                            x: width - edgePadding - (valueImage.size.width / 2.0),
-                            y: height - tileOffsetY - edgePadding - (valueImage.size.height / 2.0)
-                        )
-                }
+	                if t.value > 0 {
+	                    let valueImage = GlyphBoundsText.image(text: String(t.value), font: smallUIFont, scale: scale)
+	                    Image(uiImage: valueImage)
+	                        .renderingMode(.template)
+	                        .foregroundStyle(palette.foreground)
+	                        .position(
+	                            x: width - valuePadding - (valueImage.size.width / 2.0),
+	                            y: height - tileOffsetY - valuePadding - (valueImage.size.height / 2.0)
+	                        )
+	                }
             case .plus:
                 Text("+")
                     .font(.custom("IstokWeb-Bold", size: width * WordiestTileStyle.letterFontRatio))

@@ -123,11 +123,12 @@ final class TileNode: SKNode {
         addChild(letterLabel)
 
         let edgePadding = size.width * WordiestTileStyle.padding3dpRatio
+        let valuePadding = size.width * WordiestTileStyle.padding6dpRatio
 
         if let valueNode {
             valueNode.position = CGPoint(
-                x: (size.width / 2.0) - edgePadding - (valueNode.size.width / 2.0),
-                y: (-size.height / 2.0) + tileOffsetY + edgePadding + (valueNode.size.height / 2.0)
+                x: (size.width / 2.0) - valuePadding - (valueNode.size.width / 2.0),
+                y: (-size.height / 2.0) + tileOffsetY + valuePadding + (valueNode.size.height / 2.0)
             )
             addChild(valueNode)
         }
