@@ -184,6 +184,7 @@ enum WordiestTileRenderer {
                 let bonusText = bonus.uppercased()
                 let topBaselineY = height * WordiestTileStyle.bonusTopBaselineFromTopRatio
                 let bottomBaselineY = height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio)
+                let bottomBaselineNudgeUp = 1.0 / scale
                 drawGlyphTextAtBaseline(
                     text: bonusText,
                     font: smallFont,
@@ -197,7 +198,7 @@ enum WordiestTileRenderer {
                     text: bonusText,
                     font: smallFont,
                     color: foreground,
-                    baseline: CGPoint(x: width / 2.0, y: bottomBaselineY),
+                    baseline: CGPoint(x: width / 2.0, y: bottomBaselineY - bottomBaselineNudgeUp),
                     horizontalAlignment: .center,
                     canvasHeight: height,
                     in: cg
