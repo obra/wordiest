@@ -148,7 +148,9 @@ enum WordiestTileRenderer {
         let tileOffsetY = cornerRadius
         let bodyHeight = height - (tileOffsetY * 2)
         let bonusInsetX = snapDown(width * WordiestTileStyle.bonusInsetXRatio)
-        let valuePadding = snapDown(width * WordiestTileStyle.padding6dpRatio)
+        // The stroke is clipped to the interior of the fill path, so the visual "border" consumes
+        // space inside the tile. Nudge the value left so it sits more evenly within the border.
+        let valuePadding = snapDown((width * WordiestTileStyle.padding6dpRatio) + (borderWidth / 2.0))
 
         let letterFontSize = width * WordiestTileStyle.letterFontRatio
         let smallFontSize = width * WordiestTileStyle.smallFontRatio
