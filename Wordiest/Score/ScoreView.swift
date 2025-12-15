@@ -8,6 +8,7 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
+    @State private var bottomBarHeight: CGFloat = 0
 
     var body: some View {
         let palette = model.settings.palette
@@ -71,9 +72,50 @@ struct ScoreView: View {
                     .frame(width: 52)
                     .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
                 }
+                .onPreferenceChange(WordiestHeightPreferenceKey.self) { newHeight in
+                    if abs(bottomBarHeight - newHeight) > 0.5 {
+                        bottomBarHeight = newHeight
+                    }
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(palette.background)
+
+            if let idx = highlightIndex {
+                let opponentScore = context.match.scoreSamples[idx].score
+                let anchorToBottom = opponentScore >= context.playerScore
+                let inspectorWidth: CGFloat = 360
+
+                GeometryReader { proxy in
+                    let panelWidth = min(proxy.size.width - 36, inspectorWidth)
+                    let maxPanelHeight = min(360, max(180, proxy.size.height - bottomBarHeight - 24))
+
+                    ScrollView {
+                        OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .scrollIndicators(.hidden)
+                    .frame(width: panelWidth)
+                    .frame(maxHeight: maxPanelHeight)
+                    .padding(12)
+                    .background(palette.background.opacity(0.98))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(palette.faded.opacity(0.6), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+                    .allowsHitTesting(false)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: anchorToBottom ? .bottomLeading : .topLeading
+                    )
+                    .padding(.leading, 18)
+                    .padding(.top, anchorToBottom ? 0 : (proxy.safeAreaInsets.top + 12))
+                    .padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
+                }
+            }
 
             if isCelebrating {
                 ConfettiView()
@@ -120,18 +162,9 @@ struct ScoreView: View {
                 GeometryReader { proxy in
                     let rect = CGRect(origin: .zero, size: proxy.size).insetBy(dx: 12, dy: 12)
                     let mapping = ScoreGraphMath.mappedPoints(points: points, center: center, rect: rect)
-                    let inspectorWidth = min(proxy.size.width - 24, 360)
 
                     ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
                         .contentShape(Rectangle())
-                        .overlay(alignment: .topLeading) {
-                            if let idx = highlightIndex {
-                                OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
-                                    .padding(.leading, 12)
-                                    .offset(y: proxy.size.height + 12)
-                                    .zIndex(1)
-                            }
-                        }
                         .gesture(
                             DragGesture(minimumDistance: 0)
                                 .onChanged { value in
