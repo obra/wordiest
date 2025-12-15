@@ -25,8 +25,8 @@ enum WordiestTileStyle {
     static let padding3dpRatio: CGFloat = 3.0 / 64.0
     static let padding6dpRatio: CGFloat = 6.0 / 64.0
     // Baselines are tuned for iOS font metrics so bonus text lands in the same place as Android.
-    static let bonusTopBaselineFromTopRatio: CGFloat = 10.0 / 80.0
-    static let bonusBottomBaselineFromBottomRatio: CGFloat = 3.0 / 80.0
+    static let bonusTopBaselineFromTopRatio: CGFloat = 11.0 / 80.0
+    static let bonusBottomBaselineFromBottomRatio: CGFloat = 2.0 / 80.0
     static let valueBaselineFromBottomRatio: CGFloat = 15.0 / 80.0
 
     static func height(forWidth width: CGFloat) -> CGFloat {

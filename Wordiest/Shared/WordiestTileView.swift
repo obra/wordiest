@@ -72,16 +72,16 @@ struct WordiestTileView: View {
                     .foregroundStyle(palette.foreground)
 
                 if t.value > 0 {
-                    VStack {
-                        Spacer(minLength: 0)
-                        HStack {
-                            Spacer(minLength: 0)
-                            Text(String(t.value))
-                                .font(.custom("IstokWeb-Bold", size: smallFontSize))
-                                .foregroundStyle(palette.foreground)
-                                .padding(.trailing, width * WordiestTileStyle.padding7dpRatio)
-                                .padding(.bottom, tileOffsetY + (width * WordiestTileStyle.padding7dpRatio))
-                        }
+                    let valueBaselineY = height - (height * WordiestTileStyle.valueBaselineFromBottomRatio)
+
+                    ZStack(alignment: .topTrailing) {
+                        Text(String(t.value))
+                            .font(.custom("IstokWeb-Bold", size: smallFontSize))
+                            .foregroundStyle(palette.foreground)
+                            .padding(.trailing, width * WordiestTileStyle.padding7dpRatio)
+                            .alignmentGuide(.top) { dimensions in
+                                valueBaselineY - dimensions[.firstTextBaseline]
+                            }
                     }
                     .frame(width: width, height: height)
                 }
