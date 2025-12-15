@@ -16,7 +16,8 @@ enum WordiestTileStyle {
     static let bonusInsetXRatio: CGFloat = 1.0 / 4.0
 
     static let cornerRadiusRatio: CGFloat = 8.0 / 64.0
-    static let borderWidthRatio: CGFloat = 4.0 / 64.0
+    // Android is 4dp, but iOS needs a slightly heavier stroke to match the visual weight.
+    static let borderWidthRatio: CGFloat = 4.5 / 64.0
 
     static let letterFontRatio: CGFloat = 50.0 / 64.0
     static let smallFontRatio: CGFloat = 12.0 / 64.0
