@@ -9,6 +9,7 @@ struct ScoreView: View {
     @State private var isScrubbing = false
     @State private var isCelebrating = false
     @State private var bottomBarHeight: CGFloat = 0
+    @State private var inspectorContentHeight: CGFloat = 0
 
     var body: some View {
         let palette = model.settings.palette
@@ -88,29 +89,39 @@ struct ScoreView: View {
 
                 GeometryReader { proxy in
                     let panelWidth = min(proxy.size.width - 36, inspectorWidth)
-                    let maxPanelHeight = min(360, max(180, proxy.size.height - bottomBarHeight - 24))
+                    let maxPanelHeight = max(120, min(360, proxy.size.height - proxy.safeAreaInsets.top - bottomBarHeight - 24))
 
-                    ScrollView {
-                        OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    let content = OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: panelWidth)
+                        .background(
+                            GeometryReader { measureProxy in
+                                Color.clear.preference(key: InspectorHeightPreferenceKey.self, value: measureProxy.size.height)
+                            }
+                        )
+                        .onPreferenceChange(InspectorHeightPreferenceKey.self) { newHeight in
+                            if abs(inspectorContentHeight - newHeight) > 0.5 {
+                                inspectorContentHeight = newHeight
+                            }
+                        }
+
+                    let panel: AnyView = {
+                        if inspectorContentHeight > 0, inspectorContentHeight > maxPanelHeight {
+                            return AnyView(
+                                ScrollView {
+                                    content
+                                }
+                                .scrollIndicators(.hidden)
+                                .frame(height: maxPanelHeight)
+                            )
+                        }
+                        return AnyView(content)
+                    }()
+
+                    ZStack(alignment: anchorToBottom ? .bottomLeading : .topLeading) {
+                        panel
+                            .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
+                            .allowsHitTesting(false)
                     }
-                    .scrollIndicators(.hidden)
-                    .frame(width: panelWidth)
-                    .frame(maxHeight: maxPanelHeight)
-                    .padding(12)
-                    .background(palette.background.opacity(0.98))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(palette.faded.opacity(0.6), lineWidth: 1)
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .shadow(color: palette.faded.opacity(0.45), radius: 12, x: 0, y: 8)
-                    .allowsHitTesting(false)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: anchorToBottom ? .bottomLeading : .topLeading
-                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(.leading, 18)
                     .padding(.top, anchorToBottom ? 0 : (proxy.safeAreaInsets.top + 12))
                     .padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
@@ -180,4 +191,9 @@ struct ScoreView: View {
         }
         .aspectRatio(1, contentMode: .fit)
     }
+}
+
+private struct InspectorHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat { 0 }
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
 }
