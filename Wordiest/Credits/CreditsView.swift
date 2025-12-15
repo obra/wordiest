@@ -7,16 +7,7 @@ struct CreditsView: View {
 
     var body: some View {
         let palette = model.settings.palette
-        VStack(spacing: 12) {
-            HStack {
-                Button("Back") { model.returnToSplash() }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(palette.foreground)
-                Spacer()
-            }
-            .padding(.horizontal, 18)
-            .padding(.top, 18)
-
+        VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Credits")
@@ -38,6 +29,11 @@ struct CreditsView: View {
                 }
                 .padding(.horizontal, 18)
                 .padding(.bottom, 18)
+            }
+
+            WordiestBottomBar(palette: palette) {
+                Button("Back") { model.returnToSplash() }
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

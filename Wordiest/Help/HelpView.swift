@@ -7,16 +7,7 @@ struct HelpView: View {
 
     var body: some View {
         let palette = model.settings.palette
-        VStack(spacing: 12) {
-            HStack {
-                Button("Back") { model.returnToSplash() }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(palette.foreground)
-                Spacer()
-            }
-            .padding(.horizontal, 18)
-            .padding(.top, 18)
-
+        VStack(spacing: 0) {
             TabView(selection: $selectedTitle) {
                 ForEach(HelpPages.pages) { page in
                     ScrollView {
@@ -34,7 +25,7 @@ struct HelpView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             if page.title == "Sharing" {
-                                Text("Note: This iOS port does not include leaderboards, achievements, or cloud save.")
+                                Text("Note: This iOS port does not include achievements or cloud save.")
                                     .font(.footnote)
                                     .foregroundStyle(palette.foreground.opacity(0.75))
                                     .padding(.top, 8)
@@ -47,6 +38,11 @@ struct HelpView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .automatic))
+
+            WordiestBottomBar(palette: palette) {
+                Button("Back") { model.returnToSplash() }
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(palette.background)

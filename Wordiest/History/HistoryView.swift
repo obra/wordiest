@@ -10,63 +10,66 @@ struct HistoryView: View {
 
     var body: some View {
         let palette = model.settings.palette
-        VStack(spacing: 12) {
-            HStack {
-                Button("Back") { model.returnToSplash() }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(palette.foreground)
-                Spacer()
-            }
-            .padding(.horizontal, 18)
-            .padding(.top, 18)
-
+        VStack(spacing: 0) {
             if model.historyStore.entries.isEmpty {
-                Spacer()
-                Text("History is empty, play some games!")
-                    .foregroundStyle(palette.foreground)
-                Spacer()
+                VStack {
+                    Spacer()
+                    Text("History is empty, play some games!")
+                        .foregroundStyle(palette.foreground)
+                    Spacer()
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 18)
             } else {
-                sparklineHeader(palette: palette)
-                    .padding(.horizontal, 18)
+                VStack(spacing: 12) {
+                    sparklineHeader(palette: palette)
+                        .padding(.horizontal, 18)
 
-                ScrollViewReader { reader in
-                    GeometryReader { viewportProxy in
-                        ScrollView {
-                            LazyVStack(spacing: 0) {
-                                ForEach(Array(model.historyStore.entries.enumerated()), id: \.element.id) { index, entry in
-                                    HistoryRowView(palette: palette, entry: entry)
-                                        .id(entry.id)
-                                        .background(
-                                            GeometryReader { rowProxy in
-                                                Color.clear.preference(
-                                                    key: HistoryRowFramePreferenceKey.self,
-                                                    value: [index: rowProxy.frame(in: .global)]
-                                                )
+                    ScrollViewReader { reader in
+                        GeometryReader { viewportProxy in
+                            ScrollView {
+                                LazyVStack(spacing: 0) {
+                                    ForEach(Array(model.historyStore.entries.enumerated()), id: \.element.id) { index, entry in
+                                        HistoryRowView(palette: palette, entry: entry)
+                                            .id(entry.id)
+                                            .background(
+                                                GeometryReader { rowProxy in
+                                                    Color.clear.preference(
+                                                        key: HistoryRowFramePreferenceKey.self,
+                                                        value: [index: rowProxy.frame(in: .global)]
+                                                    )
+                                                }
+                                            )
+                                            .onTapGesture {
+                                                openReview(entry: entry)
                                             }
-                                        )
-                                        .onTapGesture {
-                                            openReview(entry: entry)
-                                        }
-                                        .onLongPressGesture {
-                                            pendingDelete = entry
-                                        }
-                                    Divider().background(palette.faded.opacity(0.6))
+                                            .onLongPressGesture {
+                                                pendingDelete = entry
+                                            }
+                                        Divider().background(palette.faded.opacity(0.6))
+                                    }
                                 }
                             }
-                        }
-                        .onPreferenceChange(HistoryRowFramePreferenceKey.self) { frames in
-                            visibleRowFrames = frames
-                            updateHighlight(viewport: viewportProxy.frame(in: .global))
-                        }
-                        .gesture(
-                            DragGesture(minimumDistance: 0).onChanged { value in
-                                if value.location.y < 90 {
-                                    scrub(toX: value.location.x, width: viewportProxy.size.width - 36, reader: reader)
-                                }
+                            .onPreferenceChange(HistoryRowFramePreferenceKey.self) { frames in
+                                visibleRowFrames = frames
+                                updateHighlight(viewport: viewportProxy.frame(in: .global))
                             }
-                        )
+                            .gesture(
+                                DragGesture(minimumDistance: 0).onChanged { value in
+                                    if value.location.y < 90 {
+                                        scrub(toX: value.location.x, width: viewportProxy.size.width - 36, reader: reader)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
+                .padding(.top, 18)
+            }
+
+            WordiestBottomBar(palette: palette) {
+                Button("Back") { model.returnToSplash() }
+                    .buttonStyle(WordiestCapsuleButtonStyle(palette: palette))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
