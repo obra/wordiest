@@ -124,11 +124,12 @@ struct ScoreView: View {
 
                     ScoreGraphView(palette: palette, points: points, center: center, highlightIndex: highlightIndex)
                         .contentShape(Rectangle())
-                        .overlay(alignment: .bottomLeading) {
+                        .overlay(alignment: .topLeading) {
                             if let idx = highlightIndex {
                                 OpponentInspectorView(model: model, match: context.match, sampleIndex: idx, maxWidth: inspectorWidth)
                                     .padding(.leading, 12)
-                                    .padding(.bottom, 12)
+                                    .offset(y: proxy.size.height + 12)
+                                    .zIndex(1)
                             }
                         }
                         .gesture(
