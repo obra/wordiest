@@ -83,6 +83,7 @@
 		A775EE5CE29F51C1C3122379 /* MatchVerticalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4320554A668D905E0455C8B /* MatchVerticalLayout.swift */; };
 		AAD1D9353116FEB7126068E1 /* ReviewPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06085A14725887F1E699C4F1 /* ReviewPlacement.swift */; };
 		AECD37E2DDCE4A11AED56E0C /* DragMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322D33785A9C32666D0D3217 /* DragMathTests.swift */; };
+		B0BB739692DCDE4083600AE6 /* WordiestMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD364DBB89B4A167879F587 /* WordiestMotion.swift */; };
 		B4CD5BFD3FD90687C292C38D /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB73A3D2D7D3FFA3BEC1641 /* Strings.swift */; };
 		B59ACCD780C7BA5C64234C07 /* ShareScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1612780367CAB10196365E /* ShareScreenshotView.swift */; };
 		B9427B4C04DE39A52790B8E3 /* words.idx in Resources */ = {isa = PBXBuildFile; fileRef = 7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */; };
@@ -177,6 +178,7 @@
 		7A8E244D1DBBC204D8969A05 /* ScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotCapture.swift; sourceTree = "<group>"; };
 		7B5225FF87A1FB7866D1400D /* Wiktionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wiktionary.swift; sourceTree = "<group>"; };
 		7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */ = {isa = PBXFileReference; path = words.idx; sourceTree = "<group>"; };
+		7FD364DBB89B4A167879F587 /* WordiestMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestMotion.swift; sourceTree = "<group>"; };
 		809CFFC4DED651870EA2D4CC /* OpponentInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpponentInspectorView.swift; sourceTree = "<group>"; };
 		82CD781905F743574615D168 /* HistoryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryRowView.swift; sourceTree = "<group>"; };
 		83204C9D57F7A56C70B958ED /* WordiestButtonColorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestButtonColorsTests.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 				EF062FC01912786D8B838F81 /* WordiestButtonColors.swift */,
 				AA1F9102B0F39AB7063D772A /* WordiestCapsuleButtonStyle.swift */,
 				46CBC7A6B875509106554A61 /* WordiestHeightPreferenceKey.swift */,
+				7FD364DBB89B4A167879F587 /* WordiestMotion.swift */,
 				57A386A966CBBF1398AC57C8 /* WordiestTileRenderer.swift */,
 				17CFDE0EA563DC194FDA1365 /* WordiestTileStyle.swift */,
 				5C2F6F9F39473EF7E13CFA08 /* WordiestTileView.swift */,
@@ -707,6 +710,7 @@
 				C5DCA8D5FBD12B2441228930 /* WordiestCapsuleButtonStyle.swift in Sources */,
 				25DD8156E56BD8101224F134 /* WordiestHeightPreferenceKey.swift in Sources */,
 				FF3B2ED17EE34730367CB889 /* WordiestMenu.swift in Sources */,
+				B0BB739692DCDE4083600AE6 /* WordiestMotion.swift in Sources */,
 				A1DDBC326B7238783C5BE64D /* WordiestTileRenderer.swift in Sources */,
 				D40B0326F2D968377301B2F9 /* WordiestTileStyle.swift in Sources */,
 				E8857E14EE1CA5000CBC1B17 /* WordiestTileView.swift in Sources */,
