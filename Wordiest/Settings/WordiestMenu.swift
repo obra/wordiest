@@ -7,6 +7,7 @@ struct WordiestMenu: View {
     @State private var isPresentingPalettePicker = false
     @State private var isConfirmingReset = false
     @State private var isPresentingShare = false
+    @State private var capturedShareImage: UIImage?
 
     var body: some View {
         Menu {
@@ -16,7 +17,12 @@ struct WordiestMenu: View {
 
             Button("Change colors") { isPresentingPalettePicker = true }
 
-            Button("Share screenshot") { isPresentingShare = true }
+            Button("Share screenshot") {
+                DispatchQueue.main.async {
+                    capturedShareImage = ScreenshotCapture.capture()
+                    isPresentingShare = true
+                }
+            }
 
             Toggle(isOn: Binding(get: { model.settings.soundEnabled }, set: { newValue in
                 model.settings.soundEnabled = newValue
@@ -45,7 +51,7 @@ struct WordiestMenu: View {
             PalettePickerView(settings: model.settings)
         }
         .sheet(isPresented: $isPresentingShare) {
-            ShareScreenshotView(model: model)
+            ShareScreenshotView(model: model, initialImage: capturedShareImage)
         }
         .alert("Confirm", isPresented: $isConfirmingReset) {
             Button("Cancel", role: .cancel) {}
@@ -60,4 +66,3 @@ struct WordiestMenu: View {
         }
     }
 }
-

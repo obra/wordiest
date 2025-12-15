@@ -9,6 +9,7 @@ struct OverflowMenuOverlay: View {
 
     @State private var isConfirmingReset = false
     @State private var isPresentingShare = false
+    @State private var capturedShareImage: UIImage?
 
     var body: some View {
         if isPresented {
@@ -35,6 +36,7 @@ struct OverflowMenuOverlay: View {
                     Divider()
 
                     menuButton("Share screenshot") {
+                        capturedShareImage = ScreenshotCapture.capture()
                         isPresentingShare = true
                     }
                     Divider()
@@ -93,7 +95,7 @@ struct OverflowMenuOverlay: View {
                 Text("Reset rating and clear history?")
             }
             .sheet(isPresented: $isPresentingShare) {
-                ShareScreenshotView(model: model)
+                ShareScreenshotView(model: model, initialImage: capturedShareImage)
             }
         }
     }

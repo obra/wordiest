@@ -7,6 +7,7 @@ struct MenuView: View {
 
     @State private var isConfirmingReset = false
     @State private var isPresentingShare = false
+    @State private var capturedShareImage: UIImage?
 
     var body: some View {
         let palette = model.settings.palette
@@ -19,6 +20,7 @@ struct MenuView: View {
                     }
 
                     Button("Share screenshot") {
+                        capturedShareImage = ScreenshotCapture.capture()
                         isPresentingShare = true
                     }
 
@@ -81,7 +83,7 @@ struct MenuView: View {
         }
         .tint(palette.foreground)
         .sheet(isPresented: $isPresentingShare) {
-            ShareScreenshotView(model: model)
+            ShareScreenshotView(model: model, initialImage: capturedShareImage)
         }
     }
 }

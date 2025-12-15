@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ShareScreenshotView: View {
     @ObservedObject var model: AppModel
+    var initialImage: UIImage?
 
     @Environment(\.dismiss) private var dismiss
 
@@ -9,6 +10,12 @@ struct ShareScreenshotView: View {
     @State private var includeScore = true
     @State private var image: UIImage?
     @State private var isPresentingShare = false
+
+    init(model: AppModel, initialImage: UIImage? = nil) {
+        self.model = model
+        self.initialImage = initialImage
+        _image = State(initialValue: initialImage)
+    }
 
     var body: some View {
         let palette = model.settings.palette
@@ -20,15 +27,10 @@ struct ShareScreenshotView: View {
                 }
 
                 Section {
-                    Button("Capture screenshot") {
-                        image = ScreenshotCapture.capture()
-                    }
                     Button("Share") {
-                        if image == nil {
-                            image = ScreenshotCapture.capture()
-                        }
                         isPresentingShare = true
                     }
+                    .disabled(image == nil)
                 }
             }
             .scrollContentBackground(.hidden)
@@ -41,9 +43,6 @@ struct ShareScreenshotView: View {
             }
             .sheet(isPresented: $isPresentingShare) {
                 ShareSheet(activityItems: shareItems())
-            }
-            .onAppear {
-                image = ScreenshotCapture.capture()
             }
         }
     }
