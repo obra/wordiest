@@ -139,13 +139,13 @@ enum WordiestTileRenderer {
             return CGRect(x: x1, y: y1, width: x2 - x1, height: y2 - y1)
         }
 
-        let cornerRadius = (width * WordiestTileStyle.cornerRadiusRatio)
+        let cornerRadius = snapDown(width * WordiestTileStyle.cornerRadiusRatio)
         let borderWidthPxUnrounded = (width * WordiestTileStyle.borderWidthRatio) * scale
         var borderWidthPx = max(1, Int(borderWidthPxUnrounded.rounded()))
         if borderWidthPx % 2 != 0 { borderWidthPx += 1 } // keep strokeInset pixel-aligned
         let borderWidth = CGFloat(borderWidthPx) / scale
 
-        let tileOffsetY = snapDown(height * WordiestTileStyle.tileOffsetYRatio)
+        let tileOffsetY = cornerRadius
         let bodyHeight = height - (tileOffsetY * 2)
         let bonusInsetX = snapDown(width * WordiestTileStyle.bonusInsetXRatio)
         let valuePadding = snapDown(width * WordiestTileStyle.padding6dpRatio)
@@ -186,6 +186,8 @@ enum WordiestTileRenderer {
             cg.addPath(tileFillPath.cgPath)
             cg.clip()
             cg.setLineWidth(borderWidth * 2.0)
+            cg.setLineJoin(.round)
+            cg.setLineCap(.round)
             cg.setStrokeColor(stroke.cgColor)
             cg.addPath(tileFillPath.cgPath)
             cg.strokePath()
@@ -258,8 +260,16 @@ enum WordiestTileRenderer {
 
         let path = UIBezierPath()
 
+        // Union outline between the body (wider) and the bonus tab (narrower) has *sharp* corners
+        // at the body/tab transition points (bonusMinX/bodyMinY etc.). Those must not be rounded,
+        // otherwise the outline self-intersects and the stroke becomes discontinuous.
+
+        // Start: body top edge, after top-left corner.
         path.move(to: CGPoint(x: bodyMinX + r, y: bodyMinY))
         path.addLine(to: CGPoint(x: bonusMinX, y: bodyMinY))
+
+        // Up bonus tab left edge to top-left corner.
+        path.addLine(to: CGPoint(x: bonusMinX, y: bonusMinY + r))
         path.addArc(
             withCenter: CGPoint(x: bonusMinX + r, y: bonusMinY + r),
             radius: r,
@@ -267,6 +277,8 @@ enum WordiestTileRenderer {
             endAngle: 3.0 * .pi / 2.0,
             clockwise: true
         )
+
+        // Across bonus tab top to top-right corner.
         path.addLine(to: CGPoint(x: bonusMaxX - r, y: bonusMinY))
         path.addArc(
             withCenter: CGPoint(x: bonusMaxX - r, y: bonusMinY + r),
@@ -275,7 +287,12 @@ enum WordiestTileRenderer {
             endAngle: 0,
             clockwise: true
         )
+
+        // Down bonus tab right edge to body top edge.
+        path.addLine(to: CGPoint(x: bonusMaxX, y: bodyMinY))
         path.addLine(to: CGPoint(x: bodyMaxX - r, y: bodyMinY))
+
+        // Body top-right corner.
         path.addArc(
             withCenter: CGPoint(x: bodyMaxX - r, y: bodyMinY + r),
             radius: r,
@@ -283,6 +300,8 @@ enum WordiestTileRenderer {
             endAngle: 0,
             clockwise: true
         )
+
+        // Down body right edge to body bottom-right.
         path.addLine(to: CGPoint(x: bodyMaxX, y: bodyMaxY - r))
         path.addArc(
             withCenter: CGPoint(x: bodyMaxX - r, y: bodyMaxY - r),
@@ -291,7 +310,10 @@ enum WordiestTileRenderer {
             endAngle: .pi / 2.0,
             clockwise: true
         )
+
+        // Across body bottom to bonus tab right edge, then down to bonus bottom-right.
         path.addLine(to: CGPoint(x: bonusMaxX, y: bodyMaxY))
+        path.addLine(to: CGPoint(x: bonusMaxX, y: bonusMaxY - r))
         path.addArc(
             withCenter: CGPoint(x: bonusMaxX - r, y: bonusMaxY - r),
             radius: r,
@@ -299,6 +321,8 @@ enum WordiestTileRenderer {
             endAngle: .pi / 2.0,
             clockwise: true
         )
+
+        // Across bonus bottom to bottom-left corner.
         path.addLine(to: CGPoint(x: bonusMinX + r, y: bonusMaxY))
         path.addArc(
             withCenter: CGPoint(x: bonusMinX + r, y: bonusMaxY - r),
@@ -307,7 +331,12 @@ enum WordiestTileRenderer {
             endAngle: .pi,
             clockwise: true
         )
+
+        // Up bonus tab left edge to body bottom, then across to body bottom-left.
+        path.addLine(to: CGPoint(x: bonusMinX, y: bodyMaxY))
         path.addLine(to: CGPoint(x: bodyMinX + r, y: bodyMaxY))
+
+        // Body bottom-left corner.
         path.addArc(
             withCenter: CGPoint(x: bodyMinX + r, y: bodyMaxY - r),
             radius: r,
@@ -315,6 +344,8 @@ enum WordiestTileRenderer {
             endAngle: .pi,
             clockwise: true
         )
+
+        // Up body left edge to body top-left corner, then close.
         path.addLine(to: CGPoint(x: bodyMinX, y: bodyMinY + r))
         path.addArc(
             withCenter: CGPoint(x: bodyMinX + r, y: bodyMinY + r),
