@@ -77,6 +77,7 @@
 		9B3493F589FB95B981E098AD /* GameCenterManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A295CD4E3A1179405FFBE5 /* GameCenterManagerTests.swift */; };
 		9B3661EB0F0EBC8B3CCB03D4 /* ic_core_overflow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84896A9EEEE65B6D6DAE7E30 /* ic_core_overflow@3x.png */; };
 		9C4EB2C19133F99152291A59 /* ScoreSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ECC64839C5B613AA8D5BE8 /* ScoreSummaryTests.swift */; };
+		A1DDBC326B7238783C5BE64D /* WordiestTileRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A386A966CBBF1398AC57C8 /* WordiestTileRenderer.swift */; };
 		A3A7A458DD07A0CB719F8763 /* WordiestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C40B1DFA81C8CCB804B864 /* WordiestApp.swift */; };
 		A5DFE8E13E5903EE3F370D2D /* MatchVerticalLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3C2BF0CD6C53A74BB7823A /* MatchVerticalLayoutTests.swift */; };
 		A775EE5CE29F51C1C3122379 /* MatchVerticalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4320554A668D905E0455C8B /* MatchVerticalLayout.swift */; };
@@ -150,6 +151,7 @@
 		46CBC7A6B875509106554A61 /* WordiestHeightPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestHeightPreferenceKey.swift; sourceTree = "<group>"; };
 		4C3411BCE0D020CE7B795921 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		53B897F46C3F7C85641AFC8A /* TileNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileNode.swift; sourceTree = "<group>"; };
+		57A386A966CBBF1398AC57C8 /* WordiestTileRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestTileRenderer.swift; sourceTree = "<group>"; };
 		5C2F6F9F39473EF7E13CFA08 /* WordiestTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestTileView.swift; sourceTree = "<group>"; };
 		5D02CD1E40D850281D3C60BF /* pickup.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pickup.mp3; sourceTree = "<group>"; };
 		5ED03F911057E96B3A59F2C0 /* BestTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestTrackerTests.swift; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 				EF062FC01912786D8B838F81 /* WordiestButtonColors.swift */,
 				AA1F9102B0F39AB7063D772A /* WordiestCapsuleButtonStyle.swift */,
 				46CBC7A6B875509106554A61 /* WordiestHeightPreferenceKey.swift */,
+				57A386A966CBBF1398AC57C8 /* WordiestTileRenderer.swift */,
 				17CFDE0EA563DC194FDA1365 /* WordiestTileStyle.swift */,
 				5C2F6F9F39473EF7E13CFA08 /* WordiestTileView.swift */,
 			);
@@ -699,6 +702,7 @@
 				C5DCA8D5FBD12B2441228930 /* WordiestCapsuleButtonStyle.swift in Sources */,
 				25DD8156E56BD8101224F134 /* WordiestHeightPreferenceKey.swift in Sources */,
 				FF3B2ED17EE34730367CB889 /* WordiestMenu.swift in Sources */,
+				A1DDBC326B7238783C5BE64D /* WordiestTileRenderer.swift in Sources */,
 				D40B0326F2D968377301B2F9 /* WordiestTileStyle.swift in Sources */,
 				E8857E14EE1CA5000CBC1B17 /* WordiestTileView.swift in Sources */,
 			);

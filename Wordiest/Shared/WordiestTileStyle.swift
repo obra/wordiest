@@ -24,7 +24,7 @@ enum WordiestTileStyle {
     static let padding7dpRatio: CGFloat = 7.0 / 64.0
     static let padding3dpRatio: CGFloat = 3.0 / 64.0
     static let padding6dpRatio: CGFloat = 6.0 / 64.0
-    // Legacy baseline ratios (unused): current iOS renderers place text using edge padding instead.
+    // Android baseline ratios: using these yields closer parity than padding-based placement.
     static let bonusTopBaselineFromTopRatio: CGFloat = 11.0 / 80.0
     static let bonusBottomBaselineFromBottomRatio: CGFloat = 2.0 / 80.0
     static let valueBaselineFromBottomRatio: CGFloat = 15.0 / 80.0
