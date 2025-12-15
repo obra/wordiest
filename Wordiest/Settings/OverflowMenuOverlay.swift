@@ -10,10 +10,11 @@ struct OverflowMenuOverlay: View {
     @State private var isConfirmingReset = false
     @State private var isPresentingShare = false
     @State private var capturedShareImage: UIImage?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        if isPresented {
-            ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: .bottomTrailing) {
+            if isPresented {
                 Color.clear
                     .contentShape(Rectangle())
                     .ignoresSafeArea()
@@ -92,25 +93,27 @@ struct OverflowMenuOverlay: View {
                 .shadow(color: .black.opacity(0.35), radius: 10, x: 0, y: 6)
                 .padding(.trailing, 12)
                 .padding(.bottom, 50 + 12)
+                .transition(WordiestMotion.overlayTransition(reduceMotion: reduceMotion))
             }
-            .alert("Confirm", isPresented: $isConfirmingReset) {
-                Button("Cancel", role: .cancel) {
-                    isConfirmingReset = false
-                }
-                Button("Reset", role: .destructive) {
-                    model.settings.resetRatingAndStats()
-                    model.historyStore.clear()
-                    model.applySettingsToScene()
-                    isConfirmingReset = false
-                    isPresented = false
-                    model.returnToSplash()
-                }
-            } message: {
-                Text("Reset rating and clear history?")
+        }
+        .animation(WordiestMotion.overlayAnimation(reduceMotion: reduceMotion), value: isPresented)
+        .alert("Confirm", isPresented: $isConfirmingReset) {
+            Button("Cancel", role: .cancel) {
+                isConfirmingReset = false
             }
-            .sheet(isPresented: $isPresentingShare) {
-                ShareScreenshotView(model: model, initialImage: capturedShareImage)
+            Button("Reset", role: .destructive) {
+                model.settings.resetRatingAndStats()
+                model.historyStore.clear()
+                model.applySettingsToScene()
+                isConfirmingReset = false
+                isPresented = false
+                model.returnToSplash()
             }
+        } message: {
+            Text("Reset rating and clear history?")
+        }
+        .sheet(isPresented: $isPresentingShare) {
+            ShareScreenshotView(model: model, initialImage: capturedShareImage)
         }
     }
 

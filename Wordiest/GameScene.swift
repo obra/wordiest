@@ -3,7 +3,7 @@ import WordiestCore
 import UIKit
 
 @MainActor
-final class GameScene: SKScene {
+	final class GameScene: SKScene {
     private enum Row: CaseIterable {
         case word1
         case word2
@@ -106,15 +106,15 @@ final class GameScene: SKScene {
         }
     }
 
-    func shuffle() {
-        let state = currentRackState()
-        applyRackState(Shuffle.shuffled(state: state))
-        rebalanceBanks()
-        layoutAll(animated: true)
-        if soundEnabled {
-            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
-        }
-    }
+	    func shuffle() {
+	        let state = currentRackState()
+	        applyRackState(Shuffle.shuffled(state: state))
+	        rebalanceBanks()
+	        layoutAll(animated: true)
+	        if soundEnabled {
+	            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+	        }
+	    }
 
     func resetWords() {
         resetWords(clearOnlyInvalid: false)
@@ -189,7 +189,7 @@ final class GameScene: SKScene {
 
     // MARK: - Touch handling
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+	    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard dragging == nil, let touch = touches.first else { return }
         let point = touch.location(in: self)
 
@@ -215,15 +215,22 @@ final class GameScene: SKScene {
 
         removeTileFromRows(node)
 
-        let offset = CGPoint(x: point.x - node.position.x, y: point.y - node.position.y)
-        node.zPosition = 30
-        let baseScale = node.xScale
-        node.setScale(baseScale * DragConstants.draggingScaleMultiplier)
-        dragging = (node, offset, baseScale)
-        if soundEnabled {
-            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
-        }
-    }
+	        let offset = CGPoint(x: point.x - node.position.x, y: point.y - node.position.y)
+	        node.zPosition = 30
+	        let baseScale = node.xScale
+	        if UIAccessibility.isReduceMotionEnabled {
+	            node.setScale(baseScale * DragConstants.draggingScaleMultiplier)
+	        } else {
+	            node.removeAction(forKey: "wordiest.scale")
+	            let action = SKAction.scale(to: baseScale * DragConstants.draggingScaleMultiplier, duration: 0.08)
+	            action.timingMode = .easeOut
+	            node.run(action, withKey: "wordiest.scale")
+	        }
+	        dragging = (node, offset, baseScale)
+	        if soundEnabled {
+	            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+	        }
+	    }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let dragging else { return }
@@ -449,21 +456,26 @@ final class GameScene: SKScene {
         baseline2.fillColor = palette.faded
     }
 
-    private func layoutRow(_ tiles: [TileNode], row: Row, atY y: CGFloat, baseTileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat, animated: Bool) {
+	    private func layoutRow(_ tiles: [TileNode], row: Row, atY y: CGFloat, baseTileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat, animated: Bool) {
         let layoutCount = max(tiles.count, 1)
         let scaleCount = (row == .bank1 || row == .bank2) ? bankCapacity : layoutCount
         let metrics = TileRowLayout.metrics(baseTileSize: baseTileSize, baseGap: tileGap, layoutCount: layoutCount, scaleCount: scaleCount, availableWidth: contentWidth, leftX: leftX)
         let scale = baseTileSize.width > 0 ? metrics.tileSize.width / baseTileSize.width : 1
         let step = metrics.tileSize.width + metrics.gap
 
-        for (idx, tile) in tiles.enumerated() {
-            let target = CGPoint(x: metrics.startX + (CGFloat(idx) * step), y: y)
+	        for (idx, tile) in tiles.enumerated() {
+	            let target = CGPoint(x: metrics.startX + (CGFloat(idx) * step), y: y)
 
-            if animated {
-                let duration: TimeInterval = 0.20
+	            if animated {
+	                if UIAccessibility.isReduceMotionEnabled {
+	                    tile.position = target
+	                    tile.setScale(scale)
+	                    continue
+	                }
+	                let duration: TimeInterval = 0.20
 
-                let move = SKAction.move(to: target, duration: duration)
-                move.timingFunction = Self.overshootTimingFunction()
+	                let move = SKAction.move(to: target, duration: duration)
+	                move.timingFunction = Self.overshootTimingFunction()
 
                 let scaleAction = SKAction.scale(to: scale, duration: duration)
                 scaleAction.timingFunction = Self.overshootTimingFunction()

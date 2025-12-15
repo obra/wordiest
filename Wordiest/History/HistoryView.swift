@@ -2,11 +2,12 @@ import SwiftUI
 import WordiestCore
 
 struct HistoryView: View {
-    @ObservedObject var model: AppModel
-    @State private var pendingDelete: HistoryEntry?
-    @State private var visibleRowFrames: [Int: CGRect] = [:]
-    @State private var highlightStart: Int?
-    @State private var highlightEnd: Int?
+	@ObservedObject var model: AppModel
+	@Environment(\.accessibilityReduceMotion) private var reduceMotion
+	@State private var pendingDelete: HistoryEntry?
+	@State private var visibleRowFrames: [Int: CGRect] = [:]
+	@State private var highlightStart: Int?
+	@State private var highlightEnd: Int?
 
     var body: some View {
         let palette = model.settings.palette
@@ -172,7 +173,7 @@ struct HistoryView: View {
         let selection = Int(round(Double(count) * (1.0 - fraction)))
         let index = min(max(selection, 0), count - 1)
         let entry = model.historyStore.entries[index]
-        withAnimation(.easeOut(duration: 0.15)) {
+        withAnimation(WordiestMotion.microAnimation(reduceMotion: reduceMotion)) {
             reader.scrollTo(entry.id, anchor: .top)
         }
     }

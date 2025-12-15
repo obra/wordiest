@@ -8,12 +8,13 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
-	@State private var bottomBarHeight: CGFloat = 0
-	@State private var inspectorContentHeight: CGFloat = 0
+    @State private var bottomBarHeight: CGFloat = 0
+    @State private var inspectorContentHeight: CGFloat = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-	var body: some View {
-		let palette = model.settings.palette
-		ZStack {
+    var body: some View {
+        let palette = model.settings.palette
+        ZStack {
 			VStack(spacing: 16) {
 				if let tiles = playerTiles(), !tiles.isEmpty {
 					ScoreTileRowView(palette: palette, tiles: tiles)
@@ -82,7 +83,7 @@ struct ScoreView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(palette.background)
 
-			if let idx = highlightIndex {
+            if let idx = highlightIndex {
 				let opponentScore = context.match.scoreSamples[idx].score
 				let anchorToBottom = opponentScore >= context.playerScore
 				let inspectorWidth: CGFloat = 360
@@ -122,12 +123,12 @@ struct ScoreView: View {
 					.padding(.top, anchorToBottom ? 0 : 12)
 					.padding(.bottom, anchorToBottom ? (bottomBarHeight + 12) : 0)
 					.safeAreaPadding(anchorToBottom ? .bottom : .top, 12)
-			}
+            }
 
-			if isCelebrating {
-				ConfettiView()
-					.ignoresSafeArea()
-                    .transition(.opacity)
+            if isCelebrating {
+                ConfettiView()
+                    .ignoresSafeArea()
+                    .transition(WordiestMotion.overlayTransition(reduceMotion: reduceMotion))
             }
 
         }
@@ -139,9 +140,13 @@ struct ScoreView: View {
                 upsetLosses: context.upsetLosses
             )
             if should {
-                isCelebrating = true
+                withAnimation(WordiestMotion.overlayAnimation(reduceMotion: reduceMotion)) {
+                    isCelebrating = true
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    isCelebrating = false
+                    withAnimation(WordiestMotion.overlayAnimation(reduceMotion: reduceMotion)) {
+                        isCelebrating = false
+                    }
                 }
             }
         }
