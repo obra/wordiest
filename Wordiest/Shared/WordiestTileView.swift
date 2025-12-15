@@ -46,23 +46,18 @@ struct WordiestTileView: View {
 
                 if let bonus = t.bonus, !bonus.isEmpty {
                     let bonusText = bonus.uppercased()
-                    let topBaselineY = height * WordiestTileStyle.bonusTopBaselineFromTopRatio
-                    let bottomBaselineY = height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio)
-
-                    ZStack(alignment: .top) {
+                    VStack(spacing: 0) {
                         Text(bonusText)
                             .font(.custom("IstokWeb-Bold", size: smallFontSize))
                             .foregroundStyle(palette.foreground)
-                            .alignmentGuide(.top) { dimensions in
-                                topBaselineY - dimensions[.firstTextBaseline]
-                            }
+                            .padding(.top, width * WordiestTileStyle.padding3dpRatio)
+
+                        Spacer(minLength: 0)
 
                         Text(bonusText)
                             .font(.custom("IstokWeb-Bold", size: smallFontSize))
                             .foregroundStyle(palette.foreground)
-                            .alignmentGuide(.top) { dimensions in
-                                bottomBaselineY - dimensions[.firstTextBaseline]
-                            }
+                            .padding(.bottom, width * WordiestTileStyle.padding3dpRatio)
                     }
                     .frame(width: width, height: height)
                 }
@@ -72,16 +67,16 @@ struct WordiestTileView: View {
                     .foregroundStyle(palette.foreground)
 
                 if t.value > 0 {
-                    let valueBaselineY = height - (height * WordiestTileStyle.valueBaselineFromBottomRatio)
-
-                    ZStack(alignment: .topTrailing) {
-                        Text(String(t.value))
-                            .font(.custom("IstokWeb-Bold", size: smallFontSize))
-                            .foregroundStyle(palette.foreground)
-                            .padding(.trailing, width * WordiestTileStyle.padding7dpRatio)
-                            .alignmentGuide(.top) { dimensions in
-                                valueBaselineY - dimensions[.firstTextBaseline]
-                            }
+                    VStack {
+                        Spacer(minLength: 0)
+                        HStack {
+                            Spacer(minLength: 0)
+                            Text(String(t.value))
+                                .font(.custom("IstokWeb-Bold", size: smallFontSize))
+                                .foregroundStyle(palette.foreground)
+                                .padding(.trailing, width * WordiestTileStyle.padding3dpRatio)
+                                .padding(.bottom, tileOffsetY + (width * WordiestTileStyle.padding3dpRatio))
+                        }
                     }
                     .frame(width: width, height: height)
                 }

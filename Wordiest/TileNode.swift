@@ -78,7 +78,7 @@ final class TileNode: SKNode {
 
         self.valueLabel = SKLabelNode(fontNamed: fontName)
         self.valueLabel.fontColor = .white
-        self.valueLabel.verticalAlignmentMode = .baseline
+        self.valueLabel.verticalAlignmentMode = .bottom
         self.valueLabel.horizontalAlignmentMode = .right
         self.valueLabel.fontSize = size.width * WordiestTileStyle.smallFontRatio
         self.valueLabel.text = tile.value > 0 ? String(tile.value) : nil
@@ -86,14 +86,14 @@ final class TileNode: SKNode {
 
         self.bonusLabelTop = SKLabelNode(fontNamed: fontName)
         self.bonusLabelTop.fontColor = .white
-        self.bonusLabelTop.verticalAlignmentMode = .baseline
+        self.bonusLabelTop.verticalAlignmentMode = .top
         self.bonusLabelTop.horizontalAlignmentMode = .center
         self.bonusLabelTop.fontSize = size.width * WordiestTileStyle.smallFontRatio
         self.bonusLabelTop.zPosition = 10
 
         self.bonusLabelBottom = SKLabelNode(fontNamed: fontName)
         self.bonusLabelBottom.fontColor = .white
-        self.bonusLabelBottom.verticalAlignmentMode = .baseline
+        self.bonusLabelBottom.verticalAlignmentMode = .bottom
         self.bonusLabelBottom.horizontalAlignmentMode = .center
         self.bonusLabelBottom.fontSize = size.width * WordiestTileStyle.smallFontRatio
         self.bonusLabelBottom.zPosition = 10
@@ -119,8 +119,8 @@ final class TileNode: SKNode {
         addChild(letterLabel)
 
         valueLabel.position = CGPoint(
-            x: (size.width / 2.0) - (size.width * WordiestTileStyle.padding7dpRatio),
-            y: (-size.height / 2.0) + (size.height * WordiestTileStyle.valueBaselineFromBottomRatio)
+            x: (size.width / 2.0) - (size.width * WordiestTileStyle.padding3dpRatio),
+            y: (-size.height / 2.0) + tileOffsetY + (size.width * WordiestTileStyle.padding3dpRatio)
         )
         addChild(valueLabel)
 
@@ -129,8 +129,8 @@ final class TileNode: SKNode {
         bonusLabelBottom.text = bonus
 
         if let bonus, !bonus.isEmpty {
-            bonusLabelTop.position = CGPoint(x: 0, y: (size.height / 2.0) - (size.height * WordiestTileStyle.bonusTopBaselineFromTopRatio))
-            bonusLabelBottom.position = CGPoint(x: 0, y: (-size.height / 2.0) + (size.height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio))
+            bonusLabelTop.position = CGPoint(x: 0, y: (size.height / 2.0) - (size.width * WordiestTileStyle.padding3dpRatio))
+            bonusLabelBottom.position = CGPoint(x: 0, y: (-size.height / 2.0) + (size.width * WordiestTileStyle.padding3dpRatio))
             addChild(bonusLabelTop)
             addChild(bonusLabelBottom)
         }
