@@ -17,7 +17,7 @@ enum WordiestTileStyle {
 
     static let cornerRadiusRatio: CGFloat = 8.0 / 64.0
     // Android is 4dp, but iOS needs a slightly heavier stroke to match the visual weight.
-    static let borderWidthRatio: CGFloat = 4.5 / 64.0
+    static let borderWidthRatio: CGFloat = 6.0 / 64.0
 
     static let letterFontRatio: CGFloat = 50.0 / 64.0
     static let smallFontRatio: CGFloat = 12.0 / 64.0
@@ -26,8 +26,8 @@ enum WordiestTileStyle {
     static let padding3dpRatio: CGFloat = 3.0 / 64.0
     static let padding6dpRatio: CGFloat = 6.0 / 64.0
     // Android baseline ratios: using these yields closer parity than padding-based placement.
-    static let bonusTopBaselineFromTopRatio: CGFloat = 11.5 / 80.0
-    static let bonusBottomBaselineFromBottomRatio: CGFloat = 2.5 / 80.0
+    static let bonusTopBaselineFromTopRatio: CGFloat = 12.5 / 80.0
+    static let bonusBottomBaselineFromBottomRatio: CGFloat = 4.0 / 80.0
     static let valueBaselineFromBottomRatio: CGFloat = 15.0 / 80.0
 
     static func height(forWidth width: CGFloat) -> CGFloat {

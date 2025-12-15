@@ -152,24 +152,38 @@ enum WordiestTileRenderer {
 
             let strokeInset = borderWidth / 2.0
             let strokeCornerRadius = max(0, cornerRadius - strokeInset)
-            let bodyRect = CGRect(x: 0, y: tileOffsetY, width: width, height: bodyHeight).insetBy(dx: strokeInset, dy: strokeInset)
-            let bodyPath = UIBezierPath(roundedRect: bodyRect, cornerRadius: strokeCornerRadius)
+            let bodyFillRect = CGRect(x: 0, y: tileOffsetY, width: width, height: bodyHeight)
+            let bodyFillPath = UIBezierPath(roundedRect: bodyFillRect, cornerRadius: cornerRadius)
+            let bodyStrokeRect = bodyFillRect.insetBy(dx: strokeInset, dy: strokeInset)
+            let bodyStrokePath = UIBezierPath(roundedRect: bodyStrokeRect, cornerRadius: strokeCornerRadius)
 
             let hasBonus = (tile.bonus?.isEmpty == false)
-            let bonusPath: UIBezierPath? = {
+            let bonusFillPath: UIBezierPath? = {
+                guard hasBonus else { return nil }
+                let bonusRect = CGRect(x: bonusInsetX, y: 0, width: width - (bonusInsetX * 2), height: height)
+                return UIBezierPath(roundedRect: bonusRect, cornerRadius: cornerRadius)
+            }()
+            let bonusStrokePath: UIBezierPath? = {
                 guard hasBonus else { return nil }
                 let bonusRect = CGRect(x: bonusInsetX, y: 0, width: width - (bonusInsetX * 2), height: height).insetBy(dx: strokeInset, dy: strokeInset)
                 return UIBezierPath(roundedRect: bonusRect, cornerRadius: strokeCornerRadius)
             }()
 
+            cg.setFillColor(background.cgColor)
+            bodyFillPath.fill()
+
             cg.setLineWidth(borderWidth)
             cg.setStrokeColor(stroke.cgColor)
-            bonusPath?.stroke()
-            bodyPath.stroke()
+            bodyStrokePath.stroke()
 
-            cg.setFillColor(background.cgColor)
-            bonusPath?.fill()
-            bodyPath.fill()
+            // Draw the bonus tab after the body stroke so the tab fill erases the stroke segment that
+            // would otherwise appear as a line across the tab/body overlap.
+            if let bonusFillPath, let bonusStrokePath {
+                cg.setFillColor(background.cgColor)
+                bonusFillPath.fill()
+                cg.setStrokeColor(stroke.cgColor)
+                bonusStrokePath.stroke()
+            }
 
             drawGlyphText(
                 text: tile.letter.uppercased(),
@@ -182,9 +196,11 @@ enum WordiestTileRenderer {
 
             if let bonus = tile.bonus, !bonus.isEmpty {
                 let bonusText = bonus.uppercased()
-                let topBaselineY = height * WordiestTileStyle.bonusTopBaselineFromTopRatio
-                let bottomBaselineY = height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio)
-                let bottomBaselineNudgeUp = 1.0 / scale
+                let bonusBounds = glyphBounds(text: bonusText, font: smallFont)
+                let verticalInset = bonusBounds.height * 0.10
+
+                let topBaselineY = (height * WordiestTileStyle.bonusTopBaselineFromTopRatio) + verticalInset
+                let bottomBaselineY = height - (height * WordiestTileStyle.bonusBottomBaselineFromBottomRatio) - verticalInset
                 drawGlyphTextAtBaseline(
                     text: bonusText,
                     font: smallFont,
@@ -198,7 +214,7 @@ enum WordiestTileRenderer {
                     text: bonusText,
                     font: smallFont,
                     color: foreground,
-                    baseline: CGPoint(x: width / 2.0, y: bottomBaselineY - bottomBaselineNudgeUp),
+                    baseline: CGPoint(x: width / 2.0, y: bottomBaselineY),
                     horizontalAlignment: .center,
                     canvasHeight: height,
                     in: cg

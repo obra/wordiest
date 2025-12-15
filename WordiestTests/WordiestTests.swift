@@ -10,9 +10,11 @@ final class WordiestTests: XCTestCase {
     func testBonusTabDoesNotShowBodyBorderLine() {
         let palette = ColorPalette.palette(index: 1)
         let tile = Tile(letter: "p", value: 3, bonus: "2L")
+        let width: CGFloat = 64
+        let height = WordiestTileStyle.height(forWidth: width)
         guard let image = renderToImage(
-            WordiestTileView(palette: palette, kind: .tile(tile), width: 64),
-            size: CGSize(width: 64, height: WordiestTileStyle.height(forWidth: 64))
+            WordiestTileView(palette: palette, kind: .tile(tile), width: width),
+            size: CGSize(width: width, height: height)
         ) else {
             XCTFail("Unable to render WordiestTileView")
             return
@@ -22,7 +24,10 @@ final class WordiestTests: XCTestCase {
         // the border line segment that would otherwise cut across the tab/body overlap.
         //
         // Sample a pixel inside the overlap region (away from the centered bonus text) near the body's top edge.
-        let sample = image.pixelColor(at: CGPoint(x: 18, y: 9))
+        let borderWidth = max(1, width * WordiestTileStyle.borderWidthRatio)
+        let strokeInset = borderWidth / 2.0
+        let tileOffsetY = height * WordiestTileStyle.tileOffsetYRatio
+        let sample = image.pixelColor(at: CGPoint(x: width / 2.0, y: tileOffsetY + strokeInset + 1))
         XCTAssertTrue(sample.isClose(to: palette.uiBackground, tolerance: 0.12), "Expected overlap region to be background, got \(sample)")
     }
 
