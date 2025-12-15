@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -43,6 +43,7 @@
 		5EB71F53D36F1861C78E145E /* WordiestCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7F68DFEC7BE3D60B3B3449C9 /* WordiestCore */; };
 		61A1D7DEED5DAC419ACEAFD5 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2776E45AF69BBFB1627C56 /* CreditsView.swift */; };
 		620F9A6C48E63448F1A15545 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A664D6989DB175F712994177 /* AppModel.swift */; };
+		6288B6F2A0D4123E5767BF3C /* OpponentInspectorViewOpacityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75685811C1472EF2F8C4D9F2 /* OpponentInspectorViewOpacityTests.swift */; };
 		63068D9B1911492D8FD05281 /* ScoreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDA3892AC7D80D4A7941E36 /* ScoreViewModel.swift */; };
 		6432D897EECCED0ABCF23BC3 /* ScoreGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9C85908B4B41181E118CD7 /* ScoreGraphView.swift */; };
 		64AD1C4DD2792DD30FA7BBBD /* ic_core_overflow.png in Resources */ = {isa = PBXBuildFile; fileRef = 159CE4C7BDB519FF612A019C /* ic_core_overflow.png */; };
@@ -160,16 +161,17 @@
 		65631C37BF14E87CD456DEF4 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		6584911EE8303B3D85F740C2 /* SparklineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SparklineView.swift; sourceTree = "<group>"; };
 		689FF527B02291029D5DEC89 /* HTMLText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLText.swift; sourceTree = "<group>"; };
-		68B4F4B96FF1CE6302534A72 /* WordiestCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WordiestCore; sourceTree = SOURCE_ROOT; };
+		68B4F4B96FF1CE6302534A72 /* WordiestCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WordiestCore; path = WordiestCore; sourceTree = SOURCE_ROOT; };
 		68F111C5F3F27AC61C3FDB4F /* Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shuffle.swift; sourceTree = "<group>"; };
 		6D2776E45AF69BBFB1627C56 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
 		6F0DDAE2F8D893E2F73880CC /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 		7175E378BA73685D202FCBDE /* ResetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetTests.swift; sourceTree = "<group>"; };
 		74FB5233EE35642C7AA973EB /* WordiestMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestMenu.swift; sourceTree = "<group>"; };
+		75685811C1472EF2F8C4D9F2 /* OpponentInspectorViewOpacityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpponentInspectorViewOpacityTests.swift; sourceTree = "<group>"; };
 		769ACE542B56513F86A2199D /* BestTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestTracker.swift; sourceTree = "<group>"; };
 		7A8E244D1DBBC204D8969A05 /* ScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotCapture.swift; sourceTree = "<group>"; };
 		7B5225FF87A1FB7866D1400D /* Wiktionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wiktionary.swift; sourceTree = "<group>"; };
-		7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */ = {isa = PBXFileReference; lastKnownFileType = file; path = words.idx; sourceTree = "<group>"; };
+		7CFBA7B2DB7B56BBDB4A81A1 /* words.idx */ = {isa = PBXFileReference; path = words.idx; sourceTree = "<group>"; };
 		809CFFC4DED651870EA2D4CC /* OpponentInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpponentInspectorView.swift; sourceTree = "<group>"; };
 		82CD781905F743574615D168 /* HistoryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryRowView.swift; sourceTree = "<group>"; };
 		83204C9D57F7A56C70B958ED /* WordiestButtonColorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestButtonColorsTests.swift; sourceTree = "<group>"; };
@@ -192,7 +194,7 @@
 		9E3C2BF0CD6C53A74BB7823A /* MatchVerticalLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchVerticalLayoutTests.swift; sourceTree = "<group>"; };
 		A0F472E4195AA51F1F5326DF /* ScoreCelebrateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCelebrateTests.swift; sourceTree = "<group>"; };
 		A270FFCB42C1CA6A1B037A4A /* DragScaleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragScaleTests.swift; sourceTree = "<group>"; };
-		A3D799B470740295E4500221 /* matchdata.packed */ = {isa = PBXFileReference; lastKnownFileType = text; path = matchdata.packed; sourceTree = "<group>"; };
+		A3D799B470740295E4500221 /* matchdata.packed */ = {isa = PBXFileReference; path = matchdata.packed; sourceTree = "<group>"; };
 		A664D6989DB175F712994177 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		A73318CBC22EA7EBCF84427C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8AF29676AA2BFF50B45889A /* WordiestBarButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordiestBarButtonStyle.swift; sourceTree = "<group>"; };
@@ -206,10 +208,10 @@
 		C491C6875CB317989E6FF266 /* IstokWeb-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IstokWeb-Bold.ttf"; sourceTree = "<group>"; };
 		C74E7949DF0730B1F4546E4F /* ShuffleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleTests.swift; sourceTree = "<group>"; };
 		C8BC2801CCD81718501E0465 /* SparklineMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SparklineMath.swift; sourceTree = "<group>"; };
-		D70B9D5A29CEBED88B284BE9 /* words.def */ = {isa = PBXFileReference; lastKnownFileType = text; path = words.def; sourceTree = "<group>"; };
+		D70B9D5A29CEBED88B284BE9 /* words.def */ = {isa = PBXFileReference; path = words.def; sourceTree = "<group>"; };
 		DA5D9A571C523F29F995ADCB /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		DB1612780367CAB10196365E /* ShareScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareScreenshotView.swift; sourceTree = "<group>"; };
-		DC980312C975A57FB84E133C /* Wordiest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wordiest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC980312C975A57FB84E133C /* Wordiest.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Wordiest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF3BA5C0D76190BC9D09B540 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButton.swift; sourceTree = "<group>"; };
 		DF9C85908B4B41181E118CD7 /* ScoreGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreGraphView.swift; sourceTree = "<group>"; };
 		E12DE8795E30D321B7A1CA5D /* HelpPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPages.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				5FD5E800A5FD3B3D028B9975 /* InfoPlistVersionTests.swift */,
 				311EA536309027DA6DDBD7E1 /* MatchDefinitionStringsTests.swift */,
 				9E3C2BF0CD6C53A74BB7823A /* MatchVerticalLayoutTests.swift */,
+				75685811C1472EF2F8C4D9F2 /* OpponentInspectorViewOpacityTests.swift */,
 				2C3CA83283E7FF700891D617 /* PrettyRelativeTimeTests.swift */,
 				7175E378BA73685D202FCBDE /* ResetTests.swift */,
 				3B18FB262DD49833668D3B27 /* ReviewPlacementTests.swift */,
@@ -560,6 +563,7 @@
 			packageReferences = (
 				C24BC52A5482A671D33DF8DC /* XCLocalSwiftPackageReference "WordiestCore" */,
 			);
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -606,6 +610,7 @@
 				2F92E1A5E42B67266BD12B56 /* InfoPlistVersionTests.swift in Sources */,
 				5243366987C79EA8431D1A3B /* MatchDefinitionStringsTests.swift in Sources */,
 				A5DFE8E13E5903EE3F370D2D /* MatchVerticalLayoutTests.swift in Sources */,
+				6288B6F2A0D4123E5767BF3C /* OpponentInspectorViewOpacityTests.swift in Sources */,
 				90BCA8337F328CD4CC7E2D41 /* PrettyRelativeTimeTests.swift in Sources */,
 				8530717F2623C928E01C8B4D /* ResetTests.swift in Sources */,
 				14C5DAC860D98383DEE2EC1F /* ReviewPlacementTests.swift in Sources */,
@@ -845,9 +850,7 @@
 				CODE_SIGN_ENTITLEMENTS = Wordiest/Wordiest.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 87WJ58S66M;
 				INFOPLIST_FILE = Wordiest/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -883,9 +886,7 @@
 				CODE_SIGN_ENTITLEMENTS = Wordiest/Wordiest.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 87WJ58S66M;
 				INFOPLIST_FILE = Wordiest/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

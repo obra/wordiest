@@ -39,7 +39,7 @@ struct OpponentInspectorView: View {
             }
         }
         .padding(12)
-        .background(palette.background.opacity(0.2))
+        .background(palette.background)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(palette.faded.opacity(0.6), lineWidth: 1)
