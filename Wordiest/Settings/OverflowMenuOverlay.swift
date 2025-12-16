@@ -69,9 +69,7 @@ struct OverflowMenuOverlay: View {
                     Divider()
 
                     menuButton("Privacy policy") {
-                        if let url = URL(string: "https://concreterose.github.io/privacypolicy.html") {
-                            UIApplication.shared.open(url)
-                        }
+                        model.openPrivacyPolicy()
                         isPresented = false
                     }
                     Divider()

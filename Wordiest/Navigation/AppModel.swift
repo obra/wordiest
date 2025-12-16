@@ -108,8 +108,7 @@ final class AppModel: ObservableObject {
     }
 
     func openPrivacyPolicy() {
-        guard let url = URL(string: "https://concreterose.github.io/privacypolicy.html") else { return }
-        UIApplication.shared.open(url)
+        UIApplication.shared.open(AppLinks.privacyPolicy)
     }
 
     func configureSceneIfReady(size: CGSize) {

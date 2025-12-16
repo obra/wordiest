@@ -1,6 +1,39 @@
 enum AppCopy {
-    static let creditsHTML =
+    static let originalAndroidCreditsHTML =
         """
-        Developed by <b>Concreterose</b> <br><br> <b>Wordiest</b> gratefully uses: <br><br> <b>Wiktionary</b> <br>Words and definitions <br>http://wiktionary.org <br><br> <b>SOWPODS</b> <br>Canonical list of English words <br>http://members.ozemail.com.au/~rjackman <br><br> <b>Natural Language Toolkit</b> <br>Sentence analysis <br>http://nltk.org <br><br> <b>Google Play Game Services</b> <br>Leaderboards, achievements, cloud save <br>http://developer.android.com/google/play-services <br><br> <b>Google App Engine</b> <br>Backend service <br>http://developers.google.com/appengine <br><br> <b>FreeSFX</b> <br>Sounds <br>http://www.freesfx.co.uk <br><br> <b>PrettyTime</b> <br>Time formatting <br>http://ocpsoft.org/prettytime <br><br> <b>KdTree</b> <br>Spacial partitioning for finding nearby points <br>http://robowiki.net/wiki/User:Rednaxela/kD-Tree <br><br> <b>Leonids</b> <br>Particle system library <br>http://github.com/plattysoft/Leonids <br><br> <b>Special Thanks</b> <br>Alex, Brett, Cory, Dave, Grant, Greg, Gretta, <br>Hooman, Joseph, Kimberly, Lap, Linsney, Lorna, <br>Mary, Melissa, Michael, Sam, Stephanie, Úlfar
+        <b>Original Android credits (Wordiest v1.188)</b><br><br>
+        Developed by <b>Concreterose</b><br><br>
+        <b>Wordiest</b> gratefully uses:<br><br>
+        <b>Wiktionary</b><br>
+        Words and definitions<br>
+        http://wiktionary.org<br><br>
+        <b>SOWPODS</b><br>
+        Canonical list of English words<br>
+        http://members.ozemail.com.au/~rjackman<br><br>
+        <b>Natural Language Toolkit</b><br>
+        Sentence analysis<br>
+        http://nltk.org<br><br>
+        <b>Google Play Game Services</b><br>
+        Leaderboards, achievements, cloud save<br>
+        http://developer.android.com/google/play-services<br><br>
+        <b>Google App Engine</b><br>
+        Backend service<br>
+        http://developers.google.com/appengine<br><br>
+        <b>FreeSFX</b><br>
+        Sounds<br>
+        http://www.freesfx.co.uk<br><br>
+        <b>PrettyTime</b><br>
+        Time formatting<br>
+        http://ocpsoft.org/prettytime<br><br>
+        <b>KdTree</b><br>
+        Spacial partitioning for finding nearby points<br>
+        http://robowiki.net/wiki/User:Rednaxela/kD-Tree<br><br>
+        <b>Leonids</b><br>
+        Particle system library<br>
+        http://github.com/plattysoft/Leonids<br><br>
+        <b>Special Thanks</b><br>
+        Alex, Brett, Cory, Dave, Grant, Greg, Gretta,<br>
+        Hooman, Joseph, Kimberly, Lap, Linsney, Lorna,<br>
+        Mary, Melissa, Michael, Sam, Stephanie, Úlfar
         """
 }

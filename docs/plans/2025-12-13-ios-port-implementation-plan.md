@@ -886,7 +886,7 @@ git commit -m "shell: add help pages"
 - Palette cycles 1..6 (colors ported from Android `colors.xml`).
 - Sound enabled/disabled persists; when disabled, do not play pickup/drop.
 - “Reset rating”: resets rating + clears history.
-- “Privacy policy”: opens `https://concreterose.github.io/privacypolicy.html`.
+- “Privacy policy”: opens `https://obra.github.io/wordiest/privacy.html`.
 
 **Commit:**
 

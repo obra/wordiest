@@ -35,7 +35,7 @@ Menu items (popup menu):
 - Achievements
 - Reset rating (also clears history)
 - About game
-- Privacy policy (opens `https://concreterose.github.io/privacypolicy.html`)
+- Privacy policy (opens `https://obra.github.io/wordiest/privacy.html`)
 
 ## Product decisions (iOS equivalents)
 

@@ -52,9 +52,7 @@ struct MenuView: View {
                     .foregroundStyle(.red)
 
                     Button("Privacy policy") {
-                        if let url = URL(string: "https://concreterose.github.io/privacypolicy.html") {
-                            UIApplication.shared.open(url)
-                        }
+                        model.openPrivacyPolicy()
                     }
                 }
 
