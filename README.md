@@ -21,9 +21,9 @@ This repo uses XcodeGen.
 2. Open `Wordiest.xcodeproj`
 3. Build + run the `Wordiest` scheme
 
-## Assets derived from the original Android APK
+## Assets derived from the original Android release
 
-The public repository **must not** include the original APK. Some assets and data in this repo were extracted from that APK and are listed here for clarity:
+Some assets and data in this repo were extracted from the original Android version and are listed here for clarity:
 
 - `Wordiest/Resources/drop.mp3`
 - `Wordiest/Resources/pickup.mp3`
