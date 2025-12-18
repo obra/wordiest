@@ -34,16 +34,112 @@ tile_base() {
     "${out}"
 }
 
+tile_base_4w() {
+  local out="$1"
+  local size="${2:-740}"
+  local inset="${3:-40}"
+  local stroke="${4:-22}"
+
+  local tab_height=110
+  local corner=110
+  local tab_corner=55
+
+  local full_top="${inset}"
+  local full_bottom=$((size - inset))
+  local main_left="${inset}"
+  local main_right=$((size - inset))
+  local main_top=$((inset + tab_height))
+  local main_bottom=$((size - inset - tab_height))
+
+  local tab_width=240
+  local tab_left=$(((size - tab_width) / 2))
+  local tab_right=$((tab_left + tab_width))
+
+  local svg="${TMP_DIR}/tile4w.svg"
+  cat >"${svg}" <<SVG
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  <path
+    fill="#FFFFFF"
+    stroke="#1A1A1A"
+    stroke-width="${stroke}"
+    stroke-linejoin="round"
+    d="
+      M $((main_left + corner)) ${main_top}
+      L ${tab_left} ${main_top}
+      L ${tab_left} $((full_top + tab_corner))
+      Q ${tab_left} ${full_top} $((tab_left + tab_corner)) ${full_top}
+      L $((tab_right - tab_corner)) ${full_top}
+      Q ${tab_right} ${full_top} ${tab_right} $((full_top + tab_corner))
+      L ${tab_right} ${main_top}
+      L $((main_right - corner)) ${main_top}
+      Q ${main_right} ${main_top} ${main_right} $((main_top + corner))
+      L ${main_right} $((main_bottom - corner))
+      Q ${main_right} ${main_bottom} $((main_right - corner)) ${main_bottom}
+      L ${tab_right} ${main_bottom}
+      L ${tab_right} $((full_bottom - tab_corner))
+      Q ${tab_right} ${full_bottom} $((tab_right - tab_corner)) ${full_bottom}
+      L $((tab_left + tab_corner)) ${full_bottom}
+      Q ${tab_left} ${full_bottom} ${tab_left} $((full_bottom - tab_corner))
+      L ${tab_left} ${main_bottom}
+      L $((main_left + corner)) ${main_bottom}
+      Q ${main_left} ${main_bottom} ${main_left} $((main_bottom - corner))
+      L ${main_left} $((main_top + corner))
+      Q ${main_left} ${main_top} $((main_left + corner)) ${main_top}
+      Z
+    "
+  />
+</svg>
+SVG
+
+  # rsvg-convert yields a clean single-stroke outline (no double-stroke artifacts).
+  rsvg-convert -w "${size}" -h "${size}" "${svg}" -o "${out}"
+}
+
 tile_with_letter() {
   local out="$1"
   local tile="$2"
   local letter="${3:-W}"
   local pts="${4:-520}"
-  local y_offset="${5:-20}"
+  local y_offset="${5:-0}"
+
+  local glyph="${TMP_DIR}/glyph-${letter}-${pts}.png"
+  magick -background none -fill "#151515" -font "${FONT_PATH}" -pointsize "${pts}" \
+    "label:${letter}" -trim +repage "${glyph}"
+
+  magick "${tile}" "${glyph}" \
+    -gravity center -geometry "+0+${y_offset}" -composite \
+    "${out}"
+}
+
+tile_add_value_and_bonus() {
+  local out="$1"
+  local tile="$2"
+  local letter_value="${3:-4}"
+  local bonus_label="${4:-4W}"
+
+  local size=740
+  local inset=40
+  local tab_height=110
+
+  local main_right=$((size - inset))
+  local main_bottom=$((size - inset - tab_height))
+  local value_inset=70
+
+  local value_dx=$(( (size - main_right) + value_inset ))
+  local value_dy=$(( (size - main_bottom) + value_inset ))
+
+  local value_glyph="${TMP_DIR}/glyph-value-${letter_value}.png"
+  magick -background none -fill "#151515" -font "${FONT_PATH}" -pointsize 92 \
+    "label:${letter_value}" -trim +repage "${value_glyph}"
+
+  local bonus_glyph="${TMP_DIR}/glyph-bonus-${bonus_label}.png"
+  magick -background none -fill "#151515" -font "${FONT_PATH}" -pointsize 92 \
+    "label:${bonus_label}" -trim +repage "${bonus_glyph}"
 
   magick "${tile}" \
-    -font "${FONT_PATH}" -gravity center -fill "#151515" \
-    -pointsize "${pts}" -annotate "+0+${y_offset}" "${letter}" \
+    "${bonus_glyph}" -gravity north -geometry "+0+58" -composite \
+    "${bonus_glyph}" -gravity south -geometry "+0+58" -composite \
+    "${value_glyph}" -gravity southeast -geometry "+${value_dx}+${value_dy}" -composite \
     "${out}"
 }
 
@@ -69,6 +165,17 @@ tile_with_letter "${tile_w}" "${tile}" "W"
 tile_shadow="${TMP_DIR}/tile_w_shadow.png"
 shadowed "${tile_shadow}" "${tile_w}"
 
+# 4W tile used for icon option C
+tile4w="${TMP_DIR}/tile4w.png"
+tile4w_letter="${TMP_DIR}/tile4w_letter.png"
+tile4w_full="${TMP_DIR}/tile4w_full.png"
+tile_base_4w "${tile4w}"
+tile_with_letter "${tile4w_letter}" "${tile4w}" "W" 470 8
+tile_add_value_and_bonus "${tile4w_full}" "${tile4w_letter}" "4" "4W"
+
+tile4w_shadow="${TMP_DIR}/tile4w_shadow.png"
+shadowed "${tile4w_shadow}" "${tile4w_full}"
+
 # Option A: warm yellow + slight tilt (classic tile vibe)
 magick -size 1024x1024 xc:"#F4D84B" \
   \( "${tile_shadow}" -background none -rotate -12 \) -gravity center -composite \
@@ -83,7 +190,7 @@ magick -size 1024x1024 radial-gradient:"#F7F7F7"-"#D8D8D8" \
 
 # Option C: deep blue gradient + white tile (bold, high contrast)
 magick -size 1024x1024 radial-gradient:"#3B82F6"-"#0B1A3A" \
-  \( "${tile_shadow}" -background none -rotate 8 \) -gravity center -composite \
+  \( "${tile4w_shadow}" -background none -rotate 8 \) -gravity center -composite \
   -alpha off \
   "${OUT_DIR}/C-blue-badge.png"
 
