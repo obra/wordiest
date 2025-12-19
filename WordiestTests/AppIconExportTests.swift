@@ -40,7 +40,7 @@ private func renderOptionC() -> UIImage {
             outerColor: UIColor(red: 0.043, green: 0.102, blue: 0.227, alpha: 1.0)  // #0B1A3A
         )
 
-        let drawWidth: CGFloat = 560
+        let drawWidth: CGFloat = 700
         let drawHeight = drawWidth * WordiestTileStyle.aspectRatio
 
         // Tile: rendered at the same *relative sizes* as the in-app tiles (same renderer),
@@ -55,7 +55,7 @@ private func renderOptionC() -> UIImage {
             scale: 1
         )
 
-        let tileCenter = CGPoint(x: iconSize.width * 0.52, y: iconSize.height * 0.54)
+        let tileCenter = CGPoint(x: iconSize.width * 0.52, y: iconSize.height * 0.51)
         cg.saveGState()
         cg.translateBy(x: tileCenter.x, y: tileCenter.y)
         cg.rotate(by: 8.0 * (.pi / 180.0))
