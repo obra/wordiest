@@ -189,10 +189,7 @@ magick -size 1024x1024 radial-gradient:"#F7F7F7"-"#D8D8D8" \
   "${OUT_DIR}/B-clean-gray.png"
 
 # Option C: deep blue gradient + white tile (bold, high contrast)
-magick -size 1024x1024 radial-gradient:"#3B82F6"-"#0B1A3A" \
-  \( "${tile4w_shadow}" -background none -rotate 8 \) -gravity center -composite \
-  -alpha off \
-  "${OUT_DIR}/C-blue-badge.png"
+echo "Skipping Option C here; run scripts/export_icon_option_c.sh to generate it using the in-app renderer."
 
 # Option D: subtle quadrant chart nod + tile (ties to after-round screen, still simple)
 magick -size 1024x1024 xc:"#FFFFFF" \
@@ -215,10 +212,9 @@ magick -size 1024x1024 xc:"#0F0F12" \
 magick montage \
   "${OUT_DIR}/A-warm-tile.png" \
   "${OUT_DIR}/B-clean-gray.png" \
-  "${OUT_DIR}/C-blue-badge.png" \
   "${OUT_DIR}/D-quadrants.png" \
   "${OUT_DIR}/E-dark.png" \
-  -tile 5x1 -geometry 220x220+24+24 -background "#FFFFFF" \
+  -tile 4x1 -geometry 220x220+24+24 -background "#FFFFFF" \
   "${OUT_DIR}/preview-montage.png"
 
 echo "Wrote icon options to: ${OUT_DIR}"
