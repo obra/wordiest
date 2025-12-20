@@ -52,6 +52,7 @@ final class AppModel: ObservableObject {
         self.gameCenter = gameCenter
         self.scene = GameScene(size: .zero)
 
+        AudioSession.configureForSoundEffects()
         gameCenter.authenticateIfNeeded()
         Task { await loadAssets() }
     }

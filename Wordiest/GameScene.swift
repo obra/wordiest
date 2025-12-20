@@ -1,5 +1,6 @@
 import SpriteKit
 import WordiestCore
+import AVFoundation
 import UIKit
 
 @MainActor
@@ -113,7 +114,7 @@ import UIKit
 	        rebalanceBanks()
 	        layoutAll(animated: true)
 	        if soundEnabled {
-	            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+	            SoundEffects.shared.play(.pickup)
 	        }
 	    }
 
@@ -137,7 +138,7 @@ import UIKit
         rebalanceBanks()
         layoutAll(animated: true)
         if soundEnabled {
-            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+            SoundEffects.shared.play(.pickup)
         }
     }
 
@@ -145,7 +146,7 @@ import UIKit
         if isReview { return }
         loadNextMatch()
         if soundEnabled {
-            run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+            SoundEffects.shared.play(.drop)
         }
     }
 
@@ -230,7 +231,7 @@ import UIKit
 	        dragging = (node, offset, baseScale)
 	        updateDragHighlights(at: point)
 	        if soundEnabled {
-	            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
+	            SoundEffects.shared.play(.pickup)
 	        }
 	    }
 
@@ -283,7 +284,7 @@ import UIKit
         node.zPosition = 1
         layoutAll(animated: true)
         if soundEnabled {
-            run(SKAction.playSoundFileNamed("drop.mp3", waitForCompletion: false))
+            SoundEffects.shared.play(.drop)
         }
     }
 
@@ -736,6 +737,66 @@ import UIKit
             let s: Float = 1.70158
             let p = t - 1
             return p * p * ((s + 1) * p + s) + 1
+        }
+    }
+}
+
+enum AudioSession {
+    static func configureForSoundEffects() {
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.ambient, options: [.mixWithOthers])
+            try session.setActive(true)
+        } catch {
+            // Best effort. If configuration fails, the game should still be playable.
+        }
+    }
+}
+
+@MainActor
+final class SoundEffects {
+    enum Effect: String, CaseIterable {
+        case pickup = "pickup"
+        case drop = "drop"
+    }
+
+    static let shared = SoundEffects()
+
+    var volume: Float = 0.20 {
+        didSet {
+            for player in players.values {
+                player.volume = volume
+            }
+        }
+    }
+
+    private var players: [Effect: AVAudioPlayer] = [:]
+
+    private init() {
+        AudioSession.configureForSoundEffects()
+        loadPlayers()
+    }
+
+    func play(_ effect: Effect) {
+        guard let player = players[effect] else { return }
+        if player.isPlaying {
+            player.stop()
+        }
+        player.currentTime = 0
+        player.play()
+    }
+
+    private func loadPlayers() {
+        for effect in Effect.allCases {
+            guard let url = Bundle.main.url(forResource: effect.rawValue, withExtension: "mp3") else { continue }
+            do {
+                let player = try AVAudioPlayer(contentsOf: url)
+                player.volume = volume
+                player.prepareToPlay()
+                players[effect] = player
+            } catch {
+                // Best effort.
+            }
         }
     }
 }
