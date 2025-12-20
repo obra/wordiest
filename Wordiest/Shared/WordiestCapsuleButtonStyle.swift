@@ -6,6 +6,9 @@ struct WordiestCapsuleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 17, weight: .semibold))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .allowsTightening(true)
             .foregroundStyle(palette.foreground)
             .padding(.vertical, 10)
             .padding(.horizontal, 12)
@@ -20,4 +23,3 @@ struct WordiestCapsuleButtonStyle: ButtonStyle {
             )
     }
 }
-
