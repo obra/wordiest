@@ -478,20 +478,22 @@ import UIKit
         if wordRow == highlightedWordRow { return }
         highlightedWordRow = wordRow
 
-        let show1 = wordRow == .word1
-        let show2 = wordRow == .word2
-        setHighlight(baseline1, isVisible: show1)
-        setHighlight(baseline2, isVisible: show2)
+        let baseAlpha: CGFloat = 0.12
+        let strongAlpha: CGFloat = 0.22
+
+        let alpha1: CGFloat = (wordRow == .word1) ? strongAlpha : baseAlpha
+        let alpha2: CGFloat = (wordRow == .word2) ? strongAlpha : baseAlpha
+        setHighlightAlpha(baseline1, targetAlpha: alpha1)
+        setHighlightAlpha(baseline2, targetAlpha: alpha2)
     }
 
     private func clearDragHighlights() {
         highlightedWordRow = nil
-        setHighlight(baseline1, isVisible: false)
-        setHighlight(baseline2, isVisible: false)
+        setHighlightAlpha(baseline1, targetAlpha: 0)
+        setHighlightAlpha(baseline2, targetAlpha: 0)
     }
 
-    private func setHighlight(_ node: SKShapeNode, isVisible: Bool) {
-        let targetAlpha: CGFloat = isVisible ? 0.22 : 0
+    private func setHighlightAlpha(_ node: SKShapeNode, targetAlpha: CGFloat) {
         if UIAccessibility.isReduceMotionEnabled {
             node.alpha = targetAlpha
             return
