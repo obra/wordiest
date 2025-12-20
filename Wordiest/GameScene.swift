@@ -36,6 +36,7 @@ import UIKit
 
     private let baseline1 = SKShapeNode()
     private let baseline2 = SKShapeNode()
+    private var highlightedWordRow: Row?
 
     var onRequestOpenWiktionary: ((String) -> Void)?
     var safeAreaInsetsOverride: UIEdgeInsets? {
@@ -227,6 +228,7 @@ import UIKit
 	            node.run(action, withKey: "wordiest.scale")
 	        }
 	        dragging = (node, offset, baseScale)
+	        updateDragHighlights(at: point)
 	        if soundEnabled {
 	            run(SKAction.playSoundFileNamed("pickup.mp3", waitForCompletion: false))
 	        }
@@ -237,6 +239,7 @@ import UIKit
         let point = touch.location(in: self)
         let proposed = CGPoint(x: point.x - dragging.offset.x, y: point.y - dragging.offset.y)
         dragging.node.position = clampedDragPosition(node: dragging.node, proposed: proposed)
+        updateDragHighlights(at: point)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -245,6 +248,7 @@ import UIKit
         let dropX = DragMath.draggedCenterX(touchX: point.x, touchOffsetX: dragging.offset.x)
         drop(dragging.node, dropX: dropX, at: point)
         self.dragging = nil
+        clearDragHighlights()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -253,6 +257,7 @@ import UIKit
         let dropX = DragMath.draggedCenterX(touchX: point.x, touchOffsetX: dragging.offset.x)
         drop(dragging.node, dropX: dropX, at: point)
         self.dragging = nil
+        clearDragHighlights()
     }
 
     private func drop(_ node: TileNode, dropX: CGFloat, at point: CGPoint) {
@@ -327,7 +332,7 @@ import UIKit
         for baseline in [baseline1, baseline2] {
             baseline.strokeColor = .clear
             baseline.fillColor = palette.faded
-            baseline.alpha = 0.35
+            baseline.alpha = 0
             baseline.zPosition = 0
             if baseline.parent == nil { addChild(baseline) }
         }
@@ -442,18 +447,59 @@ import UIKit
     }
 
     private func layoutBaselines(rowYs: [Row: CGFloat], word1TileHeight: CGFloat, word2TileHeight: CGFloat, leftX: CGFloat, contentWidth: CGFloat) {
-        let baselineHeight1 = max(3, word1TileHeight * 0.06)
-        let baselineHeight2 = max(3, word2TileHeight * 0.06)
         let inset = max(0, baselineInset - appSpacer)
-        let baselineLeftX = leftX + inset
-        let baselineWidth = max(0, contentWidth - (inset * 2))
-        let rect1 = CGRect(x: baselineLeftX, y: (rowYs[.word1] ?? 0) - (word1TileHeight / 2) - baselineHeight1 - 2, width: baselineWidth, height: baselineHeight1)
-        let rect2 = CGRect(x: baselineLeftX, y: (rowYs[.word2] ?? 0) - (word2TileHeight / 2) - baselineHeight2 - 2, width: baselineWidth, height: baselineHeight2)
+        let highlightLeftX = leftX + inset
+        let highlightWidth = max(0, contentWidth - (inset * 2))
 
-        baseline1.path = CGPath(rect: rect1, transform: nil)
-        baseline2.path = CGPath(rect: rect2, transform: nil)
+        let rect1 = CGRect(
+            x: highlightLeftX,
+            y: (rowYs[.word1] ?? 0) - (word1TileHeight / 2),
+            width: highlightWidth,
+            height: word1TileHeight
+        )
+        let rect2 = CGRect(
+            x: highlightLeftX,
+            y: (rowYs[.word2] ?? 0) - (word2TileHeight / 2),
+            width: highlightWidth,
+            height: word2TileHeight
+        )
+
+        let radius1 = max(4, min(10, word1TileHeight * 0.18))
+        let radius2 = max(4, min(10, word2TileHeight * 0.18))
+        baseline1.path = CGPath(roundedRect: rect1, cornerWidth: radius1, cornerHeight: radius1, transform: nil)
+        baseline2.path = CGPath(roundedRect: rect2, cornerWidth: radius2, cornerHeight: radius2, transform: nil)
         baseline1.fillColor = palette.faded
         baseline2.fillColor = palette.faded
+    }
+
+    private func updateDragHighlights(at point: CGPoint) {
+        let row = closestRow(to: point)
+        let wordRow: Row? = (row == .word1 || row == .word2) ? row : nil
+        if wordRow == highlightedWordRow { return }
+        highlightedWordRow = wordRow
+
+        let show1 = wordRow == .word1
+        let show2 = wordRow == .word2
+        setHighlight(baseline1, isVisible: show1)
+        setHighlight(baseline2, isVisible: show2)
+    }
+
+    private func clearDragHighlights() {
+        highlightedWordRow = nil
+        setHighlight(baseline1, isVisible: false)
+        setHighlight(baseline2, isVisible: false)
+    }
+
+    private func setHighlight(_ node: SKShapeNode, isVisible: Bool) {
+        let targetAlpha: CGFloat = isVisible ? 0.22 : 0
+        if UIAccessibility.isReduceMotionEnabled {
+            node.alpha = targetAlpha
+            return
+        }
+        node.removeAction(forKey: "wordiest.highlight")
+        let action = SKAction.fadeAlpha(to: targetAlpha, duration: 0.08)
+        action.timingMode = .easeOut
+        node.run(action, withKey: "wordiest.highlight")
     }
 
 	    private func layoutRow(_ tiles: [TileNode], row: Row, atY y: CGFloat, baseTileSize: CGSize, leftX: CGFloat, contentWidth: CGFloat, animated: Bool) {
