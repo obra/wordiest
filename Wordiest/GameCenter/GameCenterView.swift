@@ -2,7 +2,12 @@ import GameKit
 import SwiftUI
 
 struct GameCenterView: UIViewControllerRepresentable {
-    var state: GKGameCenterViewControllerState
+    enum Destination: Equatable {
+        case leaderboards
+        case leaderboard(id: String)
+    }
+
+    var destination: Destination
     var onFinish: () -> Void
 
     func makeCoordinator() -> Coordinator {
@@ -10,7 +15,13 @@ struct GameCenterView: UIViewControllerRepresentable {
     }
 
     func makeUIViewController(context: Context) -> GKGameCenterViewController {
-        let vc = GKGameCenterViewController(state: state)
+        let vc: GKGameCenterViewController
+        switch destination {
+        case .leaderboards:
+            vc = GKGameCenterViewController(state: .leaderboards)
+        case .leaderboard(let id):
+            vc = GKGameCenterViewController(leaderboardID: id, playerScope: .global, timeScope: .allTime)
+        }
         vc.gameCenterDelegate = context.coordinator
         return vc
     }
@@ -29,4 +40,3 @@ struct GameCenterView: UIViewControllerRepresentable {
         }
     }
 }
-
