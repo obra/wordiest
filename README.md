@@ -33,9 +33,10 @@ Some assets and data in this repo were extracted from the original Android versi
 - `Wordiest/Resources/ic_core_overflow.png`
 - `Wordiest/Resources/ic_core_overflow@2x.png`
 - `Wordiest/Resources/ic_core_overflow@3x.png`
-- `Wordiest/Assets.xcassets/AppIcon.appiconset/*`
 
 If you replace any of the above, please keep this list up to date.
+
+The iOS app icon is original to this port.
 
 ## License
 
@@ -43,4 +44,3 @@ If you replace any of the above, please keep this list up to date.
 - **Istok Web font**: SIL Open Font License 1.1 (see `Wordiest/Resources/OFL.txt`)
 
 Other assets and word/definition data may have additional attribution and licensing requirements; see the in-app Credits screen for historical context.
-
