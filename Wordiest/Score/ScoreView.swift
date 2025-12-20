@@ -80,6 +80,7 @@ struct ScoreView: View {
                     }
                 }
             }
+            .safeAreaPadding(.top, 12)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(palette.background)
 
