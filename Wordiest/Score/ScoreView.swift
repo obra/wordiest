@@ -17,7 +17,8 @@ struct ScoreView: View {
         ZStack {
 			VStack(spacing: 16) {
 				if let tiles = playerTiles(), !tiles.isEmpty {
-					ScoreTileRowView(palette: palette, tiles: tiles)
+                    let style: ScoreTileRowView.Style = tiles.count >= 10 ? .compact : .standard
+					ScoreTileRowView(palette: palette, tiles: tiles, style: style)
 						.padding(.horizontal, 18)
                         .padding(.top, 6)
                 }
