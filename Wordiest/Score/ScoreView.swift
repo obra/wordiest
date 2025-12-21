@@ -163,7 +163,7 @@ struct ScoreView: View {
 
     private var alwaysCelebrate: Bool {
 #if DEBUG
-        UserDefaults.standard.bool(forKey: "debugAlwaysCelebrate")
+        true
 #else
         false
 #endif
