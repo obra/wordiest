@@ -135,7 +135,7 @@ struct ScoreView: View {
 		            }
 
             if isCelebrating {
-                ConfettiView()
+                ConfettiView(tiles: context.match.tiles)
                     .ignoresSafeArea()
                     .transition(WordiestMotion.overlayTransition(reduceMotion: reduceMotion))
             }
