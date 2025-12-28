@@ -8,6 +8,7 @@ struct ScoreView: View {
     @State private var highlightIndex: Int?
     @State private var isScrubbing = false
     @State private var isCelebrating = false
+    @State private var isConfettiEmitting = false
     @State private var bottomBarHeight: CGFloat = 0
     @State private var inspectorContentHeight: CGFloat = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -135,7 +136,7 @@ struct ScoreView: View {
 		            }
 
             if isCelebrating {
-                ConfettiView(tiles: context.match.tiles, palette: palette)
+                ConfettiView(tiles: context.match.tiles, palette: palette, isEmitting: isConfettiEmitting)
                     .ignoresSafeArea()
                     .transition(WordiestMotion.overlayTransition(reduceMotion: reduceMotion))
             }
@@ -151,8 +152,20 @@ struct ScoreView: View {
             if should {
                 withAnimation(WordiestMotion.overlayAnimation(reduceMotion: reduceMotion)) {
                     isCelebrating = true
+                    isConfettiEmitting = true
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+
+                // Stop emitting quickly, but leave the view up long enough for all tiles to fall off-screen.
+                let emissionDuration: TimeInterval = reduceMotion ? 0.35 : 0.85
+                let settleDuration: TimeInterval = reduceMotion ? 0.6 : 2.9
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + emissionDuration) {
+                    withAnimation(WordiestMotion.microAnimation(reduceMotion: reduceMotion)) {
+                        isConfettiEmitting = false
+                    }
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + emissionDuration + settleDuration) {
                     withAnimation(WordiestMotion.overlayAnimation(reduceMotion: reduceMotion)) {
                         isCelebrating = false
                     }

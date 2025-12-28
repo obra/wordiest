@@ -5,6 +5,7 @@ import WordiestCore
 struct ConfettiView: UIViewRepresentable {
     var tiles: [Tile]
     var palette: ColorPalette
+    var isEmitting: Bool
 
     func makeUIView(context: Context) -> TileConfettiEmitterView {
         TileConfettiEmitterView(tiles: tiles, palette: palette)
@@ -12,6 +13,7 @@ struct ConfettiView: UIViewRepresentable {
 
     func updateUIView(_ uiView: TileConfettiEmitterView, context: Context) {
         uiView.updateIfNeeded(tiles: tiles, palette: palette)
+        uiView.setEmitting(isEmitting)
     }
 }
 
@@ -82,7 +84,8 @@ final class TileConfettiEmitterView: UIView {
 
         let height = max(1, bounds.height)
         let targetPeakHeight = height * 0.80
-        let yAcceleration = max(900, height * 1.15)
+        // Higher acceleration makes a faster "up then down" cycle.
+        let yAcceleration = max(1800, height * 2.0)
         let baseVelocity = sqrt(2.0 * yAcceleration * targetPeakHeight)
         let velocityRange = baseVelocity * 0.22
         let emissionRange: CGFloat = CGFloat.pi / 10
@@ -97,12 +100,16 @@ final class TileConfettiEmitterView: UIView {
             if pool.count > 40 { break }
         }
 
-        return pool.map { tile in
+        // Too many distinct cells makes the emission look "wavy" (each cell has its own randomness).
+        // Keep a small set and let each emit continuously.
+        let distinct = Array(pool.prefix(8))
+
+        return distinct.map { tile in
             let cell = CAEmitterCell()
 
-            cell.birthRate = 2.6
-            cell.lifetime = 5.2
-            cell.lifetimeRange = 0.9
+            cell.birthRate = 7.5
+            cell.lifetime = 3.0
+            cell.lifetimeRange = 0.6
 
             cell.velocity = baseVelocity
             cell.velocityRange = velocityRange
@@ -118,11 +125,15 @@ final class TileConfettiEmitterView: UIView {
 
             cell.scale = 0.22
             cell.scaleRange = 0.08
-            cell.alphaSpeed = -0.06
+            cell.alphaSpeed = -0.20
 
             let image = WordiestTileRenderer.image(tile: tile, size: imageSize, background: tileFill, foreground: tileInk, stroke: tileInk, scale: scale)
             cell.contents = image.cgImage
             return cell
         }
+    }
+
+    func setEmitting(_ isEmitting: Bool) {
+        emitterLayer.birthRate = isEmitting ? 1.0 : 0.0
     }
 }
