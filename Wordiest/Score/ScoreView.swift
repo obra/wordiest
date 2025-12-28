@@ -144,7 +144,7 @@ struct ScoreView: View {
         }
         .tint(palette.foreground)
         .onAppear {
-            let should = alwaysCelebrate || ScoreSummary.shouldCelebrate(
+            let should = ScoreSummary.shouldCelebrate(
                 opponentsCount: context.match.scoreSamples.count,
                 expectedLosses: context.expectedLosses,
                 upsetLosses: context.upsetLosses
@@ -172,14 +172,6 @@ struct ScoreView: View {
                 }
             }
         }
-    }
-
-    private var alwaysCelebrate: Bool {
-#if DEBUG
-        true
-#else
-        false
-#endif
     }
 
     private func playerTiles() -> [ScoreTile]? {
