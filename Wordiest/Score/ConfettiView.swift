@@ -4,18 +4,22 @@ import WordiestCore
 
 struct ConfettiView: UIViewRepresentable {
     var tiles: [Tile]
+    var palette: ColorPalette
 
     func makeUIView(context: Context) -> TileConfettiEmitterView {
-        TileConfettiEmitterView(tiles: tiles)
+        TileConfettiEmitterView(tiles: tiles, palette: palette)
     }
 
     func updateUIView(_ uiView: TileConfettiEmitterView, context: Context) {
-        uiView.updateTilesIfNeeded(tiles: tiles)
+        uiView.updateIfNeeded(tiles: tiles, palette: palette)
     }
 }
 
 final class TileConfettiEmitterView: UIView {
     private var tiles: [Tile]
+    private var palette: ColorPalette
+    private var lastBoundsSize: CGSize = .zero
+    private var cachedCells: [CAEmitterCell] = []
 
     override class var layerClass: AnyClass {
         CAEmitterLayer.self
@@ -26,8 +30,9 @@ final class TileConfettiEmitterView: UIView {
         layer as! CAEmitterLayer
     }
 
-    init(tiles: [Tile]) {
+    init(tiles: [Tile], palette: ColorPalette) {
         self.tiles = tiles
+        self.palette = palette
         super.init(frame: .zero)
         isUserInteractionEnabled = false
         configure()
@@ -40,32 +45,47 @@ final class TileConfettiEmitterView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Keep the emitter attached to the bottom, even while bounds are changing.
-        emitterLayer.emitterPosition = CGPoint(x: bounds.midX, y: bounds.maxY + 10)
-        emitterLayer.emitterSize = CGSize(width: bounds.width, height: 1)
+        // Fountain from the bottom-center.
+        emitterLayer.emitterPosition = CGPoint(x: bounds.midX, y: bounds.maxY - 6)
+        emitterLayer.emitterSize = CGSize(width: 1, height: 1)
+
+        if lastBoundsSize != bounds.size {
+            lastBoundsSize = bounds.size
+            cachedCells = Self.cells(tiles: tiles, palette: palette, bounds: bounds)
+            emitterLayer.emitterCells = cachedCells
+        }
     }
 
-    func updateTilesIfNeeded(tiles: [Tile]) {
-        if self.tiles == tiles { return }
+    func updateIfNeeded(tiles: [Tile], palette: ColorPalette) {
+        if self.tiles == tiles, self.palette == palette { return }
         self.tiles = tiles
-        emitterLayer.emitterCells = Self.cells(tiles: tiles)
+        self.palette = palette
+        cachedCells = Self.cells(tiles: tiles, palette: palette, bounds: bounds)
+        emitterLayer.emitterCells = cachedCells
     }
 
     private func configure() {
         let emitter = emitterLayer
-        emitter.emitterShape = .line
-        emitter.emitterMode = .outline
+        emitter.emitterShape = .point
         emitter.renderMode = .oldestFirst
         emitter.birthRate = 1.0
-        emitter.emitterCells = Self.cells(tiles: tiles)
+        cachedCells = Self.cells(tiles: tiles, palette: palette, bounds: bounds)
+        emitter.emitterCells = cachedCells
     }
 
-    private static func cells(tiles: [Tile]) -> [CAEmitterCell] {
+    private static func cells(tiles: [Tile], palette: ColorPalette, bounds: CGRect) -> [CAEmitterCell] {
         let scale = UIScreen.main.scale
         let imageWidth: CGFloat = 84
         let imageSize = CGSize(width: imageWidth, height: imageWidth * WordiestTileStyle.aspectRatio)
-        let tileFill = ColorPalette.palette(index: 1).uiBackground
-        let tileInk = ColorPalette.palette(index: 1).uiForeground
+        let tileFill = palette.uiBackground
+        let tileInk = palette.uiForeground
+
+        let height = max(1, bounds.height)
+        let targetPeakHeight = height * 0.80
+        let yAcceleration = max(900, height * 1.15)
+        let baseVelocity = sqrt(2.0 * yAcceleration * targetPeakHeight)
+        let velocityRange = baseVelocity * 0.22
+        let emissionRange: CGFloat = CGFloat.pi / 10
 
         // If there are too few tiles, repeat them so the effect has enough variety.
         var pool = tiles
@@ -80,25 +100,25 @@ final class TileConfettiEmitterView: UIView {
         return pool.map { tile in
             let cell = CAEmitterCell()
 
-            cell.birthRate = 1.2
-            cell.lifetime = 4.8
-            cell.lifetimeRange = 0.8
+            cell.birthRate = 2.6
+            cell.lifetime = 5.2
+            cell.lifetimeRange = 0.9
 
-            cell.velocity = 520
-            cell.velocityRange = 180
-            cell.yAcceleration = 820
+            cell.velocity = baseVelocity
+            cell.velocityRange = velocityRange
+            cell.yAcceleration = yAcceleration
             cell.xAcceleration = 0
 
             // Fountain upward, with a little spray.
             cell.emissionLongitude = -.pi / 2
-            cell.emissionRange = .pi / 7
+            cell.emissionRange = emissionRange
 
-            cell.spin = 2.4
-            cell.spinRange = 3.2
+            cell.spin = 2.8
+            cell.spinRange = 3.6
 
             cell.scale = 0.22
             cell.scaleRange = 0.08
-            cell.alphaSpeed = -0.12
+            cell.alphaSpeed = -0.06
 
             let image = WordiestTileRenderer.image(tile: tile, size: imageSize, background: tileFill, foreground: tileInk, stroke: tileInk, scale: scale)
             cell.contents = image.cgImage
