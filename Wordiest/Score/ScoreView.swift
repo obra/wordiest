@@ -156,8 +156,8 @@ struct ScoreView: View {
                 }
 
                 // Stop emitting quickly, but leave the view up long enough for all tiles to fall off-screen.
-                let emissionDuration: TimeInterval = reduceMotion ? 0.35 : 0.85
-                let settleDuration: TimeInterval = reduceMotion ? 0.6 : 2.9
+                let emissionDuration: TimeInterval = reduceMotion ? 0.45 : 1.1
+                let settleDuration: TimeInterval = reduceMotion ? 1.2 : 5.2
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + emissionDuration) {
                     withAnimation(WordiestMotion.microAnimation(reduceMotion: reduceMotion)) {
