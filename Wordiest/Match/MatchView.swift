@@ -8,7 +8,7 @@ struct MatchView: View {
     @State private var wiktionaryWord: String?
     @State private var submitWarningMessage: String?
     @State private var isConfirmingLeave = false
-    @State private var bottomBarHeight: CGFloat = 0
+    @State private var bottomBarHeight: CGFloat = 62
 
     var body: some View {
         GeometryReader { proxy in
@@ -20,9 +20,9 @@ struct MatchView: View {
                         model.scene.onRequestOpenWiktionary = { word in
                             wiktionaryWord = word
                         }
+                        updateSceneInsets(proxy: proxy)
                         model.configureSceneIfReady(size: sceneSize)
                         model.applySettingsToScene()
-                        updateSceneInsets(proxy: proxy)
                     }
                     .onChange(of: proxy.size) { _, newSize in
                         model.configureSceneIfReady(size: newSize)
