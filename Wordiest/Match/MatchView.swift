@@ -8,7 +8,7 @@ struct MatchView: View {
     @State private var wiktionaryWord: String?
     @State private var submitWarningMessage: String?
     @State private var isConfirmingLeave = false
-    @State private var bottomBarHeight: CGFloat = 62
+    @State private var bottomBarHeight: CGFloat = 72
 
     var body: some View {
         GeometryReader { proxy in
@@ -95,7 +95,7 @@ struct MatchView: View {
                     .buttonStyle(WordiestCapsuleButtonStyle(palette: model.settings.palette))
                 }
                 .onPreferenceChange(WordiestHeightPreferenceKey.self) { newHeight in
-                    if abs(bottomBarHeight - newHeight) > 0.5 {
+                    if newHeight > 0, abs(bottomBarHeight - newHeight) > 4 {
                         bottomBarHeight = newHeight
                         updateSceneInsets(proxy: proxy)
                     }
